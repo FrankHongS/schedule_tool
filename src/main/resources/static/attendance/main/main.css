@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+}
+
+#main-container{
+    width: 60%;
+    margin: 150px auto 0;
+}
+
+#main-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    padding: 2px;
+}
+
+#main-table,
+#main-table tr td {
+    border: 1px solid #0094ff;
+}
+
+#main-table tr :first-child{
+    width: 20%;
+    min-width: 100px;
+    cursor: pointer;
+}
+
+#main-table tr :last-child{
+    width: 5%;
+    min-width: 50px;
+}
+
+#main-table thead td{
+    height: 30px;
+}
+
+#main-table tbody td{
+    height: 50px;
+}
