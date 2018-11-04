@@ -25,9 +25,15 @@ body {
     cursor: pointer;
 }
 
+/* 子代[2,4] */
+#main-table tr :nth-child(-n+4):nth-child(n+2){
+    width: 25%;
+}
+
 #main-table tr :last-child{
     width: 5%;
     min-width: 50px;
+    cursor: pointer;
 }
 
 #main-table thead td{

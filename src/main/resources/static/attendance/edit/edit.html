@@ -1,14 +1,73 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Edit</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="edit.css" />
+    <link rel="stylesheet" href="../../plugin/layui/css/layui.css">
+    <script src="../../jquery/jquery-3.3.1.js"></script>
+    <script src="../../plugin/laydate/laydate.js"></script>
     <script src="edit.js"></script>
 </head>
+
 <body>
-    
+    <form id='main-container' class="layui-form" action="">
+        <div class="layui-form-item">
+            <label for="" class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <select name="type" id="event-type">
+                    <option value="1">请假</option>
+                    <option value="2">迟到,早退</option>
+                    <option value="3">homebase</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block name">
+                <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">alias</label>
+            <div class="layui-input-block alias">
+                <input type="text" name="alias" placeholder="请输入alias" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">请假时间</label>
+            <div class="layui-input-block range">
+                <input type="text" name="range" placeholder="  -" autocomplete="off" class="layui-input datepicker">
+            </div>
+        </div>
+
+        <div class="layui-form-item choose-item" pane="">
+            <label class="layui-form-label">原始复选框</label>
+            <div class="layui-input-block choose">
+                <span>否</span><input name='isNoraml' type="radio" checked="">
+                <span>是</span><input name='isNoraml' type="radio">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block comment">
+                <textarea placeholder="请输入内容，不超过200字" class="layui-textarea" name="comment"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
 </body>
+
 </html>
