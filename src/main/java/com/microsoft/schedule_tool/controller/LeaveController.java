@@ -3,10 +3,7 @@ package com.microsoft.schedule_tool.controller;
 import com.microsoft.schedule_tool.entity.LeaveType;
 import com.microsoft.schedule_tool.service.LeaveService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,12 +14,13 @@ import java.util.Map;
  * E-mail: frank_hon@foxmail.com
  */
 @RestController
+@RequestMapping("/leave")
 public class LeaveController {
 
     @Autowired
     private LeaveService leaveService;
 
-    @GetMapping(value = "/leave")
+    @GetMapping(value = "")
     public Map<String, List<LeaveType>> getLeavesByAlias(
             @RequestParam(name = "alias") String alias){
         Map<String,List<LeaveType>> leaveMap=new HashMap<>();
@@ -31,7 +29,7 @@ public class LeaveController {
         return leaveMap;
     }
 
-    @PostMapping(value = "/leave")
+    @PostMapping(value = "")
     public Map<String, LeaveType> saveLeave(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "alias") String alias,
@@ -52,7 +50,7 @@ public class LeaveController {
         return leaveMap;
     }
 
-    @PostMapping(value = "/leave/update")
+    @PostMapping(value = "/update")
     public Map<String, String> updateLeave(
             @RequestParam(name = "id") Integer id,
             @RequestParam(name = "isNormal",required = false) Boolean isNormal,

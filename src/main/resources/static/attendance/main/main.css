@@ -2,9 +2,76 @@ body {
     margin: 0;
 }
 
+#main-form-container{
+    width: 60%;
+    margin: 80px auto 0;
+}
+
+#main-form{
+    display: inline-block;
+}
+
+.main-form-item {
+    margin-bottom: 15px;
+}
+
+#main-form-container .main-btn{
+    display: inline-block;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.main-form-item .form-btn{
+    position: relative;
+    left: 130px;
+}
+
+#main-form-container .add-btn{
+    float: right;
+    position: relative;
+    top:49px;
+    right: 20px;
+}
+
+.main-form-item .form-input{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+.main-form-item .label {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    min-width: 100px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+
+.main-form-item .range-dash{
+    display: inline-block;
+    margin: 0 10px;
+    text-align: center;
+}
+
+/* employee attendance table */
 #main-container{
     width: 60%;
-    margin: 150px auto 0;
+    margin: 30px auto 0;
 }
 
 #main-table {

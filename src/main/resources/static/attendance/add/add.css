@@ -1,0 +1,47 @@
+body{
+    margin: 0;
+}
+
+.add-form-item{
+    margin: 15px 0;
+}
+
+.add-form-item .form-input{
+    height: 30px;
+    line-height: 30px;
+    width: 200px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+.add-form-item .label {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    min-width: 100px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+
+.add-form-item button{
+    display: inline-block;
+    width: 85px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.add-form-item .save-btn{
+    margin-left: 130px; 
+}

@@ -5,6 +5,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -16,6 +17,10 @@ import java.util.Date;
 public class Employee {
 
     @Id
+    @GeneratedValue
+    private Integer id;
+
+    @Column(nullable = false,unique = true)
     private String alias;
 
     @Column(nullable = false)
