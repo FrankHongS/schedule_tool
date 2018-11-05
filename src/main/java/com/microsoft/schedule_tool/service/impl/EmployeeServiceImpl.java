@@ -56,12 +56,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean deleteEmployee(String alias) {
 
-        if(!mEmployeeRepository.findById(alias).isPresent())
+        if(!mEmployeeRepository.findByAlias(alias).isPresent())
             throw new RuntimeException("employee alias not existing");
         try {
             mEmployeeRepository.deleteById(alias);
 
-            if(!mEmployeeRepository.findById(alias).isPresent())
+            if(!mEmployeeRepository.findByAlias(alias).isPresent())
                 return true;
             else
                 throw new RuntimeException("fail to delete employee");

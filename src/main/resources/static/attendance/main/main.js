@@ -28,7 +28,7 @@ $(
                 ]
             ];
 
-            const rowGroup = ['name', 'leave', 'late', 'homebase', 'edit']
+            const rowGroup = ['name', 'leave', 'late', 'homebase', 'edit'];
             const cellsArray = dataList.map(
                 rowValues => {
                     return rowValues.map(
@@ -58,9 +58,9 @@ $(
             $('.edit').bind('click', function (e) {
                 layer.open({
                     type: 2,
-                    title: 'hello world !',
+                    title: '编辑考勤信息',
                     area: ['800px', '560px'],
-                    fix: false, //不固定
+                    fix: true, //不固定
                     maxmin: true,
                     scrollbar: false,//屏蔽父窗口滚动条
                     content: '../edit/edit.html'

@@ -13,34 +13,62 @@ caption{
     font-size: 1.8em;
 }
 
-.a-container{
-    width: 60%;
+.container{
+    width: 80%;
     margin: 20px auto;
 }
 
-.a{
+table{
     width: 100%;
     text-align: center;
     border-collapse: collapse;
 }
 
-.a,
-.a tr td {
+table,
+table tr td {
     border: 1px solid #0094ff;
 }
 
-.a thead tr td {
-    padding: 5px;
+table thead tr td {
+    padding: 8px;
     font-size: 1.2em;
 }
 
-.a tbody tr td {
-    padding: 5px;
+table tbody tr td {
+    padding: 10px;
     font-size: 1.0em;
 }
 
+table tr .index{
+    width: 8%;
+}
+
+table tr .created-time{
+    width: 17%;
+}
+
 /* 设置备注列宽度 */
-.a tr :nth-child(4){
+table tr .comment{
     width: 30%;
+}
+
+table tr .is-normal{
+    width: 10%;
+}
+
+.leave tr :nth-child(3){
+    width: 20%;
+}
+
+.leave tr :nth-child(4){
+    width: 15%;
+}
+
+.late tr :nth-child(2),.homebase tr :nth-child(2){
+    width: 30%;
+}
+
+.late tr :nth-child(3),.homebase tr :nth-child(3){
+    width: 18%;
 }
 

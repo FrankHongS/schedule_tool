@@ -28,25 +28,25 @@
         <div class="layui-form-item">
             <label class="layui-form-label">姓名</label>
             <div class="layui-input-block name">
-                <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+                <input type="text" value="张三" class="layui-input" disabled>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">alias</label>
             <div class="layui-input-block alias">
-                <input type="text" name="alias" placeholder="请输入alias" autocomplete="off" class="layui-input">
+                <input type="text" value="v-shhong" class="layui-input" disabled>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">请假时间</label>
-            <div class="layui-input-block range">
-                <input type="text" name="range" placeholder="  -" autocomplete="off" class="layui-input datepicker">
+            <label class="layui-form-label time-label">请假时间</label>
+            <div class="layui-input-block time">
+                <input type="text" placeholder="  -" class="layui-input datepicker">
             </div>
         </div>
 
         <div class="layui-form-item choose-item" pane="">
-            <label class="layui-form-label">原始复选框</label>
+            <label class="layui-form-label">是否异常</label>
             <div class="layui-input-block choose">
                 <span>否</span><input name='isNoraml' type="radio" checked="">
                 <span>是</span><input name='isNoraml' type="radio">

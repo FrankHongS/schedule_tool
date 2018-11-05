@@ -44,15 +44,15 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void updateEmployee(){
         String alias="v-shhong";
         String name="张三";
-        boolean result=employeeRepository.findById(alias).isPresent();
+        boolean result=employeeRepository.findByAlias(alias).isPresent();
 
         assertTrue(result);
 
-        Employee employee=employeeRepository.findById(alias).get();
+        Employee employee=employeeRepository.findByAlias(alias).get();
         employee.setName(name);
         Employee e=employeeRepository.save(employee);
 
@@ -60,14 +60,15 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    @Ignore
     public void deleteEmployee(){
         Employee e=new Employee();
         e.setAlias("v-shhong");
 
-        if(employeeRepository.findById(e.getAlias()).isPresent())
+        if(employeeRepository.findByAlias(e.getAlias()).isPresent())
             employeeRepository.delete(e);
 
-        boolean result=employeeRepository.findById(e.getAlias()).isPresent();
+        boolean result=employeeRepository.findByAlias(e.getAlias()).isPresent();
 
         assertTrue(!result);
     }
