@@ -44,7 +44,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void updateEmployee(){
         String alias="v-shhong";
         String name="张三";

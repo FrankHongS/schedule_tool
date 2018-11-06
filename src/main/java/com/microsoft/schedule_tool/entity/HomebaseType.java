@@ -10,13 +10,11 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * Created by Frank Hon on 2018/11/4
- * E-mail: frank_hon@foxmail.com
+ * Created by Frank Hon on 11/6/2018
+ * E-mail: v-shhong@microsoft.com
  */
-
 @Entity
-public class LeaveType {
-
+public class HomebaseType {
     @Id
     @GeneratedValue
     private Integer id;
@@ -28,7 +26,7 @@ public class LeaveType {
     private String name;
 
     @Column(nullable = false)
-    private String leaveDateRange;
+    private String homebaseDate;
 
     private String comment;
 
@@ -40,7 +38,7 @@ public class LeaveType {
     @UpdateTimestamp
     private Date lastUpdatedTime;
 
-    public LeaveType(){}
+    public HomebaseType(){}
 
     public Integer getId() {
         return id;
@@ -66,12 +64,12 @@ public class LeaveType {
         this.name = name;
     }
 
-    public String getLeaveDateRange() {
-        return leaveDateRange;
+    public String getHomebaseDate() {
+        return homebaseDate;
     }
 
-    public void setLeaveDateRange(String leaveDateRange) {
-        this.leaveDateRange = leaveDateRange;
+    public void setHomebaseDate(String homebaseDate) {
+        this.homebaseDate = homebaseDate;
     }
 
     public String getComment() {

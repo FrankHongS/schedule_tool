@@ -17,51 +17,65 @@ import java.util.Map;
 @RequestMapping("/leave")
 public class LeaveController {
 
+    private static final String KEY="leave";
+
     @Autowired
     private LeaveService leaveService;
 
     @GetMapping(value = "")
     public Map<String, List<LeaveType>> getLeavesByAlias(
             @RequestParam(name = "alias") String alias){
-        Map<String,List<LeaveType>> leaveMap=new HashMap<>();
+        Map<String,List<LeaveType>> resultMap=new HashMap<>();
         List<LeaveType> leaveList=leaveService.getAllLeavesByAlias(alias);
-        leaveMap.put("leave",leaveList);
-        return leaveMap;
+        resultMap.put(KEY,leaveList);
+        return resultMap;
     }
 
     @PostMapping(value = "")
     public Map<String, LeaveType> saveLeave(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "alias") String alias,
+            @RequestParam(name = "leaveDateRange") String leaveDateRange,
             @RequestParam(name = "isNormal",required = false) Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
-        Map<String,LeaveType> leaveMap=new HashMap<>();
+        Map<String,LeaveType> resultMap=new HashMap<>();
         LeaveType leave=new LeaveType();
         leave.setName(name);
         leave.setAlias(alias);
+        leave.setLeaveDateRange(leaveDateRange);
         leave.setNormal(isNormal);
         leave.setComment(comment);
-        if(leaveService.saveLeave(leave)){
-            leaveMap.put("leave",leave);
-        }else{
-            leaveMap.put("leave",null);
-        }
 
-        return leaveMap;
+        LeaveType result=leaveService.saveLeave(leave);
+        resultMap.put(KEY,result);
+
+        return resultMap;
     }
 
     @PostMapping(value = "/update")
-    public Map<String, String> updateLeave(
+    public Map<String, LeaveType> updateLeave(
             @RequestParam(name = "id") Integer id,
+            @RequestParam(name = "leaveDateRange",required = false) String leaveDateRange,
             @RequestParam(name = "isNormal",required = false) Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
-        Map<String,String> leaveMap=new HashMap<>();
-        if(leaveService.updateLeave(id,comment,isNormal)){
-            leaveMap.put("leave","success");
+        Map<String,LeaveType> resultMap=new HashMap<>();
+
+        LeaveType result=leaveService.updateLeave(id,leaveDateRange,comment,isNormal);
+        resultMap.put(KEY,result);
+
+        return resultMap;
+    }
+
+    @PostMapping("/delete")
+    public Map<String, String> deleteLeave(@RequestParam("id") Integer id){
+        Map<String,String> resultMap=new HashMap<>();
+
+        if(leaveService.deleteLeave(id)){
+            resultMap.put(KEY,"delete is success");
         }else{
-            leaveMap.put("leave","fail");
+            resultMap.put(KEY,"delete is failure");
         }
 
-        return leaveMap;
+        return resultMap;
     }
 }

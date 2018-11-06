@@ -47,9 +47,28 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+    @Transactional
     @Override
-    public boolean updateEmployee(String alias) {
-        return false;
+    public Employee updateEmployee(Integer id,String alias,String name) {
+
+        if(mEmployeeRepository.findById(id).isPresent()){
+            Employee employee=mEmployeeRepository.findById(id).get();
+
+            employee.setName(name);
+            employee.setAlias(alias);
+
+            try{
+                mEmployeeRepository.save(employee);
+
+                return employee;
+            }catch (Exception e){
+                throw new RuntimeException("fail to save employee "+e.getMessage());
+            }
+
+        }else{
+            throw new RuntimeException("employee not existing,can't be updated");
+        }
+
     }
 
     @Transactional
@@ -59,7 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(!mEmployeeRepository.findByAlias(alias).isPresent())
             throw new RuntimeException("employee alias not existing");
         try {
-            mEmployeeRepository.deleteById(alias);
+            mEmployeeRepository.deleteByAlias(alias);
 
             if(!mEmployeeRepository.findByAlias(alias).isPresent())
                 return true;

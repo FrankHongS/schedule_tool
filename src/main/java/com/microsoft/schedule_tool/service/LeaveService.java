@@ -12,7 +12,9 @@ public interface LeaveService {
 
     List<LeaveType> getAllLeavesByAlias(String alias);
 
-    boolean saveLeave(LeaveType leave);
+    LeaveType saveLeave(LeaveType leave);
 
-    boolean updateLeave(Integer id, String comment,Boolean isNormal);
+    LeaveType updateLeave(Integer id,String leaveDateRange, String comment,Boolean isNormal);
+
+    boolean deleteLeave(Integer id);
 }

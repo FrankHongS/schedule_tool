@@ -14,7 +14,7 @@ public interface EmployeeService {
 
     Employee saveEmployee(Employee employee);
 
-    boolean updateEmployee(String alias);
+    Employee updateEmployee(Integer id, String alias, String name);
 
     boolean deleteEmployee(String alias);
 }

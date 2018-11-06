@@ -2,31 +2,7 @@ $(
     function () {
 
         const main = {};
-
-        main.buildUI = function () {
-            const dataList = [
-                [
-                    'Joey',
-                    15,
-                    20,
-                    15,
-                    'edit'
-                ],
-                [
-                    'Chandler',
-                    15,
-                    20,
-                    15,
-                    'edit'
-                ],
-                [
-                    'Reachel',
-                    15,
-                    20,
-                    15,
-                    'edit'
-                ]
-            ];
+        main.buildSumTable = function (dataList) {
 
             const rowGroup = ['name', 'leave', 'late', 'homebase', 'edit'];
             const cellsArray = dataList.map(
@@ -67,6 +43,10 @@ $(
                 });
             });
 
+        };
+
+        main.bindClick=function(){
+
             $('.add-btn').bind('click', function (e) {
                 layer.open({
                     type: 2,
@@ -80,6 +60,18 @@ $(
 
             });
 
+            $('.search-btn').bind('click',function(e){
+                $.ajax({
+                    url:'/schedule/sum',
+                    success:result=>{
+                        $('tbody').html('');
+                        main.buildSumTable(main.parseData(result.sum))
+                    }
+                });
+            });
+        };
+
+        main.bindLaydate=function(){
             laydate.render({
                 elem: '.from',
                 theme: '#393D49',
@@ -94,6 +86,25 @@ $(
 
         };
 
-        main.buildUI();
+        main.parseData=function(dataArray){
+            const list=[];
+            for(let i=0;i<dataArray.length;i++){
+                let item=dataArray[i];
+                let listItem=[];
+
+                listItem[0]=item.name;
+                listItem[1]=item.leaveSum;
+                listItem[2]=item.lateSum;
+                listItem[3]=item.homebaseSum;
+                listItem[4]='edit';
+
+                list[i]=listItem;
+            }
+
+            return list;
+        };
+
+        main.bindClick();
+        main.bindLaydate();
     }
 );

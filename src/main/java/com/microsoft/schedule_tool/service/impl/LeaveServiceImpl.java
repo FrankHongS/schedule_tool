@@ -18,51 +18,75 @@ import java.util.List;
 public class LeaveServiceImpl implements LeaveService {
 
     @Autowired
-    private LeaveRepository leaveRepository;
+    private LeaveRepository mLeaveRepository;
 
     @Override
     public List<LeaveType> getAllLeavesByAlias(String alias) {
-        return leaveRepository.findByAlias(alias);
+        return mLeaveRepository.findByAlias(alias);
     }
 
     @Transactional
     @Override
-    public boolean saveLeave(LeaveType leave) {
+    public LeaveType saveLeave(LeaveType leave) {
         if (leave.getName() == null || "".equals(leave.getName()))
-            throw new RuntimeException("姓名不能为空！");
+            throw new RuntimeException("name can't be null");
         if (leave.getAlias() == null || "".equals(leave.getAlias()))
-            throw new RuntimeException("alias不能为空！");
+            throw new RuntimeException("alias can't be null");
+        if(leave.getLeaveDateRange()==null || "".equals(leave.getLeaveDateRange()))
+            throw new RuntimeException("leave date range can't be null");
 
         try {
-            LeaveType result = leaveRepository.save(leave);
+            LeaveType result = mLeaveRepository.save(leave);
             if (result != null)
-                return true;
+                return result;
             else
-                throw new RuntimeException("保存请假失败");
+                throw new RuntimeException("fail to save leave");
 
         } catch (Exception e) {
-            throw new RuntimeException("保存请假失败 " + e.getMessage());
+            throw new RuntimeException("fail to save leave " + e.getMessage());
         }
     }
 
+    @Transactional
     @Override
-    public boolean updateLeave(Integer id, String comment,Boolean isNormal) {
-        if (!leaveRepository.findById(id).isPresent())
-            throw new RuntimeException("该项不存在，无法更新...");
+    public LeaveType updateLeave(Integer id, String leaveDateRange, String comment,Boolean isNormal) {
+        if (!mLeaveRepository.findById(id).isPresent())
+            throw new RuntimeException("leave not existing, can't be updated...");
 
         try {
-            LeaveType leave=leaveRepository.findById(id).get();
+            LeaveType leave=mLeaveRepository.findById(id).get();
+            leave.setLeaveDateRange(leaveDateRange);
             leave.setComment(comment);
             leave.setNormal(isNormal);
 
-            LeaveType result = leaveRepository.save(leave);
+            LeaveType result = mLeaveRepository.save(leave);
             if (result != null)
-                return true;
+                return result;
             else
-                throw new RuntimeException("更新请假失败");
+                throw new RuntimeException("fail to update leave");
 
         } catch (Exception e) {
-            throw new RuntimeException("更新请假失败 " + e.getMessage());
+            throw new RuntimeException("fail to update leave " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteLeave(Integer id) {
+
+        if(!mLeaveRepository.findById(id).isPresent())
+            throw new RuntimeException("leave id not existing");
+
+        try{
+            mLeaveRepository.deleteById(id);
+
+            if(!mLeaveRepository.findById(id).isPresent())
+                return true;
+            else
+                throw new RuntimeException("fail to delete leave");
+
+        }catch (Exception e){
+            throw new RuntimeException("fail to delete leave "+e.getMessage());
         }
     }
 }

@@ -132,11 +132,28 @@ $(
             $(container).append(rowsArray);
         };
 
+        detail.bindLayer=function(){
+            $('.modify-profile-btn').bind('click', function (e) {
+                layer.open({
+                    type: 2,
+                    title: '修改成员信息',
+                    area: ['450px', '400px'],
+                    fix: false,
+                    maxmin: false,
+                    scrollbar: false,
+                    content: '../modify/modify.html'
+                });
+
+            });
+        };
+
 
         detail.buildUI = function () {
             detail.createTable('.leave-body',leaveList,leaveClassGroup);
             detail.createTable('.late-body',lateList,lateClassGroup);
             detail.createTable('.homebase-body',homebaseList,homebaseClassGroup)
+
+            detail.bindLayer();
         };
 
         detail.getParameter();
