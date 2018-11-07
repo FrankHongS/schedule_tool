@@ -4,6 +4,7 @@ import com.microsoft.schedule_tool.dao.EmployeeRepository;
 import com.microsoft.schedule_tool.dao.LateRepository;
 import com.microsoft.schedule_tool.dao.LeaveRepository;
 import com.microsoft.schedule_tool.entity.Employee;
+import com.microsoft.schedule_tool.entity.Leave;
 import com.microsoft.schedule_tool.service.SumService;
 import com.microsoft.schedule_tool.vo.Attendance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,8 @@ public class SumServiceImpl implements SumService {
             attendance.setName(employee.getName());
             String alias=employee.getAlias();
             attendance.setAlias(alias);
-            attendance.setLeaveSum(mLeaveRepository.findByAlias(alias).size());
+
+            attendance.setLeaveSum(getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
             attendance.setLateSum(mLateRepository.findByAlias(alias).size());
 
             target.add(attendance);
@@ -74,5 +76,14 @@ public class SumServiceImpl implements SumService {
         }
 
         return target;
+    }
+
+    private int getLeaveDayCount(List<Leave> leaveList){
+        int sum=0;
+        for(Leave leave:leaveList){
+            sum+=leave.getDayCount();
+        }
+
+        return sum;
     }
 }

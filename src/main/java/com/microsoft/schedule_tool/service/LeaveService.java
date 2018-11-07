@@ -10,11 +10,13 @@ import java.util.List;
  */
 public interface LeaveService {
 
-    List<Leave> getAllLeavesByAlias(String alias);
+    List<Leave> getAllLeavesByEmployeeId(Integer employeeId);
+
+    List<Leave> getAllLeavesByEmployeeIdAndLeaveType(Integer employeeId,Integer leaveType);
 
     Leave saveLeave(Leave leave);
 
-    Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange, String comment, Boolean isNormal);
+    Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange,Integer dayCount, String comment, Boolean isNormal);
 
     boolean deleteLeave(Integer id);
 }

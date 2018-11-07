@@ -22,21 +22,32 @@ public class LeaveController {
     @Autowired
     private LeaveService leaveService;
 
-    @GetMapping(value = "")
-    public Map<String, List<Leave>> getLeavesByAlias(
-            @RequestParam(name = "alias") String alias){
+    @GetMapping
+    public Map<String, List<Leave>> getLeavesByEmployeeId(
+            @RequestParam(name = "employeeId") Integer employeeId){
         Map<String,List<Leave>> resultMap=new HashMap<>();
-        List<Leave> leaveList=leaveService.getAllLeavesByAlias(alias);
+        List<Leave> leaveList=leaveService.getAllLeavesByEmployeeId(employeeId);
         resultMap.put(KEY,leaveList);
         return resultMap;
     }
 
-    @PostMapping(value = "")
+    @GetMapping("/type")
+    public Map<String, List<Leave>> getLeavesByEmployeeIdAndLeaveType(
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "leaveType") Integer leaveType){
+        Map<String,List<Leave>> resultMap=new HashMap<>();
+        List<Leave> leaveList=leaveService.getAllLeavesByEmployeeIdAndLeaveType(employeeId, leaveType);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @PostMapping
     public Map<String, Leave> saveLeave(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "alias") String alias,
             @RequestParam(name = "leaveType") Integer leaveType,
             @RequestParam(name = "leaveDateRange") String leaveDateRange,
+            @RequestParam(name = "dayCount") Integer dayCount,
             @RequestParam(name = "employeeId") Integer employeeId,
             @RequestParam(name = "isNormal",required = false) Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
@@ -46,6 +57,7 @@ public class LeaveController {
         leave.setAlias(alias);
         leave.setLeaveType(leaveType);
         leave.setLeaveDateRange(leaveDateRange);
+        leave.setDayCount(dayCount);
         leave.setEmployeeId(employeeId);
         leave.setNormal(isNormal);
         leave.setComment(comment);
@@ -59,13 +71,14 @@ public class LeaveController {
     @PostMapping(value = "/update")
     public Map<String, Leave> updateLeave(
             @RequestParam(name = "id") Integer id,
-            @RequestParam(name = "leaveType",required = false) Integer leaveType,
-            @RequestParam(name = "leaveDateRange",required = false) String leaveDateRange,
-            @RequestParam(name = "isNormal",required = false) Boolean isNormal,
+            @RequestParam(name = "leaveType") Integer leaveType,
+            @RequestParam(name = "leaveDateRange") String leaveDateRange,
+            @RequestParam(name = "dayCount") Integer dayCount,
+            @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
         Map<String, Leave> resultMap=new HashMap<>();
 
-        Leave result=leaveService.updateLeave(id,leaveType,leaveDateRange,comment,isNormal);
+        Leave result=leaveService.updateLeave(id,leaveType,leaveDateRange,dayCount,comment,isNormal);
         resultMap.put(KEY,result);
 
         return resultMap;

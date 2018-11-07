@@ -15,5 +15,7 @@ public interface LateRepository extends JpaRepository<Late,Integer> {
 
     List<Late> findByEmployeeId(Integer employeeId);
 
+    List<Late> findByEmployeeIdAndLateType(Integer employeeId,Integer LateType);
+
     void deleteByEmployeeId(Integer employeeId);
 }

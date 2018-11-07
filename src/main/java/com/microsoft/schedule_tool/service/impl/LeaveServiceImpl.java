@@ -21,8 +21,13 @@ public class LeaveServiceImpl implements LeaveService {
     private LeaveRepository mLeaveRepository;
 
     @Override
-    public List<Leave> getAllLeavesByAlias(String alias) {
-        return mLeaveRepository.findByAlias(alias);
+    public List<Leave> getAllLeavesByEmployeeId(Integer employeeId) {
+        return mLeaveRepository.findByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<Leave> getAllLeavesByEmployeeIdAndLeaveType(Integer employeeId, Integer leaveType) {
+        return mLeaveRepository.findByEmployeeIdAndLeaveType(employeeId,leaveType);
     }
 
     @Transactional
@@ -49,7 +54,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Transactional
     @Override
-    public Leave updateLeave(Integer id, Integer leaveType,String leaveDateRange, String comment, Boolean isNormal) {
+    public Leave updateLeave(Integer id, Integer leaveType,String leaveDateRange,Integer dayCount, String comment, Boolean isNormal) {
         if (!mLeaveRepository.findById(id).isPresent())
             throw new RuntimeException("leave not existing, can't be updated...");
 
@@ -57,6 +62,7 @@ public class LeaveServiceImpl implements LeaveService {
             Leave leave=mLeaveRepository.findById(id).get();
             leave.setLeaveType(leaveType);
             leave.setLeaveDateRange(leaveDateRange);
+            leave.setDayCount(dayCount);
             leave.setComment(comment);
             leave.setNormal(isNormal);
 

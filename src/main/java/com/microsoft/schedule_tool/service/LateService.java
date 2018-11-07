@@ -10,7 +10,9 @@ import java.util.List;
  */
 public interface LateService {
 
-    List<Late> getAllLatesByAlias(String alias);
+    List<Late> getAllLatesByEmployeeId(Integer employeeId);
+
+    List<Late> getAllLatesByEmployeeIdAndLateType(Integer employeeId,Integer LateType);
 
     Late saveLate(Late late);
 

@@ -33,6 +33,9 @@ public class Leave {
     @Column(nullable = false)
     private String leaveDateRange;
 
+    @Column(nullable = false)
+    private Integer dayCount;
+
     private String comment;
 
     private Boolean isNormal;
@@ -86,6 +89,14 @@ public class Leave {
 
     public void setLeaveDateRange(String leaveDateRange) {
         this.leaveDateRange = leaveDateRange;
+    }
+
+    public Integer getDayCount() {
+        return dayCount;
+    }
+
+    public void setDayCount(Integer dayCount) {
+        this.dayCount = dayCount;
     }
 
     public String getComment() {

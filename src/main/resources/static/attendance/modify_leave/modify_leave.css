@@ -1,0 +1,38 @@
+
+#main-container select{
+    min-height: 38px;
+    min-width: 160px;
+    height: 100%;
+    width: 15%;
+    padding-left: 10px; 
+    border: 1px solid #e6e6e6;
+}
+
+.choose-item{
+    height: 36px;
+}
+
+.choose{
+    padding-left: 10px;
+    padding-top: 10px;
+    overflow: hidden;
+}
+
+.name-container{
+    min-width: 200px;
+    width: 20%;
+}
+
+.alias-container{
+    min-width: 240px;
+    width: 25%;
+}
+
+.time{
+    min-width: 260px;
+    width: 30%;
+}
+
+.comment{
+    padding-right: 30px;
+}

@@ -22,12 +22,22 @@ public class LateController {
     
     @Autowired
     private LateService mLateService;
-    
-    @GetMapping(value = "")
-    public Map<String, List<Late>> getLatesByAlias(
-            @RequestParam(name = "alias") String alias){
+
+    @GetMapping
+    public Map<String, List<Late>> getLatesByEmployeeId(
+            @RequestParam(name = "employeeId") Integer employeeId){
         Map<String,List<Late>> resultMap=new HashMap<>();
-        List<Late> leaveList=mLateService.getAllLatesByAlias(alias);
+        List<Late> leaveList=mLateService.getAllLatesByEmployeeId(employeeId);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @GetMapping("/type")
+    public Map<String, List<Late>> getLatesByEmployeeIdAndLateType(
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "lateType") Integer lateType){
+        Map<String,List<Late>> resultMap=new HashMap<>();
+        List<Late> leaveList=mLateService.getAllLatesByEmployeeIdAndLateType(employeeId, lateType);
         resultMap.put(KEY,leaveList);
         return resultMap;
     }
@@ -39,7 +49,7 @@ public class LateController {
             @RequestParam(name = "lateType") Integer lateType,
             @RequestParam(name = "lateDate") String lateDate,
             @RequestParam(name = "employeeId") Integer employeeId,
-            @RequestParam(name = "isNormal",required = false) Boolean isNormal,
+            @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
         Map<String, Late> resultMap=new HashMap<>();
         Late late=new Late();
@@ -60,9 +70,9 @@ public class LateController {
     @PostMapping(value = "/update")
     public Map<String, Late> updateLate(
             @RequestParam(name = "id") Integer id,
-            @RequestParam(name = "lateType",required = false) Integer lateType,
-            @RequestParam(name = "lateDate",required = false) String lateDate,
-            @RequestParam(name = "isNormal",required = false) Boolean isNormal,
+            @RequestParam(name = "lateType") Integer lateType,
+            @RequestParam(name = "lateDate") String lateDate,
+            @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
         Map<String, Late> resultMap=new HashMap<>();
 

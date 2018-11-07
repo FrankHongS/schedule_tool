@@ -20,8 +20,13 @@ public class LateServiceImpl implements LateService {
     private LateRepository mLateRepository;
 
     @Override
-    public List<Late> getAllLatesByAlias(String alias) {
-        return mLateRepository.findByAlias(alias);
+    public List<Late> getAllLatesByEmployeeId(Integer employeeId) {
+        return mLateRepository.findByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<Late> getAllLatesByEmployeeIdAndLateType(Integer employeeId, Integer LateType) {
+        return mLateRepository.findByEmployeeIdAndLateType(employeeId, LateType);
     }
 
     @Transactional

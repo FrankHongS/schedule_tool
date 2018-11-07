@@ -48,7 +48,7 @@ body{
     font-size: 1.8em;
 }
 
-#event-type{
+select{
     min-height: 38px;
     min-width: 160px;
     width: 15%;
@@ -68,7 +68,7 @@ body{
 }
 
 .container{
-    width: 80%;
+    width: 90%;
     margin: 20px auto;
 }
 
@@ -103,7 +103,7 @@ table tr .created-time{
 
 /* 设置备注列宽度 */
 table tr .comment{
-    width: 30%;
+    width: 25%;
 }
 
 table tr .is-normal{
@@ -118,10 +118,15 @@ table tr .is-normal{
     width: 15%;
 }
 
-.late tr :nth-child(2),.homebase tr :nth-child(2){
+.edit{
+    width: 5%;
+    cursor: pointer;
+}
+
+.late tr :nth-child(2){
     width: 30%;
 }
 
-.late tr :nth-child(3),.homebase tr :nth-child(3){
-    width: 18%;
+.late tr :nth-child(3){
+    width: 17%;
 }

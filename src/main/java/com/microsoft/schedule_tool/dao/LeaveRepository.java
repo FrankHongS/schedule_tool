@@ -15,5 +15,7 @@ public interface LeaveRepository extends JpaRepository<Leave,Integer> {
 
     List<Leave> findByEmployeeId(Integer employeeId);
 
+    List<Leave> findByEmployeeIdAndLeaveType(Integer employeeId,Integer leaveType);
+
     void deleteByEmployeeId(Integer employeeId);
 }
