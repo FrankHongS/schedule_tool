@@ -6,6 +6,8 @@ package com.microsoft.schedule_tool.vo;
  */
 public class Attendance {
 
+    private int employeeId;
+
     private String name;
 
     private String alias;
@@ -14,16 +16,22 @@ public class Attendance {
 
     private int lateSum;
 
-    private int homebaseSum;
-
     public Attendance(){}
 
-    public Attendance(String name, String alias, int leaveSum, int lateSum, int homebaseSum) {
+    public Attendance(int employeeId,String name, String alias, int leaveSum, int lateSum) {
+        this.employeeId=employeeId;
         this.name = name;
         this.alias = alias;
         this.leaveSum = leaveSum;
         this.lateSum = lateSum;
-        this.homebaseSum = homebaseSum;
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -58,11 +66,4 @@ public class Attendance {
         this.lateSum = lateSum;
     }
 
-    public int getHomebaseSum() {
-        return homebaseSum;
-    }
-
-    public void setHomebaseSum(int homebaseSum) {
-        this.homebaseSum = homebaseSum;
-    }
 }

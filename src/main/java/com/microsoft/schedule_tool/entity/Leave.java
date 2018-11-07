@@ -14,8 +14,8 @@ import java.util.Date;
  * E-mail: frank_hon@foxmail.com
  */
 
-@Entity
-public class LeaveType {
+@Entity(name = "tb_leave")
+public class Leave {
 
     @Id
     @GeneratedValue
@@ -28,11 +28,17 @@ public class LeaveType {
     private String name;
 
     @Column(nullable = false)
+    private Integer leaveType;
+
+    @Column(nullable = false)
     private String leaveDateRange;
 
     private String comment;
 
     private Boolean isNormal;
+
+    @Column(nullable = false)
+    private Integer employeeId;
 
     @CreationTimestamp
     private Date createdTime;
@@ -40,7 +46,7 @@ public class LeaveType {
     @UpdateTimestamp
     private Date lastUpdatedTime;
 
-    public LeaveType(){}
+    public Leave(){}
 
     public Integer getId() {
         return id;
@@ -66,6 +72,14 @@ public class LeaveType {
         this.name = name;
     }
 
+    public Integer getLeaveType() {
+        return leaveType;
+    }
+
+    public void setLeaveType(Integer leaveType) {
+        this.leaveType = leaveType;
+    }
+
     public String getLeaveDateRange() {
         return leaveDateRange;
     }
@@ -88,6 +102,14 @@ public class LeaveType {
 
     public void setNormal(Boolean normal) {
         isNormal = normal;
+    }
+
+    public Integer getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public Date getCreatedTime() {

@@ -12,4 +12,6 @@ import java.util.List;
 public interface SumService {
 
     List<Attendance> getSumOfAllTypes();
+
+    List<Attendance> getSumOfAllTypesByAlias(String alias);
 }

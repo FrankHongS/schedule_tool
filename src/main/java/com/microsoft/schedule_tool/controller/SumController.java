@@ -5,6 +5,7 @@ import com.microsoft.schedule_tool.vo.Attendance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -29,6 +30,18 @@ public class SumController {
         Map<String, List<Attendance>> resultMap=new HashMap<>();
 
         List<Attendance> attendanceList=mSumService.getSumOfAllTypes();
+
+        resultMap.put(KEY,attendanceList);
+
+        return resultMap;
+    }
+
+    @GetMapping("/alias")
+    public Map<String, List<Attendance>> getAttendanceListByAlias(
+            @RequestParam("alias") String alias){
+        Map<String, List<Attendance>> resultMap=new HashMap<>();
+
+        List<Attendance> attendanceList=mSumService.getSumOfAllTypesByAlias(alias);
 
         resultMap.put(KEY,attendanceList);
 

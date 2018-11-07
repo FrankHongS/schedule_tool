@@ -1,13 +1,12 @@
 package com.microsoft.schedule_tool.service.impl;
 
 import com.microsoft.schedule_tool.dao.LateRepository;
-import com.microsoft.schedule_tool.entity.LateType;
+import com.microsoft.schedule_tool.entity.Late;
 import com.microsoft.schedule_tool.service.LateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,13 +20,13 @@ public class LateServiceImpl implements LateService {
     private LateRepository mLateRepository;
 
     @Override
-    public List<LateType> getAllLatesByAlias(String alias) {
+    public List<Late> getAllLatesByAlias(String alias) {
         return mLateRepository.findByAlias(alias);
     }
 
     @Transactional
     @Override
-    public LateType saveLate(LateType late) {
+    public Late saveLate(Late late) {
         if (late.getName() == null || "".equals(late.getName()))
             throw new RuntimeException("name can't be null");
         if (late.getAlias() == null || "".equals(late.getAlias()))
@@ -36,7 +35,7 @@ public class LateServiceImpl implements LateService {
             throw new RuntimeException("late date can't be null");
 
         try{
-            LateType result=mLateRepository.save(late);
+            Late result=mLateRepository.save(late);
 
             if(result!=null)
                 return result;
@@ -49,17 +48,18 @@ public class LateServiceImpl implements LateService {
 
     @Transactional
     @Override
-    public LateType updateLate(Integer id, String lateDate, String comment, Boolean isNormal) {
+    public Late updateLate(Integer id, Integer lateType, String lateDate, String comment, Boolean isNormal) {
         if (!mLateRepository.findById(id).isPresent())
             throw new RuntimeException("late not existing, can't be updated...");
 
         try {
-            LateType late=mLateRepository.findById(id).get();
+            Late late=mLateRepository.findById(id).get();
+            late.setLateType(lateType);
             late.setLateDate(lateDate);
             late.setComment(comment);
             late.setNormal(isNormal);
 
-            LateType result = mLateRepository.save(late);
+            Late result = mLateRepository.save(late);
             if (result != null)
                 return result;
             else

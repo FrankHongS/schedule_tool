@@ -1,7 +1,7 @@
 package com.microsoft.schedule_tool.service.impl;
 
 import com.microsoft.schedule_tool.dao.LeaveRepository;
-import com.microsoft.schedule_tool.entity.LeaveType;
+import com.microsoft.schedule_tool.entity.Leave;
 import com.microsoft.schedule_tool.service.LeaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,13 @@ public class LeaveServiceImpl implements LeaveService {
     private LeaveRepository mLeaveRepository;
 
     @Override
-    public List<LeaveType> getAllLeavesByAlias(String alias) {
+    public List<Leave> getAllLeavesByAlias(String alias) {
         return mLeaveRepository.findByAlias(alias);
     }
 
     @Transactional
     @Override
-    public LeaveType saveLeave(LeaveType leave) {
+    public Leave saveLeave(Leave leave) {
         if (leave.getName() == null || "".equals(leave.getName()))
             throw new RuntimeException("name can't be null");
         if (leave.getAlias() == null || "".equals(leave.getAlias()))
@@ -36,7 +36,7 @@ public class LeaveServiceImpl implements LeaveService {
             throw new RuntimeException("leave date range can't be null");
 
         try {
-            LeaveType result = mLeaveRepository.save(leave);
+            Leave result = mLeaveRepository.save(leave);
             if (result != null)
                 return result;
             else
@@ -49,17 +49,18 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Transactional
     @Override
-    public LeaveType updateLeave(Integer id, String leaveDateRange, String comment,Boolean isNormal) {
+    public Leave updateLeave(Integer id, Integer leaveType,String leaveDateRange, String comment, Boolean isNormal) {
         if (!mLeaveRepository.findById(id).isPresent())
             throw new RuntimeException("leave not existing, can't be updated...");
 
         try {
-            LeaveType leave=mLeaveRepository.findById(id).get();
+            Leave leave=mLeaveRepository.findById(id).get();
+            leave.setLeaveType(leaveType);
             leave.setLeaveDateRange(leaveDateRange);
             leave.setComment(comment);
             leave.setNormal(isNormal);
 
-            LeaveType result = mLeaveRepository.save(leave);
+            Leave result = mLeaveRepository.save(leave);
             if (result != null)
                 return result;
             else

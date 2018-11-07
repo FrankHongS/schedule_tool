@@ -2,9 +2,14 @@ $(
     function () {
 
         const main = {};
+
+        const titleArray=[];
+        window.title={};
+
+        // create sum table
         main.buildSumTable = function (dataList) {
 
-            const rowGroup = ['name', 'leave', 'late', 'homebase', 'edit'];
+            const rowGroup = ['name', 'leave', 'late', 'edit'];
             const cellsArray = dataList.map(
                 rowValues => {
                     return rowValues.map(
@@ -18,8 +23,9 @@ $(
             );
 
             const rowsArray = cellsArray.map(
-                row => {
+                (row,index)=> {
                     return $('<tr>')
+                        .attr('name',titleArray[index])
                         .append(row);
                 }
             );
@@ -28,10 +34,16 @@ $(
 
             $('.name').bind('click', function (e) {
                 // $(location).attr('href','../detail/detail.html?a='+e.target.innerHTML);//重定向跳转，在当前窗口打开新页面
-                window.open('../detail/detail.html?title=' + e.target.innerHTML);//跳转时打开新窗口
+                window.open('../detail/detail.html?title=' + $(this).parent('tr').attr('name'));//跳转时打开新窗口
             });
 
             $('.edit').bind('click', function (e) {
+                
+                const tempArray=$(this).parent('tr').attr('name').split(' ');
+                title.name=tempArray[0];
+                title.alias=tempArray[1];
+                title.employeeId=tempArray[2];
+
                 layer.open({
                     type: 2,
                     title: '编辑考勤信息',
@@ -60,14 +72,26 @@ $(
 
             });
 
-            $('.search-btn').bind('click',function(e){
-                $.ajax({
-                    url:'/schedule/sum',
-                    success:result=>{
-                        $('tbody').html('');//clear old table
-                        main.buildSumTable(main.parseData(result.sum))
-                    }
-                });
+            $('.search-btn').bind('click',e=>{
+
+                const alias=$('.alias').val();
+                if(alias){
+                    $.ajax({
+                        url:'/schedule/sum/alias?alias='+alias,
+                        success:result=>{
+                            $('tbody').html('');
+                            this.buildSumTable(this.parseData(result.sum))
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        url:'/schedule/sum',
+                        success:result=>{
+                            $('tbody').html('');//clear old table
+                            this.buildSumTable(this.parseData(result.sum))
+                        }
+                    });
+                }
             });
         };
 
@@ -92,11 +116,13 @@ $(
                 let item=dataArray[i];
                 let listItem=[];
 
+                
                 listItem[0]=item.name+' '+item.alias;
                 listItem[1]=item.leaveSum;
                 listItem[2]=item.lateSum;
-                listItem[3]=item.homebaseSum;
-                listItem[4]='edit';
+                listItem[3]='edit';
+                                
+                titleArray[i]=item.name+' '+item.alias+' '+item.employeeId;
 
                 list[i]=listItem;
             }

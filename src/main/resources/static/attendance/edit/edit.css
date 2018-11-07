@@ -18,12 +18,12 @@
     overflow: hidden;
 }
 
-.name{
+.name-container{
     min-width: 200px;
     width: 20%;
 }
 
-.alias{
+.alias-container{
     min-width: 240px;
     width: 25%;
 }

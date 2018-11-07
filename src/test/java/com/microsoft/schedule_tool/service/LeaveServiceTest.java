@@ -1,7 +1,7 @@
 package com.microsoft.schedule_tool.service;
 
 import com.microsoft.schedule_tool.dao.LeaveRepository;
-import com.microsoft.schedule_tool.entity.LeaveType;
+import com.microsoft.schedule_tool.entity.Leave;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ public class LeaveServiceTest {
     @Test
     @Ignore
     public void getAllLeavesByAlias() {
-        List<LeaveType> leaves=mLeaveRepository.findByAlias("v-shhong");
+        List<Leave> leaves=mLeaveRepository.findByAlias("v-shhong");
 
         assertEquals(1,leaves.size());
     }
@@ -35,14 +35,14 @@ public class LeaveServiceTest {
     @Test
     @Ignore
     public void saveLeave() {
-        LeaveType leave=new LeaveType();
+        Leave leave=new Leave();
         leave.setAlias("v-shhong");
         leave.setName("李杰");
         leave.setLeaveDateRange("2018-08-09 - 2018-08-12");
         leave.setComment("hello 李杰");
         leave.setNormal(false);
 
-        LeaveType result=mLeaveRepository.save(leave);
+        Leave result=mLeaveRepository.save(leave);
         assertNotNull(result);
     }
 
@@ -50,9 +50,9 @@ public class LeaveServiceTest {
     @Ignore
     public void updateLeave() {
         Integer id=5;
-        LeaveType result=null;
+        Leave result=null;
         if(mLeaveRepository.findById(id).isPresent()){
-            LeaveType leave=mLeaveRepository.findById(id).get();
+            Leave leave=mLeaveRepository.findById(id).get();
             leave.setLeaveDateRange("2018-08-09 - 2018-08-13");
             leave.setComment("hello world !");
             result=mLeaveRepository.save(leave);

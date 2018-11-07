@@ -13,8 +13,8 @@ import java.util.Date;
  * Created by Frank Hon on 11/6/2018
  * E-mail: v-shhong@microsoft.com
  */
-@Entity
-public class LateType {
+@Entity(name = "tb_late")
+public class Late {
 
     @Id
     @GeneratedValue
@@ -27,11 +27,17 @@ public class LateType {
     private String name;
 
     @Column(nullable = false)
+    private Integer lateType;
+
+    @Column(nullable = false)
     private String lateDate;
 
     private String comment;
 
     private Boolean isNormal;
+
+    @Column(nullable = false)
+    private Integer employeeId;
 
     @CreationTimestamp
     private Date createdTime;
@@ -39,7 +45,7 @@ public class LateType {
     @UpdateTimestamp
     private Date lastUpdatedTime;
 
-    public LateType(){}
+    public Late(){}
 
     public Integer getId() {
         return id;
@@ -65,6 +71,14 @@ public class LateType {
         this.name = name;
     }
 
+    public Integer getLateType() {
+        return lateType;
+    }
+
+    public void setLateType(Integer lateType) {
+        this.lateType = lateType;
+    }
+
     public String getLateDate() {
         return lateDate;
     }
@@ -87,6 +101,14 @@ public class LateType {
 
     public void setNormal(Boolean normal) {
         isNormal = normal;
+    }
+
+    public Integer getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public Date getCreatedTime() {

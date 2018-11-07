@@ -1,6 +1,6 @@
 package com.microsoft.schedule_tool.dao;
 
-import com.microsoft.schedule_tool.entity.LeaveType;
+import com.microsoft.schedule_tool.entity.Leave;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class LeaveRepositoryTest {
     @Test
     @Ignore
     public void findAllLeaves(){
-        List<LeaveType> leaves=leaveRepository.findAll();
+        List<Leave> leaves=leaveRepository.findAll();
         assertEquals(1,leaves.size());
     }
 
@@ -34,19 +34,19 @@ public class LeaveRepositoryTest {
     @Ignore
     public void findByAlias(){
         String alias="v-shhong";
-        List<LeaveType> leaves=leaveRepository.findByAlias(alias);
+        List<Leave> leaves=leaveRepository.findByAlias(alias);
         assertEquals(1,leaves.size());
     }
 
     @Test
     @Ignore
     public void insertLeave(){
-        LeaveType leave=new LeaveType();
+        Leave leave=new Leave();
         leave.setName("张三");
         leave.setAlias("v-shhong");
         leave.setNormal(true);
         leave.setComment("hello world.....");
-        LeaveType result=leaveRepository.save(leave);
+        Leave result=leaveRepository.save(leave);
         assertNotNull(result);
     }
 
@@ -54,22 +54,22 @@ public class LeaveRepositoryTest {
     @Ignore
     public void deleteLeave(){
         leaveRepository.deleteById(1);
-        List<LeaveType> leaves=leaveRepository.findAll();
+        List<Leave> leaves=leaveRepository.findAll();
         assertEquals(0,leaves.size());
     }
 
     @Test
     @Ignore
     public void updateLeave(){
-        LeaveType origin=leaveRepository.findById(7).get();
-        LeaveType leave=new LeaveType();
+        Leave origin=leaveRepository.findById(7).get();
+        Leave leave=new Leave();
         leave.setId(origin.getId());
         leave.setName("Frank Hon");
         leave.setAlias("v-shhong");
         leave.setCreatedTime(origin.getCreatedTime());
         leave.setNormal(true);
         leave.setComment("pretty good !");
-        LeaveType result=leaveRepository.save(leave);
+        Leave result=leaveRepository.save(leave);
         assertNotNull(result);
     }
 }

@@ -90,12 +90,12 @@ body {
 }
 
 /* 子代[2,4] */
-#main-table tr :nth-child(-n+4):nth-child(n+2){
-    width: 25%;
+#main-table tr :nth-child(-n+3):nth-child(n+2){
+    width: 37%;
 }
 
 #main-table tr :last-child{
-    width: 5%;
+    width: 6%;
     min-width: 50px;
     cursor: pointer;
 }

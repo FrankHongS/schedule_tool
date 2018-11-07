@@ -63,10 +63,10 @@ public class EmployeeController {
     }
 
     @PostMapping("/delete")
-    public Map<String, String> deleteEmployee(@RequestParam("alias") String alias){
+    public Map<String, String> deleteEmployee(@RequestParam("id") Integer id){
         Map<String, String> resultMap=new HashMap<>();
 
-        if(mEmployeeService.deleteEmployee(alias))
+        if(mEmployeeService.deleteEmployee(id))
             resultMap.put(KEY,"delete is success");
         else
             resultMap.put(KEY,"delete is failure");
