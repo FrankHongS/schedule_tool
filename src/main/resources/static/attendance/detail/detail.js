@@ -101,11 +101,18 @@ $(
             ]
         ];
         const homebaseClassGroup = ['index', 'created-time', 'time', 'comment','is-normal'];
+
+        window.title={
+            name:'qwe',
+            alias:'v-qwe'
+        };
         
         detail.getParameter = function () {
-            const a = decodeURIComponent($.Request('a'));
-            if (a) {
-                $("#title h1").text(a + '(v-shhong)  考勤情况')
+            const titleArray = decodeURIComponent($.Request('title')).split(' ');
+            if (titleArray.length>0) {
+                title.name=titleArray[0];
+                title.alias=titleArray[1];
+                $("#title h1").text(title.name + '('+title.alias +')  考勤情况')
             }
         };
 

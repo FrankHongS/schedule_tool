@@ -28,7 +28,7 @@ $(
 
             $('.name').bind('click', function (e) {
                 // $(location).attr('href','../detail/detail.html?a='+e.target.innerHTML);//重定向跳转，在当前窗口打开新页面
-                window.open('../detail/detail.html?a=' + e.target.innerHTML);//跳转时打开新窗口
+                window.open('../detail/detail.html?title=' + e.target.innerHTML);//跳转时打开新窗口
             });
 
             $('.edit').bind('click', function (e) {
@@ -64,7 +64,7 @@ $(
                 $.ajax({
                     url:'/schedule/sum',
                     success:result=>{
-                        $('tbody').html('');
+                        $('tbody').html('');//clear old table
                         main.buildSumTable(main.parseData(result.sum))
                     }
                 });
@@ -92,7 +92,7 @@ $(
                 let item=dataArray[i];
                 let listItem=[];
 
-                listItem[0]=item.name;
+                listItem[0]=item.name+' '+item.alias;
                 listItem[1]=item.leaveSum;
                 listItem[2]=item.lateSum;
                 listItem[3]=item.homebaseSum;
@@ -100,6 +100,8 @@ $(
 
                 list[i]=listItem;
             }
+
+            console.table(list);
 
             return list;
         };
