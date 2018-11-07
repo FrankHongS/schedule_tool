@@ -38,9 +38,6 @@ body {
 
 #main-form-container .add-btn{
     float: right;
-    position: relative;
-    top:49px;
-    right: 20px;
 }
 
 .main-form-item .form-input{
