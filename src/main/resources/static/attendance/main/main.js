@@ -75,7 +75,9 @@ $(
             $('.search-btn').bind('click',e=>{
 
                 const alias=$('.alias').val();
-                if(alias){
+                const from=$('.from').val();
+                const to=$('.to').val();
+                if(alias&&!from&&!to){
                     $.ajax({
                         url:'/schedule/sum/alias?alias='+alias,
                         success:result=>{
@@ -83,11 +85,27 @@ $(
                             this.buildSumTable(this.parseData(result.sum))
                         }
                     });
-                }else{
+                }else if(!alias&&!from&&!to){
                     $.ajax({
                         url:'/schedule/sum',
                         success:result=>{
                             $('tbody').html('');//clear old table
+                            this.buildSumTable(this.parseData(result.sum))
+                        }
+                    });
+                }else if(!alias&&from&&to){
+                    $.ajax({
+                        url:'/schedule/sum/range?from='+from+'&to='+to,
+                        success:result=>{
+                            $('tbody').html('');
+                            this.buildSumTable(this.parseData(result.sum))
+                        }
+                    });
+                }else if(alias&&from&&to){
+                    $.ajax({
+                        url:'/schedule/sum/range_and_alias?from='+from+'&to='+to+'&alias='+alias,
+                        success:result=>{
+                            $('tbody').html('');
                             this.buildSumTable(this.parseData(result.sum))
                         }
                     });

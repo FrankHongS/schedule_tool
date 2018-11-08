@@ -14,4 +14,8 @@ public interface SumService {
     List<Attendance> getSumOfAllTypes();
 
     List<Attendance> getSumOfAllTypesByAlias(String alias);
+
+    List<Attendance> getAllSumByDateRange(String from, String to);
+
+    List<Attendance> getSumByDateRangeAndAlias(String from, String to, String alias);
 }

@@ -4,28 +4,19 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Edit</title>
+    <title>Modify</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../../plugin/layui/css/layui.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="edit.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="modify_late.css" />
     <script src="../../jquery/jquery-3.3.1.js"></script>
     <script src="../../plugin/laydate/laydate.js"></script>
     <script src="../util/constants.js"></script>
     <script src="../util/util.js"></script>
-    <script src="edit.js"></script>
+    <script src="modify_late.js"></script>
 </head>
 
 <body>
     <div id='main-container' class="layui-form">
-        <div class="layui-form-item">
-            <label for="" class="layui-form-label">类型</label>
-            <div class="layui-input-block">
-                <select name="type" id="event-type">
-                    <option value="1">请假</option>
-                    <option value="2">考勤异常</option>
-                </select>
-            </div>
-        </div>
         <div class="layui-form-item">
             <label class="layui-form-label type-label">请假类型</label>
             <div class="layui-input-block">
@@ -50,9 +41,9 @@
 
         <form id="edit-form">
             <div class="layui-form-item">
-                <label class="layui-form-label time-label">请假时间</label>
+                <label class="layui-form-label time-label">时间</label>
                 <div class="layui-input-block time">
-                    <input type="text" placeholder="  -" class="layui-input datepicker">
+                    <input type="text" class="layui-input datepicker">
                 </div>
             </div>
 
@@ -67,7 +58,7 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">备注</label>
                 <div class="layui-input-block comment">
-                    <textarea placeholder="请输入内容，不超过200字" class="layui-textarea comment-text"></textarea>
+                    <textarea class="layui-textarea comment-text"></textarea>
                 </div>
             </div>
         </form>
@@ -75,7 +66,10 @@
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="button" class="layui-btn save">保存</button>
-                <button type="button" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn layui-btn-primary delete">删除</button>
+            </div>
+            <div class="message-container">
+                <span class="message"></span>
             </div>
         </div>
 

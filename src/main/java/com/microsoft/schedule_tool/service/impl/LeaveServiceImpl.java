@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +29,16 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     public List<Leave> getAllLeavesByEmployeeIdAndLeaveType(Integer employeeId, Integer leaveType) {
         return mLeaveRepository.findByEmployeeIdAndLeaveType(employeeId,leaveType);
+    }
+
+    @Override
+    public List<Leave> getAllLeavesByDateRangeAndAlias(Date from, Date to, String alias) {
+        return mLeaveRepository.findByCreatedTimeAfterAndCreatedTimeBeforeAndAlias(from, to, alias);
+    }
+
+    @Override
+    public List<Leave> getAllLeavesByDateRange(Date from, Date to) {
+        return mLeaveRepository.findByCreatedTimeAfterAndCreatedTimeBefore(from, to);
     }
 
     @Transactional

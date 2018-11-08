@@ -3,45 +3,17 @@ $(
         const edit = {};
 
         edit.buildUI = function () {
-
+            
             const that=this;
-            const render = laydate.render({
+            laydate.render({
                 elem: '.datepicker',
                 theme: '#393D49',
                 btns: ['confirm'],
-                range: true
+                range: false
             });
 
-            that.buildTypeMenu(window.leaveTypeArray);
-            that.buildTitle();
-
-            $('#event-type').bind('change', function () {
-                const value = $(this).children('option:selected').val();
-                switch (value) {
-                    case '1':
-                        $('#edit-form')[0].reset();
-
-                        $('.time-label').text('请假时间');
-                        $('.type-label').text('请假类型');
-                        $('.datepicker').attr('placeholder', '  -')
-                        render.config.range = '-';//设置laydate的属性
-
-                        that.buildTypeMenu(window.leaveTypeArray);
-                        break;
-                    case '2':
-                        $('#edit-form')[0].reset();
-
-                        $('.time-label').text('时间');
-                        $('.type-label').text('考勤类型');
-                        $('.datepicker').attr('placeholder', '发生日期')
-                        render.config.range = false;
-
-                        that.buildTypeMenu(window.lateTypeArray);
-                        break;
-                    default:
-                        break;
-                }
-            });
+            that.buildTypeMenu(window.lateTypeArray);
+            that.buildOriginData();
 
         };
         
@@ -58,63 +30,63 @@ $(
             $('select#item-type').append(rowsArray);
         };
 
-        edit.buildTitle=function(){
-            $('.name').val(window.parent.title.name);
+        edit.buildOriginData=function(){
+            $('#item-type').val(window.parent.originDataLate.lateType);//设置select选中的值
+            $('.name').val(window.parent.originDataLate.name);
             $('.name').attr('readonly','readonly');
-            $('.alias').val(window.parent.title.alias);
+            $('.alias').val(window.parent.originDataLate.alias);
             $('.alias').attr('readonly','readonly');
+            $('.datepicker').val(window.parent.originDataLate.lateDate);
+
+            if(window.parent.originDataLate.normal=='true'){// normal返回的是一个字符串，不是boolean类型
+                $("input[name='isNormal']").get(0).checked=true;
+            }else{
+                $("input[name='isNormal']").get(1).checked=true;
+            }
+            $('.comment-text').val(window.parent.originDataLate.comment);
         };
 
         edit.bindAjax = function () {
             $('.save').bind('click', function (e) {
-                console.log('start ajax...');
+                $('.message').text('正在更新...');
 
-                let data;
-                let url;
-                const value = $('#event-type').children('option:selected').val();
                 const typeValue=$('#item-type').children('option:selected').val();
-                switch (value) {
-                    case '1':
-                        data = {
-                            name: $('.name').val(),
-                            alias: $('.alias').val(),
-                            leaveType: typeValue,
-                            leaveDateRange: $('.datepicker').val(),
-                            dayCount: calculateDayCount($('.datepicker').val()),
-                            employeeId: window.parent.title.employeeId,
-                            isNormal: $('.choose input[name="isNormal"]:checked').val()==='1' ? true : false,
-                            comment: $('.comment-text').val()
-                        };
-                        console.log(data);
-                        
-                        url = '/schedule/leave';
-                        break;
-                    case '2':
-                        data = {
-                            name: $('.name').val(),
-                            alias: $('.alias').val(),
-                            lateType: typeValue,
-                            lateDate: $('.datepicker').val(),
-                            employeeId: window.parent.title.employeeId,
-                            isNormal: $('.choose input[name="isNormal"]:checked').val()==='1' ? true : false,
-                            comment: $('.comment-text').val()
-                        };
-                        console.log(data);
-                        
-                        url = '/schedule/late';
-                        break;
-                    default:
-                        break;
-                }
 
                 $.ajax({
-                    url: url,
+                    url: '/schedule/late/update',
                     type: 'POST',
-                    data: data,
+                    data: {
+                        id: window.parent.originDataLate.lateId,
+                        lateType: typeValue,
+                        lateDate: $('.datepicker').val(),
+                        isNormal: $('.choose input[name="isNormal"]:checked').val()==='1' ? true : false,
+                        comment: $('.comment-text').val()
+                    },
                     success: result => {
+                        $('.message').text('更新成功');
                         console.log(result);
                     },
                     error:(xhr,e)=>{
+                        $('.message').text('更新失败...'+e);
+                        console.log(e);
+                    }
+                });
+            });
+
+            $('.delete').bind('click', function (e) {
+                $('.message').text('正在删除...');
+                $.ajax({
+                    url: '/schedule/late/delete',
+                    type: 'POST',
+                    data:{
+                        id: window.parent.originDataLate.lateId
+                    },
+                    success: result => {
+                        $('.message').text('删除成功');
+                        console.log(result);
+                    },
+                    error:(xhr,e)=>{
+                        $('.message').text('删除失败...'+e);
                         console.log(e);
                     }
                 });

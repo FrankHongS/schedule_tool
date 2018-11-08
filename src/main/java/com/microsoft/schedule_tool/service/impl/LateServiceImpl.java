@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +28,16 @@ public class LateServiceImpl implements LateService {
     @Override
     public List<Late> getAllLatesByEmployeeIdAndLateType(Integer employeeId, Integer LateType) {
         return mLateRepository.findByEmployeeIdAndLateType(employeeId, LateType);
+    }
+
+    @Override
+    public List<Late> getAllLatesByDateRangeAndAlias(Date from, Date to, String alias) {
+        return mLateRepository.findByCreatedTimeAfterAndCreatedTimeBeforeAndAlias(from, to, alias);
+    }
+
+    @Override
+    public List<Late> getAllLatesByDateRange(Date from, Date to) {
+        return mLateRepository.findByCreatedTimeAfterAndCreatedTimeBefore(from, to);
     }
 
     @Transactional

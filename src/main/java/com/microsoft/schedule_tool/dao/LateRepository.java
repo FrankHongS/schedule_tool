@@ -3,6 +3,7 @@ package com.microsoft.schedule_tool.dao;
 import com.microsoft.schedule_tool.entity.Late;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +17,10 @@ public interface LateRepository extends JpaRepository<Late,Integer> {
     List<Late> findByEmployeeId(Integer employeeId);
 
     List<Late> findByEmployeeIdAndLateType(Integer employeeId,Integer LateType);
+
+    List<Late> findByCreatedTimeAfterAndCreatedTimeBeforeAndAlias(Date from,Date to,String alias);
+
+    List<Late> findByCreatedTimeAfterAndCreatedTimeBefore(Date from,Date to);
 
     void deleteByEmployeeId(Integer employeeId);
 }

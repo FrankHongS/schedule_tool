@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -30,6 +33,23 @@ public class LeaveServiceTest {
         List<Leave> leaves=mLeaveRepository.findByAlias("v-shhong");
 
         assertEquals(1,leaves.size());
+    }
+
+    @Test
+    @Ignore
+    public void getAllLeavesByDateRangeAndAlias() throws ParseException {
+        String smallDate="2018-11-01";
+        String bigDate="2018-11-20";
+
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Date date1=sdf.parse(smallDate);
+        Date date2=sdf.parse(bigDate);
+        Date date3=new Date(date2.getTime()+24*60*60*1000);
+
+        String alias="v-lijie";
+
+        List<Leave> leaveList=mLeaveRepository.findByCreatedTimeAfterAndCreatedTimeBeforeAndAlias(date1,date3,alias);
+        assertEquals(2,leaveList.size());
     }
 
     @Test

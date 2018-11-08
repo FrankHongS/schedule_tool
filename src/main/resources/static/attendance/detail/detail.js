@@ -8,6 +8,12 @@ $(
 
         //跨域传递name,alias,employeeId给modify.html
         window.title={};
+
+        const originDataLeaveArray=[];
+        window.originDataLeave={};
+
+        const originDataLateArray=[];
+        window.originDataLate={};
         
         detail.getParameter = function () {
             const titleArray = decodeURIComponent($.Request('title')).split(' ');
@@ -15,11 +21,11 @@ $(
                 title.name=titleArray[0];
                 title.alias=titleArray[1];
                 title.employeeId=titleArray[2];
-                $("#title h1").text(title.name + '('+title.alias +')  考勤情况')
+                $("#title h1").text(title.name + '('+title.alias +')')
             }
         };
 
-        detail.createTable=function(container,dataList,classGroup){
+        detail.createTable=function(container,dataList,classGroup,originDataArray){
             const cellsArray = dataList.map(
                 rowValues => {
                     return rowValues.map(
@@ -33,8 +39,9 @@ $(
             );
 
             const rowsArray = cellsArray.map(
-                row => {
+                (row,index) => {
                     return $('<tr>')
+                        .attr('name',originDataArray[index])
                         .append(row);
                 }
             );
@@ -73,6 +80,16 @@ $(
 
         detail.bindLeaveLayer=function(){
             $('.leave .edit').bind('click',function(){
+
+                const tempArray=$(this).parent('tr').attr('name').split(' , ');
+                originDataLeave.leaveId=tempArray[0];
+                originDataLeave.leaveType=tempArray[1];
+                originDataLeave.name=tempArray[2];
+                originDataLeave.alias=tempArray[3];
+                originDataLeave.leaveDateRange=tempArray[4];
+                originDataLeave.normal=tempArray[5];
+                originDataLeave.comment=tempArray[6];
+
                 layer.open({
                     type: 2,
                     title: '修改请假信息',
@@ -81,6 +98,30 @@ $(
                     maxmin: true,
                     scrollbar: false,//屏蔽父窗口滚动条
                     content: '../modify_leave/modify_leave.html'
+                });
+            });
+        };
+
+        detail.bindLateLayer=function(){
+            $('.late .edit').bind('click',function(){
+
+                const tempArray=$(this).parent('tr').attr('name').split(' , ');
+                originDataLate.lateId=tempArray[0];
+                originDataLate.lateType=tempArray[1];
+                originDataLate.name=tempArray[2];
+                originDataLate.alias=tempArray[3];
+                originDataLate.lateDate=tempArray[4];
+                originDataLate.normal=tempArray[5];
+                originDataLate.comment=tempArray[6];
+
+                layer.open({
+                    type: 2,
+                    title: '修改请假信息',
+                    area: ['800px', '560px'],
+                    fix: true, //不固定
+                    maxmin: true,
+                    scrollbar: false,//屏蔽父窗口滚动条
+                    content: '../modify_late/modify_late.html'
                 });
             });
         };
@@ -94,7 +135,8 @@ $(
                 $.ajax({
                     url:'/schedule/leave/type?employeeId='+title.employeeId+'&leaveType='+leaveType,
                     success:result=>{
-                        this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup);
+                        $('.leave-body').html('');
+                        this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
                         this.bindLeaveLayer();
                     }
                 });
@@ -106,7 +148,9 @@ $(
                 $.ajax({
                     url:'/schedule/late/type?employeeId='+title.employeeId+'&lateType='+lateType,
                     success:result=>{
-                        this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup);
+                        $('.late-body').html('');
+                        this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
+                        this.bindLateLayer();
                     }
                 });
             });
@@ -128,6 +172,8 @@ $(
                 itemList[6]='edit';
 
                 list[i]=itemList;
+
+                originDataLeaveArray[i]=item.id+' , '+item.leaveType+' , '+item.name+' , '+item.alias+' , '+item.leaveDateRange+' , '+item.normal+' , '+item.comment;
             }
 
             return list;
@@ -148,6 +194,8 @@ $(
                 itemList[5]='edit';
 
                 list[i]=itemList;
+
+                originDataLateArray[i]=item.id+' , '+item.lateType+' , '+item.name+' , '+item.alias+' , '+item.lateDate+' , '+item.normal+' , '+item.comment;
             }
 
             return list;

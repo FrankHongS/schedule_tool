@@ -9,7 +9,7 @@ $(
                 elem: '.datepicker',
                 theme: '#393D49',
                 btns: ['confirm'],
-                range: true
+                range: '-'
             });
 
             that.buildTypeMenu(window.leaveTypeArray);
@@ -44,6 +44,13 @@ $(
             });
 
         };
+
+        edit.bindClick=function(){
+            $('.cancel').bind('click',function(){
+                const index=parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            });
+        };
         
         edit.buildTypeMenu=function(dataArray){
             $('select#item-type').html('');
@@ -67,7 +74,7 @@ $(
 
         edit.bindAjax = function () {
             $('.save').bind('click', function (e) {
-                console.log('start ajax...');
+                $('.message').text('正在保存...');
 
                 let data;
                 let url;
@@ -112,9 +119,11 @@ $(
                     type: 'POST',
                     data: data,
                     success: result => {
+                        $('.message').text('保存成功');
                         console.log(result);
                     },
                     error:(xhr,e)=>{
+                        $('.message').text('保存失败...'+e);
                         console.log(e);
                     }
                 });
@@ -122,6 +131,7 @@ $(
         };
 
         edit.buildUI();
+        edit.bindClick();
         edit.bindAjax();
     }
 );

@@ -9,7 +9,7 @@ $(document).ready(
 
         modify.bindAjax = function () {
             $('.modify-btn').bind('click', function (e) {
-                console.log('start ajax...');
+                $('.message').text('正在修改...');
 
                 $.ajax({
                     url: '/schedule/employee/update',
@@ -20,13 +20,18 @@ $(document).ready(
                         alias: $('.alias').val()
                     },
                     success: result => {
+                        $('.message').text('修改成功');
+                        console.log(result);
+                    },
+                    error:(xhr,e)=>{
+                        $('.message').text('修改失败...'+e);
                         console.log(result);
                     }
                 });
             });
 
             $('.delete-btn').bind('click', function (e) {
-                console.log('start ajax...');
+                $('.message').text('正在删除...');
 
                 $.ajax({
                     url: '/schedule/employee/delete',
@@ -35,7 +40,12 @@ $(document).ready(
                         id: window.parent.title.employeeId
                     },
                     success: result => {
+                        $('.message').text('删除成功');
                         console.log(result);
+                    },
+                    error:(xhr,e)=>{
+                        $('.message').text('删除失败...'+e);
+                        console.log(e);
                     }
                 });
             });

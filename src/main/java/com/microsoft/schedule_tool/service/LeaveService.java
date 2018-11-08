@@ -2,6 +2,7 @@ package com.microsoft.schedule_tool.service;
 
 import com.microsoft.schedule_tool.entity.Leave;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,6 +14,10 @@ public interface LeaveService {
     List<Leave> getAllLeavesByEmployeeId(Integer employeeId);
 
     List<Leave> getAllLeavesByEmployeeIdAndLeaveType(Integer employeeId,Integer leaveType);
+
+    List<Leave> getAllLeavesByDateRangeAndAlias(Date from, Date to, String alias);
+
+    List<Leave> getAllLeavesByDateRange(Date from, Date to);
 
     Leave saveLeave(Leave leave);
 

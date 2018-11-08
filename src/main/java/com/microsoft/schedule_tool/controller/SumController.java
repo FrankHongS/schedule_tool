@@ -47,4 +47,33 @@ public class SumController {
 
         return resultMap;
     }
+
+    @GetMapping("/range")
+    public Map<String, List<Attendance>> getAttendanceListByRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to
+    ){
+        Map<String, List<Attendance>> resultMap=new HashMap<>();
+
+        List<Attendance> attendanceList=mSumService.getAllSumByDateRange(from,to);
+
+        resultMap.put(KEY,attendanceList);
+
+        return resultMap;
+    }
+
+    @GetMapping("/range_and_alias")
+    public Map<String, List<Attendance>> getAttendanceListByRangeAndAlias(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam("alias") String alias
+    ){
+        Map<String, List<Attendance>> resultMap=new HashMap<>();
+
+        List<Attendance> attendanceList=mSumService.getSumByDateRangeAndAlias(from, to, alias);
+
+        resultMap.put(KEY,attendanceList);
+
+        return resultMap;
+    }
 }
