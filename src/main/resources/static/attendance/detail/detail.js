@@ -2,9 +2,9 @@ $(
     function () {
         const detail = {};
 
-        const leaveClassGroup = ['index', 'created-time', 'time', 'length', 'comment','is-normal','edit'];
+        const leaveClassGroup = ['index', 'leaveType','created-time', 'time', 'length', 'comment','is-normal','edit'];
 
-        const lateClassGroup = ['index', 'created-time', 'time', 'comment','is-normal','edit'];
+        const lateClassGroup = ['index','lateType', 'created-time', 'time', 'comment','is-normal','edit'];
 
         //跨域传递name,alias,employeeId给modify.html
         window.title={};
@@ -116,7 +116,7 @@ $(
 
                 layer.open({
                     type: 2,
-                    title: '修改请假信息',
+                    title: '修改考勤异常信息',
                     area: ['800px', '560px'],
                     fix: true, //不固定
                     maxmin: true,
@@ -132,27 +132,53 @@ $(
 
                 const leaveType=$('.leave-type').children('option:selected').val();
 
-                $.ajax({
-                    url:'/schedule/leave/type?employeeId='+title.employeeId+'&leaveType='+leaveType,
-                    success:result=>{
-                        $('.leave-body').html('');
-                        this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
-                        this.bindLeaveLayer();
-                    }
-                });
+                if(leaveType==0){
+                    $.ajax({
+                        url:'/schedule/leave?employeeId='+title.employeeId,
+                        success:result=>{
+                            $('.leave-body').html('');
+                            this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
+                            this.bindLeaveLayer();
+                        }
+                    });
+                }else{
+
+                    $.ajax({
+                        url:'/schedule/leave/type?employeeId='+title.employeeId+'&leaveType='+(leaveType-1),
+                        success:result=>{
+                            $('.leave-body').html('');
+                            this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
+                            this.bindLeaveLayer();
+                        }
+                    });
+                }
+
             });
 
             $('.late-search').bind('click',()=>{
                 console.log('start ajax....');
                 const lateType=$('.late-type').children('option:selected').val();
-                $.ajax({
-                    url:'/schedule/late/type?employeeId='+title.employeeId+'&lateType='+lateType,
-                    success:result=>{
-                        $('.late-body').html('');
-                        this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
-                        this.bindLateLayer();
-                    }
-                });
+
+                if(lateType==0){
+                    $.ajax({
+                        url:'/schedule/late?employeeId='+title.employeeId,
+                        success:result=>{
+                            $('.late-body').html('');
+                            this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
+                            this.bindLateLayer();
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        url:'/schedule/late/type?employeeId='+title.employeeId+'&lateType='+(lateType-1),
+                        success:result=>{
+                            $('.late-body').html('');
+                            this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
+                            this.bindLateLayer();
+                        }
+                    });
+                }
+
             });
         };
 
@@ -164,12 +190,13 @@ $(
                 let itemList=[];
 
                 itemList[0]=i+1;
-                itemList[1]=parseUTCTime(item.createdTime);
-                itemList[2]=item.leaveDateRange;
-                itemList[3]=item.dayCount;
-                itemList[4]=item.comment;
-                itemList[5]=item.normal?'正常':'异常';
-                itemList[6]='edit';
+                itemList[1]=window.leaveTypeArray[item.leaveType+1];
+                itemList[2]=parseUTCTime(item.createdTime);
+                itemList[3]=item.leaveDateRange;
+                itemList[4]=item.dayCount;
+                itemList[5]=item.comment;
+                itemList[6]=item.normal?'正常':'异常';
+                itemList[7]='edit';
 
                 list[i]=itemList;
 
@@ -187,11 +214,12 @@ $(
                 let itemList=[];
 
                 itemList[0]=i+1;
-                itemList[1]=parseUTCTime(item.createdTime);
-                itemList[2]=item.lateDate;
-                itemList[3]=item.comment;
-                itemList[4]=item.normal?'正常':'异常';
-                itemList[5]='edit';
+                itemList[1]=window.lateTypeArray[item.lateType+1];
+                itemList[2]=parseUTCTime(item.createdTime);
+                itemList[3]=item.lateDate;
+                itemList[4]=item.comment;
+                itemList[5]=item.normal?'正常':'异常';
+                itemList[6]='edit';
 
                 list[i]=itemList;
 

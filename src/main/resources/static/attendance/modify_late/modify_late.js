@@ -12,6 +12,7 @@ $(
                 range: false
             });
 
+            window.lateTypeArray.splice(0,1);
             that.buildTypeMenu(window.lateTypeArray);
             that.buildOriginData();
 

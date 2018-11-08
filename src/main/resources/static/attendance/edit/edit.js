@@ -11,6 +11,8 @@ $(
                 btns: ['confirm'],
                 range: '-'
             });
+            window.leaveTypeArray.splice(0,1);
+            window.lateTypeArray.splice(0,1);
 
             that.buildTypeMenu(window.leaveTypeArray);
             that.buildTitle();

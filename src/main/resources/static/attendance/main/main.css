@@ -86,7 +86,14 @@ body {
 #main-table tr :first-child{
     width: 20%;
     min-width: 100px;
+}
+
+#main-table tr .name{
     cursor: pointer;
+}
+
+#main-table tr .name:hover{
+    color: #009688;
 }
 
 /* 子代[2,4] */
@@ -97,7 +104,13 @@ body {
 #main-table tr :last-child{
     width: 6%;
     min-width: 50px;
+}
+
+#main-table tr .edit{
     cursor: pointer;
+}
+#main-table tr .edit:hover{
+    color: #009688;
 }
 
 #main-table thead td{

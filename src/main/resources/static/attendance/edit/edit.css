@@ -18,6 +18,11 @@
     overflow: hidden;
 }
 
+.choose .note{
+    margin-left: 30px;
+    line-height: 0.8em;
+}
+
 .name-container{
     min-width: 200px;
     width: 20%;

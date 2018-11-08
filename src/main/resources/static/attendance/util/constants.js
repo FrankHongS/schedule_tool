@@ -10,6 +10,7 @@ window.leaveType = {
 };
 
 window.leaveTypeArray=[
+    '全部',
     'homebase',
     '病假',
     '年假',
@@ -27,6 +28,7 @@ window.lateType={
 };
 
 window.lateTypeArray=[
+    '全部',
     '迟到',
     '早退',
     '临时外出'
