@@ -8,6 +8,7 @@ body {
 }
 
 #main-form{
+    width: 100%;
     display: inline-block;
 }
 
@@ -32,8 +33,11 @@ body {
 }
 
 .main-form-item .search-btn{
-    position: relative;
-    left: 130px;
+    margin-left: 130px;
+}
+
+.main-form-item .message{
+    margin-left: 100px;
 }
 
 #main-form-container .add-btn{

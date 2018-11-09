@@ -42,6 +42,30 @@ public class LateController {
         return resultMap;
     }
 
+
+    @GetMapping("/range_and_type")
+    public Map<String, List<Late>> getLeavesByEmployeeIdAndLeaveTypeAndRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "leaveType") Integer lateType){
+        Map<String,List<Late>> resultMap=new HashMap<>();
+        List<Late> leaveList=mLateService.getAllLatesByDateRangeAndEmployeeIdAndLeaveType(from, to, employeeId, lateType);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @GetMapping("/range")
+    public Map<String, List<Late>> getLeavesByEmployeeIdAndRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam(name = "employeeId") Integer employeeId){
+        Map<String,List<Late>> resultMap=new HashMap<>();
+        List<Late> leaveList=mLateService.getAllLatesByDateRangeAndEmployeeId(from, to, employeeId);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
     @PostMapping(value = "")
     public Map<String, Late> saveLate(
             @RequestParam(name = "name") String name,
@@ -52,16 +76,8 @@ public class LateController {
             @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
         Map<String, Late> resultMap=new HashMap<>();
-        Late late=new Late();
-        late.setName(name);
-        late.setAlias(alias);
-        late.setLateType(lateType);
-        late.setLateDate(lateDate);
-        late.setEmployeeId(employeeId);
-        late.setNormal(isNormal);
-        late.setComment(comment);
 
-        Late result=mLateService.saveLate(late);
+        Late result=mLateService.saveLate(name, alias, lateType, lateDate, employeeId, isNormal, comment);
         resultMap.put(KEY,result);
 
         return resultMap;

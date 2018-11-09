@@ -3,8 +3,8 @@ $(
 
         const main = {};
 
-        const titleArray=[];
-        window.title={};
+        const titleArray = [];
+        window.title = {};
 
         // create sum table
         main.buildSumTable = function (dataList) {
@@ -23,9 +23,9 @@ $(
             );
 
             const rowsArray = cellsArray.map(
-                (row,index)=> {
+                (row, index) => {
                     return $('<tr>')
-                        .attr('name',titleArray[index])
+                        .attr('name', titleArray[index])
                         .append(row);
                 }
             );
@@ -34,15 +34,16 @@ $(
 
             $('.name').bind('click', function (e) {
                 // $(location).attr('href','../detail/detail.html?a='+e.target.innerHTML);//重定向跳转，在当前窗口打开新页面
-                window.open('../detail/detail.html?title=' + $(this).parent('tr').attr('name'));//跳转时打开新窗口
+                window.open('../detail/detail.html?title=' + $(this).parent('tr').attr('name')
+                +'&from='+window.title.from+'&to='+window.title.to);//跳转时打开新窗口
             });
 
             $('.edit').bind('click', function (e) {
-                
-                const tempArray=$(this).parent('tr').attr('name').split(' ');
-                title.name=tempArray[0];
-                title.alias=tempArray[1];
-                title.employeeId=tempArray[2];
+
+                const tempArray = $(this).parent('tr').attr('name').split(' , ');
+                title.name = tempArray[0];
+                title.alias = tempArray[1];
+                title.employeeId = tempArray[2];
 
                 layer.open({
                     type: 2,
@@ -57,7 +58,7 @@ $(
 
         };
 
-        main.bindClick=function(){
+        main.bindClick = function () {
 
             $('.add-btn').bind('click', function (e) {
                 layer.open({
@@ -72,48 +73,41 @@ $(
 
             });
 
-            $('.search-btn').bind('click',e=>{
+            $('.search-btn').bind('click', () => {
 
-                const alias=$('.alias').val();
-                const from=$('.from').val();
-                const to=$('.to').val();
-                if(alias&&!from&&!to){
-                    $.ajax({
-                        url:'/schedule/sum/alias?alias='+alias,
-                        success:result=>{
-                            $('tbody').html('');
-                            this.buildSumTable(this.parseData(result.sum))
-                        }
-                    });
-                }else if(!alias&&!from&&!to){
-                    $.ajax({
-                        url:'/schedule/sum',
-                        success:result=>{
-                            $('tbody').html('');//clear old table
-                            this.buildSumTable(this.parseData(result.sum))
-                        }
-                    });
-                }else if(!alias&&from&&to){
-                    $.ajax({
-                        url:'/schedule/sum/range?from='+from+'&to='+to,
-                        success:result=>{
-                            $('tbody').html('');
-                            this.buildSumTable(this.parseData(result.sum))
-                        }
-                    });
-                }else if(alias&&from&&to){
-                    $.ajax({
-                        url:'/schedule/sum/range_and_alias?from='+from+'&to='+to+'&alias='+alias,
-                        success:result=>{
-                            $('tbody').html('');
-                            this.buildSumTable(this.parseData(result.sum))
-                        }
-                    });
+                const alias = $('.alias').val();
+                const from = $('.from').val();
+                const to = $('.to').val();
+
+                title.from=0;
+                title.to=0;
+
+                let url;
+
+                if (alias && !from && !to) {//only alias
+                    url = '/schedule/sum/alias?alias=' + alias;
+                } else if (!alias && !from && !to) {//neither alias nor range
+                    url = '/schedule/sum';
+                } else if (!alias && from && to) {//only range
+                    url = '/schedule/sum/range?from=' + from + '&to=' + to;
+
+                    title.from=from;
+                    title.to=to;
+                } else if (alias && from && to) {//both alias and range
+                    url = '/schedule/sum/range_and_alias?from=' + from + '&to=' + to + '&alias=' + alias;
+
+                    title.from=from;
+                    title.to=to;
+                }else{
+                    $('.main-form-item .message').text('查找失败，时间范围需同为空或同不为空... :)');
+                    return;
                 }
+
+                this.getRequest(url);
             });
         };
 
-        main.bindLaydate=function(){
+        main.bindLaydate = function () {
             laydate.render({
                 elem: '.from',
                 theme: '#393D49',
@@ -128,24 +122,37 @@ $(
 
         };
 
-        main.parseData=function(dataArray){
-            const list=[];
-            for(let i=0;i<dataArray.length;i++){
-                let item=dataArray[i];
-                let listItem=[];
+        main.getRequest = function (url) {
+            $('.main-form-item .message').text('正在查找...');
+            $.ajax({
+                url: url,
+                success: result => {
+                    $('.main-form-item .message').text('查找成功');
+                    $('tbody').html('');
+                    this.buildSumTable(this.parseData(result.sum))
+                },
+                error: (xhr,e)=>{
+                    $('.main-form-item .message').text('查找失败...'+e);
+                }
+            });
+        };
 
-                
-                listItem[0]=item.name+' '+item.alias;
-                listItem[1]=item.leaveSum;
-                listItem[2]=item.lateSum;
-                listItem[3]='edit';
-                                
-                titleArray[i]=item.name+' '+item.alias+' '+item.employeeId;
+        main.parseData = function (dataArray) {
+            const list = [];
+            for (let i = 0; i < dataArray.length; i++) {
+                let item = dataArray[i];
+                let listItem = [];
 
-                list[i]=listItem;
+
+                listItem[0] = item.name + ' ' + item.alias;
+                listItem[1] = item.leaveSum;
+                listItem[2] = item.lateSum;
+                listItem[3] = 'edit';
+
+                titleArray[i] = item.name + ' , ' + item.alias + ' , ' + item.employeeId;
+
+                list[i] = listItem;
             }
-
-            console.table(list);
 
             return list;
         };

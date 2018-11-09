@@ -22,5 +22,13 @@ public interface LateRepository extends JpaRepository<Late,Integer> {
 
     List<Late> findByCreatedTimeAfterAndCreatedTimeBefore(Date from,Date to);
 
+    List<Late> findByLateDateAfterAndLateDateBeforeAndAlias(Date from,Date to,String alias);
+
+    List<Late> findByLateDateAfterAndLateDateBefore(Date from,Date to);
+
+    List<Late> findByLateDateAfterAndLateDateBeforeAndEmployeeIdAndLateType(Date from, Date to, Integer employeeId,Integer lateType);
+
+    List<Late> findByLateDateAfterAndLateDateBeforeAndEmployeeId(Date from, Date to, Integer employeeId);
+
     void deleteByEmployeeId(Integer employeeId);
 }

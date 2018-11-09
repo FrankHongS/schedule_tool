@@ -19,7 +19,13 @@ public interface LateService {
 
     List<Late> getAllLatesByDateRange(Date from, Date to);
 
+    List<Late> getAllLatesByDateRangeAndEmployeeIdAndLeaveType(String from, String to, Integer employeeId, Integer lateType);
+
+    List<Late> getAllLatesByDateRangeAndEmployeeId(String from, String to, Integer employeeId);
+
     Late saveLate(Late late);
+
+    Late saveLate(String name, String alias, Integer lateType, String lateDate, Integer employeeId, Boolean isNormal, String comment);
 
     Late updateLate(Integer id, Integer lateType, String lateDate, String comment, Boolean isNormal);
 

@@ -41,28 +41,43 @@ public class LeaveController {
         return resultMap;
     }
 
+    @GetMapping("/range_and_type")
+    public Map<String, List<Leave>> getLeavesByEmployeeIdAndLeaveTypeAndRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "leaveType") Integer leaveType){
+        Map<String,List<Leave>> resultMap=new HashMap<>();
+        List<Leave> leaveList=leaveService.getAllLeavesByDateRangeAndEmployeeIdAndLeaveType(from, to, employeeId, leaveType);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @GetMapping("/range")
+    public Map<String, List<Leave>> getLeavesByEmployeeIdAndRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam(name = "employeeId") Integer employeeId){
+        Map<String,List<Leave>> resultMap=new HashMap<>();
+        List<Leave> leaveList=leaveService.getAllLeavesByDateRangeAndEmployeeId(from, to, employeeId);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
     @PostMapping
     public Map<String, Leave> saveLeave(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "alias") String alias,
             @RequestParam(name = "leaveType") Integer leaveType,
             @RequestParam(name = "leaveDateRange") String leaveDateRange,
+            @RequestParam(name = "halfType",required = false) Integer halfType,
             @RequestParam(name = "dayCount") Integer dayCount,
             @RequestParam(name = "employeeId") Integer employeeId,
             @RequestParam(name = "isNormal",required = false) Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
         Map<String, Leave> resultMap=new HashMap<>();
-        Leave leave=new Leave();
-        leave.setName(name);
-        leave.setAlias(alias);
-        leave.setLeaveType(leaveType);
-        leave.setLeaveDateRange(leaveDateRange);
-        leave.setDayCount(dayCount);
-        leave.setEmployeeId(employeeId);
-        leave.setNormal(isNormal);
-        leave.setComment(comment);
 
-        Leave result=leaveService.saveLeave(leave);
+        Leave result=leaveService.saveLeave(name, alias, leaveType, leaveDateRange,halfType, dayCount, employeeId, isNormal, comment);
         resultMap.put(KEY,result);
 
         return resultMap;
@@ -73,12 +88,13 @@ public class LeaveController {
             @RequestParam(name = "id") Integer id,
             @RequestParam(name = "leaveType") Integer leaveType,
             @RequestParam(name = "leaveDateRange") String leaveDateRange,
+            @RequestParam(name = "halfType",required = false) Integer halfType,
             @RequestParam(name = "dayCount") Integer dayCount,
             @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
         Map<String, Leave> resultMap=new HashMap<>();
 
-        Leave result=leaveService.updateLeave(id,leaveType,leaveDateRange,dayCount,comment,isNormal);
+        Leave result=leaveService.updateLeave(id,leaveType,leaveDateRange,halfType,dayCount,comment,isNormal);
         resultMap.put(KEY,result);
 
         return resultMap;

@@ -30,8 +30,13 @@ public class Leave {
     @Column(nullable = false)
     private Integer leaveType;
 
-    @Column(nullable = false)
-    private String leaveDateRange;
+    @Column(name = "leave_date_from", nullable = false)
+    private Date from;
+
+    @Column(name = "leave_date_to", nullable = false)
+    private Date to;
+
+    private Integer halfType;
 
     @Column(nullable = false)
     private Integer dayCount;
@@ -83,12 +88,28 @@ public class Leave {
         this.leaveType = leaveType;
     }
 
-    public String getLeaveDateRange() {
-        return leaveDateRange;
+    public Date getFrom() {
+        return from;
     }
 
-    public void setLeaveDateRange(String leaveDateRange) {
-        this.leaveDateRange = leaveDateRange;
+    public void setFrom(Date from) {
+        this.from = from;
+    }
+
+    public Date getTo() {
+        return to;
+    }
+
+    public void setTo(Date to) {
+        this.to = to;
+    }
+
+    public Integer getHalfType() {
+        return halfType;
+    }
+
+    public void setHalfType(Integer halfType) {
+        this.halfType = halfType;
     }
 
     public Integer getDayCount() {

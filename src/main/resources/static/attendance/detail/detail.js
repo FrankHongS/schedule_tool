@@ -14,15 +14,22 @@ $(
 
         const originDataLateArray=[];
         window.originDataLate={};
+
+        // time range
+        let from;
+        let to;
         
         detail.getParameter = function () {
-            const titleArray = decodeURIComponent($.Request('title')).split(' ');
+            const titleArray = decodeURIComponent($.Request('title')).split(' , ');
             if (titleArray.length>0) {
                 title.name=titleArray[0];
                 title.alias=titleArray[1];
                 title.employeeId=titleArray[2];
                 $("#title h1").text(title.name + '('+title.alias +')')
             }
+
+            from=decodeURIComponent($.Request('from'));
+            to=decodeURIComponent($.Request('to'));
         };
 
         detail.createTable=function(container,dataList,classGroup,originDataArray){
@@ -133,24 +140,45 @@ $(
                 const leaveType=$('.leave-type').children('option:selected').val();
 
                 if(leaveType==0){
-                    $.ajax({
-                        url:'/schedule/leave?employeeId='+title.employeeId,
-                        success:result=>{
-                            $('.leave-body').html('');
-                            this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
-                            this.bindLeaveLayer();
-                        }
-                    });
+                    if(from==0&&to==0){
+                        $.ajax({
+                            url:'/schedule/leave?employeeId='+title.employeeId,
+                            success:result=>{
+                                $('.leave-body').html('');
+                                this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
+                                this.bindLeaveLayer();
+                            }
+                        });
+                    }else if(from!=0&&to!=0){
+                        $.ajax({
+                            url:'/schedule/leave/range?employeeId='+title.employeeId+'&from='+from+'&to='+to,
+                            success:result=>{
+                                $('.leave-body').html('');
+                                this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
+                                this.bindLeaveLayer();
+                            }
+                        });
+                    }
                 }else{
-
-                    $.ajax({
-                        url:'/schedule/leave/type?employeeId='+title.employeeId+'&leaveType='+(leaveType-1),
-                        success:result=>{
-                            $('.leave-body').html('');
-                            this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
-                            this.bindLeaveLayer();
-                        }
-                    });
+                    if(from==0&&to==0){
+                        $.ajax({
+                            url:'/schedule/leave/type?employeeId='+title.employeeId+'&leaveType='+(leaveType-1),
+                            success:result=>{
+                                $('.leave-body').html('');
+                                this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
+                                this.bindLeaveLayer();
+                            }
+                        });
+                    }else if(from!=0&&to!=0){
+                        $.ajax({
+                            url:'/schedule/leave/range_and_type?employeeId='+title.employeeId+'&from='+from+'&to='+to+'&leaveType='+(leaveType-1),
+                            success:result=>{
+                                $('.leave-body').html('');
+                                this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
+                                this.bindLeaveLayer();
+                            }
+                        });
+                    }
                 }
 
             });
@@ -160,23 +188,45 @@ $(
                 const lateType=$('.late-type').children('option:selected').val();
 
                 if(lateType==0){
-                    $.ajax({
-                        url:'/schedule/late?employeeId='+title.employeeId,
-                        success:result=>{
-                            $('.late-body').html('');
-                            this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
-                            this.bindLateLayer();
-                        }
-                    });
+                    if(from==0&&to==0){
+                        $.ajax({
+                            url:'/schedule/late?employeeId='+title.employeeId,
+                            success:result=>{
+                                $('.late-body').html('');
+                                this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
+                                this.bindLateLayer();
+                            }
+                        });
+                    }else if(from!=0&&to!=0){
+                        $.ajax({
+                            url:'/schedule/late/range?employeeId='+title.employeeId+'&from='+from+'&to='+to,
+                            success:result=>{
+                                $('.late-body').html('');
+                                this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
+                                this.bindLateLayer();
+                            }
+                        });
+                    }
                 }else{
-                    $.ajax({
-                        url:'/schedule/late/type?employeeId='+title.employeeId+'&lateType='+(lateType-1),
-                        success:result=>{
-                            $('.late-body').html('');
-                            this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
-                            this.bindLateLayer();
-                        }
-                    });
+                    if(from==0&&to==0){
+                        $.ajax({
+                            url:'/schedule/late/type?employeeId='+title.employeeId+'&lateType='+(lateType-1),
+                            success:result=>{
+                                $('.late-body').html('');
+                                this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
+                                this.bindLateLayer();
+                            }
+                        });
+                    }else if(from!=0&&to!=0){
+                        $.ajax({
+                            url:'/schedule/late/range_and_type?employeeId='+title.employeeId+'&from='+from+'&to='+to+'&leaveType='+(lateType-1),
+                            success:result=>{
+                                $('.late-body').html('');
+                                this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
+                                this.bindLateLayer();
+                            }
+                        });
+                    }
                 }
 
             });
@@ -192,7 +242,7 @@ $(
                 itemList[0]=i+1;
                 itemList[1]=window.leaveTypeArray[item.leaveType+1];
                 itemList[2]=parseUTCTime(item.createdTime);
-                itemList[3]=item.leaveDateRange;
+                itemList[3]=parseUTCTimeToYMD(item.from)+' - '+parseUTCTimeToYMD(item.to);
                 itemList[4]=item.dayCount;
                 itemList[5]=item.comment;
                 itemList[6]=item.normal?'正常':'异常';
@@ -200,7 +250,7 @@ $(
 
                 list[i]=itemList;
 
-                originDataLeaveArray[i]=item.id+' , '+item.leaveType+' , '+item.name+' , '+item.alias+' , '+item.leaveDateRange+' , '+item.normal+' , '+item.comment;
+                originDataLeaveArray[i]=item.id+' , '+item.leaveType+' , '+item.name+' , '+item.alias+' , '+itemList[3]+' , '+item.normal+' , '+item.comment;
             }
 
             return list;
@@ -216,14 +266,14 @@ $(
                 itemList[0]=i+1;
                 itemList[1]=window.lateTypeArray[item.lateType+1];
                 itemList[2]=parseUTCTime(item.createdTime);
-                itemList[3]=item.lateDate;
+                itemList[3]=parseUTCTimeToYMD(item.lateDate);
                 itemList[4]=item.comment;
                 itemList[5]=item.normal?'正常':'异常';
                 itemList[6]='edit';
 
                 list[i]=itemList;
 
-                originDataLateArray[i]=item.id+' , '+item.lateType+' , '+item.name+' , '+item.alias+' , '+item.lateDate+' , '+item.normal+' , '+item.comment;
+                originDataLateArray[i]=item.id+' , '+item.lateType+' , '+item.name+' , '+item.alias+' , '+itemList[3]+' , '+item.normal+' , '+item.comment;
             }
 
             return list;

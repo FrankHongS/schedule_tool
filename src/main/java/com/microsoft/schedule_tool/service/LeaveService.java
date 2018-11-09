@@ -13,15 +13,21 @@ public interface LeaveService {
 
     List<Leave> getAllLeavesByEmployeeId(Integer employeeId);
 
-    List<Leave> getAllLeavesByEmployeeIdAndLeaveType(Integer employeeId,Integer leaveType);
+    List<Leave> getAllLeavesByEmployeeIdAndLeaveType(Integer employeeId, Integer leaveType);
 
     List<Leave> getAllLeavesByDateRangeAndAlias(Date from, Date to, String alias);
 
     List<Leave> getAllLeavesByDateRange(Date from, Date to);
 
+    List<Leave> getAllLeavesByDateRangeAndEmployeeIdAndLeaveType(String from, String to, Integer employeeId, Integer leaveType);
+
+    List<Leave> getAllLeavesByDateRangeAndEmployeeId(String from, String to, Integer employeeId);
+
     Leave saveLeave(Leave leave);
 
-    Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange,Integer dayCount, String comment, Boolean isNormal);
+    Leave saveLeave(String name, String alias, Integer leaveType, String leaveDateRange,Integer halfType, Integer dayCount, Integer employeeId, Boolean isNormal, String comment);
+
+    Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange,Integer halfType, Integer dayCount, String comment, Boolean isNormal);
 
     boolean deleteLeave(Integer id);
 }

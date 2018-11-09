@@ -6,6 +6,7 @@ import com.microsoft.schedule_tool.dao.LeaveRepository;
 import com.microsoft.schedule_tool.entity.Employee;
 import com.microsoft.schedule_tool.entity.Leave;
 import com.microsoft.schedule_tool.service.SumService;
+import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.vo.Attendance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,9 +86,8 @@ public class SumServiceImpl implements SumService {
     public List<Attendance> getAllSumByDateRange(String from, String to) {
 
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date fromDate = sdf.parse(from);
-            Date toDate = new Date(sdf.parse(to).getTime() + 24 * 60 * 60 * 1000);
+            Date fromDate = DateUtil.parseDateString(from);
+            Date toDate = new Date(DateUtil.parseDateString(to).getTime() + 24 * 60 * 60 * 1000);
             List<Attendance> target = new ArrayList<>();
 
             List<Employee> employees = mEmployeeRepository.findAll();
@@ -102,8 +102,8 @@ public class SumServiceImpl implements SumService {
                 attendance.setAlias(alias);
 
                 attendance.setLeaveSum(getLeaveDayCount
-                        (mLeaveRepository.findByCreatedTimeAfterAndCreatedTimeBeforeAndAlias(fromDate, toDate, alias)));
-                attendance.setLateSum(mLateRepository.findByAlias(alias).size());
+                        (mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
+                attendance.setLateSum(mLateRepository.findByLateDateAfterAndLateDateBeforeAndAlias(fromDate,toDate,alias).size());
 
                 target.add(attendance);
             }
@@ -132,8 +132,8 @@ public class SumServiceImpl implements SumService {
                 attendance.setName(employee.getName());
                 attendance.setAlias(alias);
                 attendance.setLeaveSum(getLeaveDayCount
-                        (mLeaveRepository.findByCreatedTimeAfterAndCreatedTimeBeforeAndAlias(fromDate, toDate, alias)));
-                attendance.setLateSum(mLateRepository.findByAlias(alias).size());
+                        (mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
+                attendance.setLateSum(mLateRepository.findByLateDateAfterAndLateDateBeforeAndAlias(fromDate,toDate,alias).size());
 
                 target.add(attendance);
             } else {

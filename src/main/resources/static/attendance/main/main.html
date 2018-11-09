@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Attendance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="../../favicon.ico"/>
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="../../jquery/jquery-3.3.1.js" type="text/javascript"></script>
     <script src="../../jquery/getParameter.js" type="text/javascript"></script>
@@ -17,21 +18,23 @@
 <body>
     <div id="main-form-container">
         <form id="main-form">
+            <button type="button" class="main-btn add-btn">添加新成员</button>
             <div class="main-form-item">
                 <label class='label' for="from">查找时间范围</label>
-                <input type="text" class="form-input from" id="from" placeholder="from"><span class="range-dash">--</span><input type="text" class="form-input to" placeholder="to">
+                <input type="text" class="form-input from" id="from" placeholder="from"><span class="range-dash">--</span><input
+                    type="text" class="form-input to" placeholder="to">
             </div>
             <div class="main-form-item">
-                    <label class='label' for="alias">alias</label>
-                    <input type="text" class="form-input alias" id="alias" placeholder="请输入alias">
-                </div>
+                <label class='label' for="alias">alias</label>
+                <input type="text" class="form-input alias" id="alias" placeholder="请输入alias">
+            </div>
 
             <div class="main-form-item">
                 <button type="button" class="main-btn search-btn">搜索</button>
+                <span class="message"></span>
             </div>
         </form>
 
-        <button type="button" class="main-btn add-btn">添加新成员</button>
     </div>
     <div id="main-container">
         <table id="main-table">

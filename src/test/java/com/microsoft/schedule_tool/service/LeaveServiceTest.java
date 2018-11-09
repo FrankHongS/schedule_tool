@@ -58,7 +58,7 @@ public class LeaveServiceTest {
         Leave leave=new Leave();
         leave.setAlias("v-shhong");
         leave.setName("李杰");
-        leave.setLeaveDateRange("2018-08-09 - 2018-08-12");
+//        leave.setLeaveDateRange("2018-08-09 - 2018-08-12");
         leave.setComment("hello 李杰");
         leave.setNormal(false);
 
@@ -73,7 +73,7 @@ public class LeaveServiceTest {
         Leave result=null;
         if(mLeaveRepository.findById(id).isPresent()){
             Leave leave=mLeaveRepository.findById(id).get();
-            leave.setLeaveDateRange("2018-08-09 - 2018-08-13");
+//            leave.setLeaveDateRange("2018-08-09 - 2018-08-13");
             leave.setComment("hello world !");
             result=mLeaveRepository.save(leave);
         }

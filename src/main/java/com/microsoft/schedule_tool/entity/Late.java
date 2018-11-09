@@ -30,7 +30,7 @@ public class Late {
     private Integer lateType;
 
     @Column(nullable = false)
-    private String lateDate;
+    private Date lateDate;
 
     private String comment;
 
@@ -79,11 +79,11 @@ public class Late {
         this.lateType = lateType;
     }
 
-    public String getLateDate() {
+    public Date getLateDate() {
         return lateDate;
     }
 
-    public void setLateDate(String lateDate) {
+    public void setLateDate(Date lateDate) {
         this.lateDate = lateDate;
     }
 

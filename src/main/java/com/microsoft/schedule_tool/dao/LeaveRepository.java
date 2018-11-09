@@ -22,5 +22,13 @@ public interface LeaveRepository extends JpaRepository<Leave,Integer> {
 
     List<Leave> findByCreatedTimeAfterAndCreatedTimeBefore(Date from, Date to);
 
+    List<Leave> findByFromAfterAndFromBeforeAndAlias(Date from,Date to,String alias);
+
+    List<Leave> findByFromAfterAndFromBefore(Date from, Date to);
+
+    List<Leave> findByFromAfterAndFromBeforeAndEmployeeIdAndLeaveType(Date from,Date to,Integer employeeId,Integer leaveType);
+
+    List<Leave> findByFromAfterAndFromBeforeAndEmployeeId(Date from,Date to,Integer employeeId);
+
     void deleteByEmployeeId(Integer employeeId);
 }
