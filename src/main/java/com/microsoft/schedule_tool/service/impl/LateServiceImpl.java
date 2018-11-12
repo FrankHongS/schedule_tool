@@ -46,7 +46,7 @@ public class LateServiceImpl implements LateService {
     public List<Late> getAllLatesByDateRangeAndEmployeeIdAndLeaveType(String from, String to, Integer employeeId, Integer lateType) {
         try {
             Date fromDate=DateUtil.parseDateString(from);
-            Date toDate=DateUtil.parseDateString(to);
+            Date toDate = new Date(DateUtil.parseDateString(to).getTime() + 24 * 60 * 60 * 1000);
             return mLateRepository.findByLateDateAfterAndLateDateBeforeAndEmployeeIdAndLateType(fromDate, toDate, employeeId,lateType);
         } catch (ParseException e) {
             throw new RuntimeException("query failed, date is not proper...");
@@ -57,7 +57,7 @@ public class LateServiceImpl implements LateService {
     public List<Late> getAllLatesByDateRangeAndEmployeeId(String from, String to, Integer employeeId) {
         try {
             Date fromDate=DateUtil.parseDateString(from);
-            Date toDate=DateUtil.parseDateString(to);
+            Date toDate = new Date(DateUtil.parseDateString(to).getTime() + 24 * 60 * 60 * 1000);
             return mLateRepository.findByLateDateAfterAndLateDateBeforeAndEmployeeId(fromDate, toDate, employeeId);
         } catch (ParseException e) {
             throw new RuntimeException("query failed, date is not proper...");

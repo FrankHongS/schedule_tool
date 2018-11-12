@@ -71,11 +71,9 @@ public class SumServiceImpl implements SumService {
     }
 
     @Override
-    public Pager<Attendance> getSumOfAllTypesByAlias(String alias) {
+    public List<Attendance> getSumOfAllTypesByAlias(String alias) {
 
-        Pager<Attendance> target = new Pager<>();
-
-        List<Attendance> attendanceList=new ArrayList<>();
+        List<Attendance> target=new ArrayList<>();
 
         if (mEmployeeRepository.findByAlias(alias).isPresent()) {
 
@@ -87,19 +85,16 @@ public class SumServiceImpl implements SumService {
             attendance.setLeaveSum(getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
             attendance.setLateSum(mLateRepository.findByAlias(alias).size());
 
-            attendanceList.add(attendance);
+            target.add(attendance);
         } else {
             throw new RuntimeException("alias not existing");
         }
-
-        target.setCount(attendanceList.size());
-        target.setDataList(attendanceList);
 
         return target;
     }
 
     @Override
-    public Pager<Attendance> getAllSumByDateRangeByPage(Integer page, Integer size, String from, String to) {
+    public Pager<Attendance> getSumByDateRangeByPage(Integer page, Integer size, String from, String to) {
 
         try {
 
@@ -140,15 +135,10 @@ public class SumServiceImpl implements SumService {
     }
 
     @Override
-    public Pager<Attendance> getSumByDateRangeAndAlias(Integer page, Integer size, String from, String to, String alias) {
+    public List<Attendance> getSumByDateRangeAndAlias(String from, String to, String alias) {
         try {
 
-            Pageable pageable= PageRequest.of(page,size, Sort.Direction.ASC,"id");
-            Page<Employee> employeePages=mEmployeeRepository.findAll(pageable);
-            List<Employee> employees=employeePages.getContent();// the employees per page
-
-            Pager<Attendance> target=new Pager<>();
-            List<Attendance> attendanceList=new ArrayList<>();
+            List<Attendance> target=new ArrayList<>();
 
             Date fromDate = DateUtil.parseDateString(from);
             Date toDate = new Date(DateUtil.parseDateString(to).getTime() + 24 * 60 * 60 * 1000);
@@ -164,13 +154,10 @@ public class SumServiceImpl implements SumService {
                         (mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
                 attendance.setLateSum(mLateRepository.findByLateDateAfterAndLateDateBeforeAndAlias(fromDate,toDate,alias).size());
 
-                attendanceList.add(attendance);
+                target.add(attendance);
             } else {
                 throw new RuntimeException("alias not existing");
             }
-
-            target.setCount(attendanceList.size());
-            target.setDataList(attendanceList);
 
             return target;
         } catch (ParseException e) {

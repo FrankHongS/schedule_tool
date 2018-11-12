@@ -2,37 +2,37 @@ $(
     function () {
         const detail = {};
 
-        const leaveClassGroup = ['index', 'leaveType','created-time', 'time', 'length', 'comment','is-normal','edit'];
+        const leaveClassGroup = ['index', 'leaveType', 'created-time', 'time', 'length', 'comment', 'is-normal', 'edit'];
 
-        const lateClassGroup = ['index','lateType', 'created-time', 'time', 'comment','is-normal','edit'];
+        const lateClassGroup = ['index', 'lateType', 'created-time', 'time', 'comment', 'is-normal', 'edit'];
 
         //跨域传递name,alias,employeeId给modify.html
-        window.title={};
+        window.title = {};
 
-        const originDataLeaveArray=[];
-        window.originDataLeave={};
+        const originDataLeaveArray = [];
+        window.originDataLeave = {};
 
-        const originDataLateArray=[];
-        window.originDataLate={};
+        const originDataLateArray = [];
+        window.originDataLate = {};
 
         // time range
         let from;
         let to;
-        
+
         detail.getParameter = function () {
             const titleArray = decodeURIComponent($.Request('title')).split(' , ');
-            if (titleArray.length>0) {
-                title.name=titleArray[0];
-                title.alias=titleArray[1];
-                title.employeeId=titleArray[2];
-                $("#title h1").text(title.name + '('+title.alias +')')
+            if (titleArray.length > 0) {
+                title.name = titleArray[0];
+                title.alias = titleArray[1];
+                title.employeeId = titleArray[2];
+                $("#title h1").text(title.name + '(' + title.alias + ')')
             }
 
-            from=decodeURIComponent($.Request('from'));
-            to=decodeURIComponent($.Request('to'));
+            from = decodeURIComponent($.Request('from'));
+            to = decodeURIComponent($.Request('to'));
         };
 
-        detail.createTable=function(container,dataList,classGroup,originDataArray){
+        detail.createTable = function (container, dataList, classGroup, originDataArray) {
             const cellsArray = dataList.map(
                 rowValues => {
                     return rowValues.map(
@@ -46,9 +46,9 @@ $(
             );
 
             const rowsArray = cellsArray.map(
-                (row,index) => {
+                (row, index) => {
                     return $('<tr>')
-                        .attr('name',originDataArray[index])
+                        .attr('name', originDataArray[index])
                         .append(row);
                 }
             );
@@ -56,12 +56,12 @@ $(
             $(container).append(rowsArray);
         };
 
-        detail.buildTypeMenu=function(container,dataArray){
+        detail.buildTypeMenu = function (container, dataArray) {
             $('select#item-type').html('');
-            const rowsArray=dataArray.map(
-                (row,index)=>{
-                   return $('<option>')
-                        .attr('value',index)
+            const rowsArray = dataArray.map(
+                (row, index) => {
+                    return $('<option>')
+                        .attr('value', index)
                         .append(row);
                 }
             )
@@ -69,7 +69,7 @@ $(
             $(container).append(rowsArray);
         };
 
-        detail.bindClick=function(){
+        detail.bindClick = function () {
             $('.modify-profile-btn').bind('click', function (e) {
                 layer.open({
                     type: 2,
@@ -85,17 +85,17 @@ $(
 
         };
 
-        detail.bindLeaveLayer=function(){
-            $('.leave .edit').bind('click',function(){
+        detail.bindLeaveLayer = function () {
+            $('.leave .edit').bind('click', function () {
 
-                const tempArray=$(this).parent('tr').attr('name').split(' , ');
-                originDataLeave.leaveId=tempArray[0];
-                originDataLeave.leaveType=tempArray[1];
-                originDataLeave.name=tempArray[2];
-                originDataLeave.alias=tempArray[3];
-                originDataLeave.leaveDateRange=tempArray[4];
-                originDataLeave.normal=tempArray[5];
-                originDataLeave.comment=tempArray[6];
+                const tempArray = $(this).parent('tr').attr('name').split(' , ');
+                originDataLeave.leaveId = tempArray[0];
+                originDataLeave.leaveType = tempArray[1];
+                originDataLeave.name = tempArray[2];
+                originDataLeave.alias = tempArray[3];
+                originDataLeave.leaveDateRange = tempArray[4];
+                originDataLeave.normal = tempArray[5];
+                originDataLeave.comment = tempArray[6];
 
                 layer.open({
                     type: 2,
@@ -109,17 +109,17 @@ $(
             });
         };
 
-        detail.bindLateLayer=function(){
-            $('.late .edit').bind('click',function(){
+        detail.bindLateLayer = function () {
+            $('.late .edit').bind('click', function () {
 
-                const tempArray=$(this).parent('tr').attr('name').split(' , ');
-                originDataLate.lateId=tempArray[0];
-                originDataLate.lateType=tempArray[1];
-                originDataLate.name=tempArray[2];
-                originDataLate.alias=tempArray[3];
-                originDataLate.lateDate=tempArray[4];
-                originDataLate.normal=tempArray[5];
-                originDataLate.comment=tempArray[6];
+                const tempArray = $(this).parent('tr').attr('name').split(' , ');
+                originDataLate.lateId = tempArray[0];
+                originDataLate.lateType = tempArray[1];
+                originDataLate.name = tempArray[2];
+                originDataLate.alias = tempArray[3];
+                originDataLate.lateDate = tempArray[4];
+                originDataLate.normal = tempArray[5];
+                originDataLate.comment = tempArray[6];
 
                 layer.open({
                     type: 2,
@@ -133,147 +133,117 @@ $(
             });
         };
 
-        detail.bindAjax=function(){
-            $('.leave-search').bind('click',()=>{
-                console.log('start ajax....');
+        detail.bindAjax = function () {
+            $('.leave-search').bind('click', () => {
+                const leaveType = $('.leave-type').children('option:selected').val();
 
-                const leaveType=$('.leave-type').children('option:selected').val();
-
-                if(leaveType==0){
-                    if(from==0&&to==0){
-                        $.ajax({
-                            url:'/schedule/leave?employeeId='+title.employeeId,
-                            success:result=>{
-                                $('.leave-body').html('');
-                                this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
-                                this.bindLeaveLayer();
-                            }
-                        });
-                    }else if(from!=0&&to!=0){
-                        $.ajax({
-                            url:'/schedule/leave/range?employeeId='+title.employeeId+'&from='+from+'&to='+to,
-                            success:result=>{
-                                $('.leave-body').html('');
-                                this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
-                                this.bindLeaveLayer();
-                            }
-                        });
+                let url;
+                if (leaveType == 0) {
+                    if (from == 0 && to == 0) {
+                        url = '/schedule/leave?employeeId=' + title.employeeId;
+                    } else if (from != 0 && to != 0) {
+                        url = '/schedule/leave/range?employeeId=' + title.employeeId + '&from=' + from + '&to=' + to;
                     }
-                }else{
-                    if(from==0&&to==0){
-                        $.ajax({
-                            url:'/schedule/leave/type?employeeId='+title.employeeId+'&leaveType='+(leaveType-1),
-                            success:result=>{
-                                $('.leave-body').html('');
-                                this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
-                                this.bindLeaveLayer();
-                            }
-                        });
-                    }else if(from!=0&&to!=0){
-                        $.ajax({
-                            url:'/schedule/leave/range_and_type?employeeId='+title.employeeId+'&from='+from+'&to='+to+'&leaveType='+(leaveType-1),
-                            success:result=>{
-                                $('.leave-body').html('');
-                                this.createTable('.leave-body',this.parseLeaveData(result.leave),leaveClassGroup,originDataLeaveArray);
-                                this.bindLeaveLayer();
-                            }
-                        });
+                } else {
+                    if (from == 0 && to == 0) {
+                        url = '/schedule/leave/type?employeeId=' + title.employeeId + '&leaveType=' + (leaveType - 1);
+                    } else if (from != 0 && to != 0) {
+                        url = '/schedule/leave/range_and_type?employeeId=' + title.employeeId + '&from=' + from + '&to=' + to + '&leaveType=' + (leaveType - 1);
                     }
                 }
+
+                this.getLeaveRequest(url);
 
             });
 
-            $('.late-search').bind('click',()=>{
-                console.log('start ajax....');
-                const lateType=$('.late-type').children('option:selected').val();
+            $('.late-search').bind('click', () => {
+                const lateType = $('.late-type').children('option:selected').val();
 
-                if(lateType==0){
-                    if(from==0&&to==0){
-                        $.ajax({
-                            url:'/schedule/late?employeeId='+title.employeeId,
-                            success:result=>{
-                                $('.late-body').html('');
-                                this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
-                                this.bindLateLayer();
-                            }
-                        });
-                    }else if(from!=0&&to!=0){
-                        $.ajax({
-                            url:'/schedule/late/range?employeeId='+title.employeeId+'&from='+from+'&to='+to,
-                            success:result=>{
-                                $('.late-body').html('');
-                                this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
-                                this.bindLateLayer();
-                            }
-                        });
+                let url;
+                if (lateType == 0) {
+                    if (from == 0 && to == 0) {
+                        url = '/schedule/late?employeeId=' + title.employeeId;
+                    } else if (from != 0 && to != 0) {
+                        url = '/schedule/late/range?employeeId=' + title.employeeId + '&from=' + from + '&to=' + to;
                     }
-                }else{
-                    if(from==0&&to==0){
-                        $.ajax({
-                            url:'/schedule/late/type?employeeId='+title.employeeId+'&lateType='+(lateType-1),
-                            success:result=>{
-                                $('.late-body').html('');
-                                this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
-                                this.bindLateLayer();
-                            }
-                        });
-                    }else if(from!=0&&to!=0){
-                        $.ajax({
-                            url:'/schedule/late/range_and_type?employeeId='+title.employeeId+'&from='+from+'&to='+to+'&leaveType='+(lateType-1),
-                            success:result=>{
-                                $('.late-body').html('');
-                                this.createTable('.late-body',this.parseLateData(result.late),lateClassGroup,originDataLateArray);
-                                this.bindLateLayer();
-                            }
-                        });
+                } else {
+                    if (from == 0 && to == 0) {
+                        url = '/schedule/late/type?employeeId=' + title.employeeId + '&lateType=' + (lateType - 1);
+                    } else if (from != 0 && to != 0) {
+                        url = '/schedule/late/range_and_type?employeeId=' + title.employeeId + '&from=' + from + '&to=' + to + '&leaveType=' + (lateType - 1);
                     }
                 }
+
+                this.getLateRequest(url);
 
             });
         };
 
-        detail.parseLeaveData=function(dataArray){
-            const list=[];
 
-            for(let i=0;i<dataArray.length;i++){
-                let item=dataArray[i];
-                let itemList=[];
+        detail.getLeaveRequest = function (url) {
+            $.ajax({
+                url: url,
+                success: result => {
+                    $('.leave-body').html('');
+                    this.createTable('.leave-body', this.parseLeaveData(result.leave), leaveClassGroup, originDataLeaveArray);
+                    this.bindLeaveLayer();
+                }
+            });
+        };
 
-                itemList[0]=i+1;
-                itemList[1]=window.leaveTypeArray[item.leaveType+1];
-                itemList[2]=parseUTCTime(item.createdTime);
-                itemList[3]=parseUTCTimeToYMD(item.from)+' - '+parseUTCTimeToYMD(item.to);
-                itemList[4]=item.dayCount;
-                itemList[5]=item.comment;
-                itemList[6]=item.normal?'正常':'异常';
-                itemList[7]='edit';
+        detail.getLateRequest = function (url) {
+            $.ajax({
+                url: url,
+                success: result => {
+                    $('.late-body').html('');
+                    this.createTable('.late-body', this.parseLateData(result.late), lateClassGroup, originDataLateArray);
+                    this.bindLateLayer();
+                }
+            });
+        };
 
-                list[i]=itemList;
+        detail.parseLeaveData = function (dataArray) {
+            const list = [];
 
-                originDataLeaveArray[i]=item.id+' , '+item.leaveType+' , '+item.name+' , '+item.alias+' , '+itemList[3]+' , '+item.normal+' , '+item.comment;
+            for (let i = 0; i < dataArray.length; i++) {
+                let item = dataArray[i];
+                let itemList = [];
+
+                itemList[0] = i + 1;
+                itemList[1] = window.leaveTypeArray[item.leaveType + 1];
+                itemList[2] = parseUTCTime(item.createdTime);
+                itemList[3] = parseUTCTimeToYMD(item.from) + ' - ' + parseUTCTimeToYMD(item.to);
+                itemList[4] = item.dayCount;
+                itemList[5] = item.comment;
+                itemList[6] = item.normal ? '正常' : '异常';
+                itemList[7] = 'edit';
+
+                list[i] = itemList;
+
+                originDataLeaveArray[i] = item.id + ' , ' + item.leaveType + ' , ' + item.name + ' , ' + item.alias + ' , ' + itemList[3] + ' , ' + item.normal + ' , ' + item.comment;
             }
 
             return list;
         };
 
-        detail.parseLateData=function(dataArray){
-            const list=[];
+        detail.parseLateData = function (dataArray) {
+            const list = [];
 
-            for(let i=0;i<dataArray.length;i++){
-                let item=dataArray[i];
-                let itemList=[];
+            for (let i = 0; i < dataArray.length; i++) {
+                let item = dataArray[i];
+                let itemList = [];
 
-                itemList[0]=i+1;
-                itemList[1]=window.lateTypeArray[item.lateType+1];
-                itemList[2]=parseUTCTime(item.createdTime);
-                itemList[3]=parseUTCTimeToYMD(item.lateDate);
-                itemList[4]=item.comment;
-                itemList[5]=item.normal?'正常':'异常';
-                itemList[6]='edit';
+                itemList[0] = i + 1;
+                itemList[1] = window.lateTypeArray[item.lateType + 1];
+                itemList[2] = parseUTCTime(item.createdTime);
+                itemList[3] = parseUTCTimeToYMD(item.lateDate);
+                itemList[4] = item.comment;
+                itemList[5] = item.normal ? '正常' : '异常';
+                itemList[6] = 'edit';
 
-                list[i]=itemList;
+                list[i] = itemList;
 
-                originDataLateArray[i]=item.id+' , '+item.lateType+' , '+item.name+' , '+item.alias+' , '+itemList[3]+' , '+item.normal+' , '+item.comment;
+                originDataLateArray[i] = item.id + ' , ' + item.lateType + ' , ' + item.name + ' , ' + item.alias + ' , ' + itemList[3] + ' , ' + item.normal + ' , ' + item.comment;
             }
 
             return list;
@@ -281,8 +251,8 @@ $(
 
         detail.buildUI = function () {
 
-            this.buildTypeMenu('select.leave-type',window.leaveTypeArray);
-            this.buildTypeMenu('select.late-type',window.lateTypeArray);
+            this.buildTypeMenu('select.leave-type', window.leaveTypeArray);
+            this.buildTypeMenu('select.late-type', window.lateTypeArray);
 
             this.bindClick();
         };

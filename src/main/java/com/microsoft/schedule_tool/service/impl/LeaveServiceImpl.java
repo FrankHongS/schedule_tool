@@ -47,7 +47,7 @@ public class LeaveServiceImpl implements LeaveService {
     public List<Leave> getAllLeavesByDateRangeAndEmployeeIdAndLeaveType(String from, String to, Integer employeeId, Integer leaveType) {
         try {
             Date fromDate=DateUtil.parseDateString(from);
-            Date toDate=DateUtil.parseDateString(to);
+            Date toDate = new Date(DateUtil.parseDateString(to).getTime() + 24 * 60 * 60 * 1000);
             return mLeaveRepository.findByFromAfterAndFromBeforeAndEmployeeIdAndLeaveType(fromDate,toDate,employeeId,leaveType);
         } catch (ParseException e) {
             throw new RuntimeException("query failed, date range is not proper...");
@@ -59,7 +59,7 @@ public class LeaveServiceImpl implements LeaveService {
 
         try {
             Date fromDate=DateUtil.parseDateString(from);
-            Date toDate=DateUtil.parseDateString(to);
+            Date toDate = new Date(DateUtil.parseDateString(to).getTime() + 24 * 60 * 60 * 1000);
             return mLeaveRepository.findByFromAfterAndFromBeforeAndEmployeeId(fromDate, toDate, employeeId);
         } catch (ParseException e) {
             throw new RuntimeException("query failed, date range is not proper...");

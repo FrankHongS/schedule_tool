@@ -14,11 +14,11 @@ public interface SumService {
 
     Pager<Attendance> getSumOfAllTypes();
 
-    Pager<Attendance> getSumOfAllTypesByAlias(String alias);
+    List<Attendance> getSumOfAllTypesByAlias(String alias);
 
     Pager<Attendance> getSumByPage(Integer page,Integer size);
 
-    Pager<Attendance> getAllSumByDateRangeByPage(Integer page, Integer size, String from, String to);
+    Pager<Attendance> getSumByDateRangeByPage(Integer page, Integer size, String from, String to);
 
-    Pager<Attendance> getSumByDateRangeAndAlias(Integer page, Integer size, String from, String to, String alias);
+    List<Attendance> getSumByDateRangeAndAlias(String from, String to, String alias);
 }

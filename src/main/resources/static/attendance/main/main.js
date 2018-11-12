@@ -3,63 +3,25 @@ $(
 
         const main = {};
 
+        const size = 6;// the count of one page to show data
+        let ifFirsttime=true;//防止分页跳转处第一页加载两次
+
         const titleArray = [];
         window.title = {};
 
-        const dataList=[
-            [
-                '张三',
-                'v-zhangsan',
-                '5',
-                '15',
-                '8',
-                'edit'
-            ],
-            [
-                '张三',
-                'v-zhangsan',
-                '5',
-                '15',
-                '8',
-                'edit'
-            ],
-            [
-                '张三',
-                'v-zhangsan',
-                '5',
-                '15',
-                '8',
-                'edit'
-            ],
-            [
-                '张三',
-                'v-zhangsan',
-                '5',
-                '15',
-                '8',
-                'edit'
-            ],
-            [
-                '张三',
-                'v-zhangsan',
-                '5',
-                '15',
-                '8',
-                'edit'
-            ],
-            [
-                '张三',
-                'v-zhangsan',
-                '5',
-                '15',
-                '8',
-                'edit'
-            ],
-        ];
         // create sum table
-        main.buildSumTable = function (dataList) {
+        main.buildSumTable = function (dataList,isPage) {
 
-            const rowGroup = ['name', 'alias','annual','leave', 'late', 'edit'];
+            if(isPage==true&&dataList.length<size){
+                const placeholderArray=['','','','','',''];//行数不够6行时，用空格占位
+
+                for(let i=dataList.length;i<size;i++){
+                    dataList.push(placeholderArray);
+                }
+            }
+            const rowGroup = ['name', 'alias', 'annual', 'leave', 'late', 'edit'];
+
+            
             const cellsArray = dataList.map(
                 rowValues => {
                     return rowValues.map(
@@ -85,7 +47,7 @@ $(
             $('.name').bind('click', function (e) {
                 // $(location).attr('href','../detail/detail.html?a='+e.target.innerHTML);//重定向跳转，在当前窗口打开新页面
                 window.open('../detail/detail.html?title=' + $(this).parent('tr').attr('name')
-                +'&from='+window.title.from+'&to='+window.title.to);//跳转时打开新窗口
+                    + '&from=' + window.title.from + '&to=' + window.title.to);//跳转时打开新窗口
             });
 
             $('.edit').bind('click', function (e) {
@@ -129,26 +91,32 @@ $(
                 const from = $('.from').val();
                 const to = $('.to').val();
 
-                title.from=0;
-                title.to=0;
+                ifFirsttime=true;
+
+                title.from = 0;
+                title.to = 0;
 
                 let url;
 
                 if (alias && !from && !to) {//only alias
                     url = '/schedule/sum/alias?alias=' + alias;
                 } else if (!alias && !from && !to) {//neither alias nor range
-                    url = '/schedule/sum';
+                    url = '/schedule/sum?page=0&size=' + size;
+                    this.getRequest(url,false);
+                    return;
                 } else if (!alias && from && to) {//only range
-                    url = '/schedule/sum/range?from=' + from + '&to=' + to;
+                    url = '/schedule/sum/range?page=0&size=' + size + '&from=' + from + '&to=' + to;
 
-                    title.from=from;
-                    title.to=to;
+                    title.from = from;
+                    title.to = to;
+                    this.getRequest(url,true);
+                    return;
                 } else if (alias && from && to) {//both alias and range
                     url = '/schedule/sum/range_and_alias?from=' + from + '&to=' + to + '&alias=' + alias;
 
-                    title.from=from;
-                    title.to=to;
-                }else{
+                    title.from = from;
+                    title.to = to;
+                } else {
                     $('.main-form-item .message').text('查找失败，时间范围需同为空或同不为空... :)');
                     return;
                 }
@@ -157,17 +125,27 @@ $(
             });
         };
 
-        main.getRequest = function (url) {
+        main.getRequest = function (url,isRange) {
             $('.main-form-item .message').text('正在查找...');
             $.ajax({
                 url: url,
                 success: result => {
                     $('.main-form-item .message').text('查找成功');
                     $('tbody').html('');
-                    this.buildSumTable(this.parseData(result.sum))
+
+                    if (result.sum.dataList) {
+                        this.buildSumTable(this.parseData(result.sum.dataList),true);
+
+                        if($('#pager-container').is(':hidden')){
+                            this.buildPager(result.sum.count, size,isRange);
+                        }
+                    } else {
+                        this.buildSumTable(this.parseData(result.sum),false);
+                        $('#pager-container').hide();
+                    }
                 },
-                error: (xhr,e)=>{
-                    $('.main-form-item .message').text('查找失败...'+e);
+                error: (xhr, e) => {
+                    $('.main-form-item .message').text('查找失败...' + e);
                 }
             });
         };
@@ -179,10 +157,12 @@ $(
                 let listItem = [];
 
 
-                listItem[0] = item.name + ' ' + item.alias;
-                listItem[1] = item.leaveSum;
-                listItem[2] = item.lateSum;
-                listItem[3] = 'edit';
+                listItem[0] = item.name;
+                listItem[1] = item.alias;
+                listItem[2] = item.annualCount;
+                listItem[3] = item.leaveSum;
+                listItem[4] = item.lateSum;
+                listItem[5] = 'edit';
 
                 titleArray[i] = item.name + ' , ' + item.alias + ' , ' + item.employeeId;
 
@@ -207,26 +187,50 @@ $(
 
         };
 
-        main.buildPager=function(){
-            layui.use(['laypage'],function(){
-                const laypage=layui.laypage;
+        /**
+         * count: 总条数
+         * limit: 每一页显示条数
+         * range: 搜索时是否填写日期范围
+         */
+        main.buildPager = function (count, limit, range) {
+            $('#pager-container').show();
+
+            layui.use(['laypage'], () =>{
+                const laypage = layui.laypage;
                 laypage.render({
-                    elem:'pager-container',
-                    count: 50,
-                    limit:6,
-                    groups:10,
-                    layout: ['count','prev', 'next', 'page'],
-                    jump:obj=>{
-                        console.log(obj);
-                        const curr=obj.curr;
+                    elem: 'pager-container',
+                    count: count,
+                    limit: limit,
+                    groups: 10,
+                    layout: ['count', 'prev', 'next', 'page'],
+                    jump: obj => {
+
+                        if(ifFirsttime==true){
+                            ifFirsttime=false;
+                            return;
+                        }
+
+                        const curr = obj.curr;
+                        let url;
+                        if (range == true) {
+                            url = '/schedule/sum/range?page=' + (curr-1) + '&size=' + size + '&from=' + title.from + '&to=' + title.to;
+                        } else {
+                            url = '/schedule/sum?page=' + (curr-1) + '&size=' + size;
+                        }
+
+                        this.getRequest(url);
                     }
                 });
+
             });
+        };
+
+        main.buildUI=function(){
+            $('#pager-container').hide();
         };
 
         main.bindClick();
         main.bindLaydate();
-        main.buildPager();
-        main.buildSumTable(dataList);
+        main.buildUI();
     }
 );

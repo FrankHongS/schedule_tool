@@ -27,10 +27,13 @@ public class SumController {
     private SumService mSumService;
 
     @GetMapping
-    public Map<String, Pager<Attendance>> getAttendanceList(){
+    public Map<String, Pager<Attendance>> getAttendanceList(
+            @RequestParam("page") Integer page,
+            @RequestParam("size") Integer size
+    ){
         Map<String, Pager<Attendance>> resultMap=new HashMap<>();
 
-        Pager<Attendance> attendanceList=mSumService.getSumOfAllTypes();
+        Pager<Attendance> attendanceList=mSumService.getSumByPage(page, size);
 
         resultMap.put(KEY,attendanceList);
 
@@ -38,11 +41,11 @@ public class SumController {
     }
 
     @GetMapping("/alias")
-    public Map<String, Pager<Attendance>> getAttendanceListByAlias(
+    public Map<String, List<Attendance>> getAttendanceListByAlias(
             @RequestParam("alias") String alias){
-        Map<String, Pager<Attendance>> resultMap=new HashMap<>();
+        Map<String, List<Attendance>> resultMap=new HashMap<>();
 
-        Pager<Attendance> attendanceList=mSumService.getSumOfAllTypesByAlias(alias);
+        List<Attendance> attendanceList=mSumService.getSumOfAllTypesByAlias(alias);
 
         resultMap.put(KEY,attendanceList);
 
@@ -51,11 +54,13 @@ public class SumController {
 
     @GetMapping("/range")
     public Map<String, Pager<Attendance>> getAttendanceListByRange(
+            @RequestParam("page") Integer page,
+            @RequestParam("size") Integer size,
             @RequestParam("from") String from,
             @RequestParam("to") String to){
         Map<String, Pager<Attendance>> resultMap=new HashMap<>();
 
-        Pager<Attendance> attendanceList=mSumService.getAllSumByDateRange(from,to);
+        Pager<Attendance> attendanceList=mSumService.getSumByDateRangeByPage(page,size,from,to);
 
         resultMap.put(KEY,attendanceList);
 
@@ -63,13 +68,13 @@ public class SumController {
     }
 
     @GetMapping("/range_and_alias")
-    public Map<String, Pager<Attendance>> getAttendanceListByRangeAndAlias(
+    public Map<String, List<Attendance>> getAttendanceListByRangeAndAlias(
             @RequestParam("from") String from,
             @RequestParam("to") String to,
             @RequestParam("alias") String alias){
-        Map<String, Pager<Attendance>> resultMap=new HashMap<>();
+        Map<String, List<Attendance>> resultMap=new HashMap<>();
 
-        Pager<Attendance> attendanceList=mSumService.getSumByDateRangeAndAlias(from, to, alias);
+        List<Attendance> attendanceList=mSumService.getSumByDateRangeAndAlias(from, to, alias);
 
         resultMap.put(KEY,attendanceList);
 
