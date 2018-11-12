@@ -11,7 +11,7 @@ import java.util.Optional;
  * E-mail: v-shhong@microsoft.com
  */
 
-public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
+public interface EmployeeRepository extends JpaRepository<Employee,Integer>{
 
     Optional<Employee> findByAlias(String alias);
 

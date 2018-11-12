@@ -2,6 +2,7 @@ package com.microsoft.schedule_tool.controller;
 
 import com.microsoft.schedule_tool.service.SumService;
 import com.microsoft.schedule_tool.vo.Attendance;
+import com.microsoft.schedule_tool.vo.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +27,10 @@ public class SumController {
     private SumService mSumService;
 
     @GetMapping
-    public Map<String, List<Attendance>> getAttendanceList(){
-        Map<String, List<Attendance>> resultMap=new HashMap<>();
+    public Map<String, Pager<Attendance>> getAttendanceList(){
+        Map<String, Pager<Attendance>> resultMap=new HashMap<>();
 
-        List<Attendance> attendanceList=mSumService.getSumOfAllTypes();
+        Pager<Attendance> attendanceList=mSumService.getSumOfAllTypes();
 
         resultMap.put(KEY,attendanceList);
 
@@ -37,11 +38,11 @@ public class SumController {
     }
 
     @GetMapping("/alias")
-    public Map<String, List<Attendance>> getAttendanceListByAlias(
+    public Map<String, Pager<Attendance>> getAttendanceListByAlias(
             @RequestParam("alias") String alias){
-        Map<String, List<Attendance>> resultMap=new HashMap<>();
+        Map<String, Pager<Attendance>> resultMap=new HashMap<>();
 
-        List<Attendance> attendanceList=mSumService.getSumOfAllTypesByAlias(alias);
+        Pager<Attendance> attendanceList=mSumService.getSumOfAllTypesByAlias(alias);
 
         resultMap.put(KEY,attendanceList);
 
@@ -49,13 +50,12 @@ public class SumController {
     }
 
     @GetMapping("/range")
-    public Map<String, List<Attendance>> getAttendanceListByRange(
+    public Map<String, Pager<Attendance>> getAttendanceListByRange(
             @RequestParam("from") String from,
-            @RequestParam("to") String to
-    ){
-        Map<String, List<Attendance>> resultMap=new HashMap<>();
+            @RequestParam("to") String to){
+        Map<String, Pager<Attendance>> resultMap=new HashMap<>();
 
-        List<Attendance> attendanceList=mSumService.getAllSumByDateRange(from,to);
+        Pager<Attendance> attendanceList=mSumService.getAllSumByDateRange(from,to);
 
         resultMap.put(KEY,attendanceList);
 
@@ -63,14 +63,13 @@ public class SumController {
     }
 
     @GetMapping("/range_and_alias")
-    public Map<String, List<Attendance>> getAttendanceListByRangeAndAlias(
+    public Map<String, Pager<Attendance>> getAttendanceListByRangeAndAlias(
             @RequestParam("from") String from,
             @RequestParam("to") String to,
-            @RequestParam("alias") String alias
-    ){
-        Map<String, List<Attendance>> resultMap=new HashMap<>();
+            @RequestParam("alias") String alias){
+        Map<String, Pager<Attendance>> resultMap=new HashMap<>();
 
-        List<Attendance> attendanceList=mSumService.getSumByDateRangeAndAlias(from, to, alias);
+        Pager<Attendance> attendanceList=mSumService.getSumByDateRangeAndAlias(from, to, alias);
 
         resultMap.put(KEY,attendanceList);
 

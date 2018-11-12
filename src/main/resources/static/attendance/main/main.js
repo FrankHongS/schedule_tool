@@ -6,10 +6,60 @@ $(
         const titleArray = [];
         window.title = {};
 
+        const dataList=[
+            [
+                '张三',
+                'v-zhangsan',
+                '5',
+                '15',
+                '8',
+                'edit'
+            ],
+            [
+                '张三',
+                'v-zhangsan',
+                '5',
+                '15',
+                '8',
+                'edit'
+            ],
+            [
+                '张三',
+                'v-zhangsan',
+                '5',
+                '15',
+                '8',
+                'edit'
+            ],
+            [
+                '张三',
+                'v-zhangsan',
+                '5',
+                '15',
+                '8',
+                'edit'
+            ],
+            [
+                '张三',
+                'v-zhangsan',
+                '5',
+                '15',
+                '8',
+                'edit'
+            ],
+            [
+                '张三',
+                'v-zhangsan',
+                '5',
+                '15',
+                '8',
+                'edit'
+            ],
+        ];
         // create sum table
         main.buildSumTable = function (dataList) {
 
-            const rowGroup = ['name', 'leave', 'late', 'edit'];
+            const rowGroup = ['name', 'alias','annual','leave', 'late', 'edit'];
             const cellsArray = dataList.map(
                 rowValues => {
                     return rowValues.map(
@@ -107,21 +157,6 @@ $(
             });
         };
 
-        main.bindLaydate = function () {
-            laydate.render({
-                elem: '.from',
-                theme: '#393D49',
-                btns: ['confirm'],
-            });
-
-            laydate.render({
-                elem: '.to',
-                theme: '#393D49',
-                btns: ['confirm'],
-            });
-
-        };
-
         main.getRequest = function (url) {
             $('.main-form-item .message').text('正在查找...');
             $.ajax({
@@ -157,7 +192,41 @@ $(
             return list;
         };
 
+        main.bindLaydate = function () {
+            laydate.render({
+                elem: '.from',
+                theme: '#393D49',
+                btns: ['confirm'],
+            });
+
+            laydate.render({
+                elem: '.to',
+                theme: '#393D49',
+                btns: ['confirm'],
+            });
+
+        };
+
+        main.buildPager=function(){
+            layui.use(['laypage'],function(){
+                const laypage=layui.laypage;
+                laypage.render({
+                    elem:'pager-container',
+                    count: 50,
+                    limit:6,
+                    groups:10,
+                    layout: ['count','prev', 'next', 'page'],
+                    jump:obj=>{
+                        console.log(obj);
+                        const curr=obj.curr;
+                    }
+                });
+            });
+        };
+
         main.bindClick();
         main.bindLaydate();
+        main.buildPager();
+        main.buildSumTable(dataList);
     }
 );

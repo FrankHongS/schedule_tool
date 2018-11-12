@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.service;
 
 import com.microsoft.schedule_tool.entity.Employee;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface EmployeeService {
     Employee updateEmployee(Integer id, String alias, String name);
 
     boolean deleteEmployee(Integer id);
+
+    Page<Employee> getEmployeesByPageNoCriteria(Integer page, Integer size);
 }

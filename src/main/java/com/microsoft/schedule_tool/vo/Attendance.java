@@ -12,16 +12,19 @@ public class Attendance {
 
     private String alias;
 
+    private int annualCount;
+
     private int leaveSum;
 
     private int lateSum;
 
     public Attendance(){}
 
-    public Attendance(int employeeId,String name, String alias, int leaveSum, int lateSum) {
+    public Attendance(int employeeId,String name, String alias, int annualCount, int leaveSum, int lateSum) {
         this.employeeId=employeeId;
         this.name = name;
         this.alias = alias;
+        this.annualCount=annualCount;
         this.leaveSum = leaveSum;
         this.lateSum = lateSum;
     }
@@ -48,6 +51,14 @@ public class Attendance {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public int getAnnualCount() {
+        return annualCount;
+    }
+
+    public void setAnnualCount(int annualCount) {
+        this.annualCount = annualCount;
     }
 
     public int getLeaveSum() {
