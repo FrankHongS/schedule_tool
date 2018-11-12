@@ -75,23 +75,9 @@ $(
                 });
             });
 
-            $('.delete').bind('click', function (e) {
-                $('.message').text('正在删除...');
-                $.ajax({
-                    url: '/schedule/leave/delete',
-                    type: 'POST',
-                    data:{
-                        id: window.parent.originDataLeave.leaveId
-                    },
-                    success: result => {
-                        $('.message').text('删除成功');
-                        console.log(result);
-                    },
-                    error:(xhr,e)=>{
-                        $('.message').text('删除失败...'+e);
-                        console.log(e);
-                    }
-                });
+            $('.cancel').bind('click', ()=> {
+                const index=parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
             });
         };
 

@@ -2,9 +2,42 @@ $(
     function () {
         const detail = {};
 
-        const leaveClassGroup = ['index', 'leaveType', 'created-time', 'time', 'length', 'comment', 'is-normal', 'edit'];
+        const datalist=[
+            [
+                '1',
+                'homebase',
+                '2018-08-12 12:20:45',
+                '2018-12-15 - 2018-12-16',
+                '2',
+                '过年回家',
+                '正常',
+                'edit'
+            ],
+            [
+                '1',
+                'homebase',
+                '2018-08-12 12:20:45',
+                '2018-12-15 - 2018-12-16',
+                '2',
+                '过年回家',
+                '正常',
+                'edit'
+            ],
+            [
+                '1',
+                'homebase',
+                '2018-08-12 12:20:45',
+                '2018-12-15 - 2018-12-16',
+                '2',
+                '过年回家',
+                '正常',
+                'edit'
+            ],
+        ];
 
-        const lateClassGroup = ['index', 'lateType', 'created-time', 'time', 'comment', 'is-normal', 'edit'];
+        const leaveClassGroup = ['index', 'leaveType', 'created-time', 'time', 'length', 'comment', 'is-normal', 'edit','delete'];
+
+        const lateClassGroup = ['index', 'lateType', 'created-time', 'time', 'comment', 'is-normal', 'edit','delete'];
 
         //跨域传递name,alias,employeeId给modify.html
         window.title = {};
@@ -85,7 +118,7 @@ $(
 
         };
 
-        detail.bindLeaveLayer = function () {
+        detail.bindLeaveClick = function () {
             $('.leave .edit').bind('click', function () {
 
                 const tempArray = $(this).parent('tr').attr('name').split(' , ');
@@ -107,9 +140,32 @@ $(
                     content: '../modify_leave/modify_leave.html'
                 });
             });
+
+            //delete leave
+            $('.leave .delete').bind('click',function(){
+                const result=confirm('删除该项');
+                if(result==true){
+                    const tempArray = $(this).parent('tr').attr('name').split(' , ');
+                    const leaveId=tempArray[0];
+                    $.ajax({
+                        url: '/schedule/leave/delete',
+                        type: 'POST',
+                        data:{
+                            id: leaveId
+                        },
+                        success: result => {
+                            alert('删除成功');
+                            console.log(result);
+                        },
+                        error:(xhr,e)=>{
+                            alert('删除失败...'+e);
+                        }
+                    });
+                }
+            });
         };
 
-        detail.bindLateLayer = function () {
+        detail.bindLateClick = function () {
             $('.late .edit').bind('click', function () {
 
                 const tempArray = $(this).parent('tr').attr('name').split(' , ');
@@ -130,6 +186,28 @@ $(
                     scrollbar: false,//屏蔽父窗口滚动条
                     content: '../modify_late/modify_late.html'
                 });
+            });
+
+            $('.late .delete').bind('click',function(){
+                const result=confirm('删除该项');
+                if(result==true){
+                    const tempArray = $(this).parent('tr').attr('name').split(' , ');
+                    const lateId=tempArray[0];
+                    $.ajax({
+                        url: '/schedule/late/delete',
+                        type: 'POST',
+                        data:{
+                            id: lateId
+                        },
+                        success: result => {
+                            alert('删除成功');
+                            console.log(result);
+                        },
+                        error:(xhr,e)=>{
+                            alert('删除失败...'+e);
+                        }
+                    });
+                }
             });
         };
 
@@ -186,7 +264,7 @@ $(
                 success: result => {
                     $('.leave-body').html('');
                     this.createTable('.leave-body', this.parseLeaveData(result.leave), leaveClassGroup, originDataLeaveArray);
-                    this.bindLeaveLayer();
+                    this.bindLeaveClick();
                 }
             });
         };
@@ -197,7 +275,7 @@ $(
                 success: result => {
                     $('.late-body').html('');
                     this.createTable('.late-body', this.parseLateData(result.late), lateClassGroup, originDataLateArray);
-                    this.bindLateLayer();
+                    this.bindLateClick();
                 }
             });
         };
@@ -217,6 +295,7 @@ $(
                 itemList[5] = item.comment;
                 itemList[6] = item.normal ? '正常' : '异常';
                 itemList[7] = 'edit';
+                itemList[8] = 'delete';
 
                 list[i] = itemList;
 
@@ -240,6 +319,7 @@ $(
                 itemList[4] = item.comment;
                 itemList[5] = item.normal ? '正常' : '异常';
                 itemList[6] = 'edit';
+                itemList[7] = 'delete';
 
                 list[i] = itemList;
 
@@ -260,5 +340,6 @@ $(
         detail.getParameter();
         detail.buildUI();
         detail.bindAjax();
+        // detail.createTable('.leave-body', datalist, lateClassGroup, originDataLateArray);
     }
 );

@@ -4,7 +4,8 @@ $(
         const main = {};
 
         const size = 6;// the count of one page to show data
-        let ifFirsttime=true;//防止分页跳转处第一页加载两次
+        let count;
+        let isFirstTime=true;//防止分页跳转处第一页加载两次以及是否重新搜索的标志位
 
         const titleArray = [];
         window.title = {};
@@ -91,7 +92,7 @@ $(
                 const from = $('.from').val();
                 const to = $('.to').val();
 
-                ifFirsttime=true;
+                isFirstTime=true;
 
                 title.from = 0;
                 title.to = 0;
@@ -136,8 +137,10 @@ $(
                     if (result.sum.dataList) {
                         this.buildSumTable(this.parseData(result.sum.dataList),true);
 
-                        if($('#pager-container').is(':hidden')){
-                            this.buildPager(result.sum.count, size,isRange);
+                        count=result.sum.count;//将总条数赋值给count
+
+                        if(isFirstTime==true||$('#pager-container').is(':hidden')){
+                            this.buildPager(isRange);
                         }
                     } else {
                         this.buildSumTable(this.parseData(result.sum),false);
@@ -192,7 +195,7 @@ $(
          * limit: 每一页显示条数
          * range: 搜索时是否填写日期范围
          */
-        main.buildPager = function (count, limit, range) {
+        main.buildPager = function (range) {
             $('#pager-container').show();
 
             layui.use(['laypage'], () =>{
@@ -200,13 +203,13 @@ $(
                 laypage.render({
                     elem: 'pager-container',
                     count: count,
-                    limit: limit,
+                    limit: size,
                     groups: 10,
                     layout: ['count', 'prev', 'next', 'page'],
                     jump: obj => {
 
-                        if(ifFirsttime==true){
-                            ifFirsttime=false;
+                        if(isFirstTime==true){
+                            isFirstTime=false;
                             return;
                         }
 
