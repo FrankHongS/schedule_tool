@@ -7,6 +7,7 @@ import com.microsoft.schedule_tool.entity.Employee;
 import com.microsoft.schedule_tool.entity.Leave;
 import com.microsoft.schedule_tool.service.SumService;
 import com.microsoft.schedule_tool.util.DateUtil;
+import com.microsoft.schedule_tool.util.Util;
 import com.microsoft.schedule_tool.vo.Attendance;
 import com.microsoft.schedule_tool.vo.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class SumServiceImpl implements SumService {
             String alias = employee.getAlias();
             attendance.setAlias(alias);
 
-            attendance.setLeaveSum(getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
+            attendance.setLeaveSum(Util.getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
             attendance.setLateSum(mLateRepository.findByAlias(alias).size());
 
             attendanceList.add(attendance);
@@ -82,7 +83,7 @@ public class SumServiceImpl implements SumService {
             attendance.setEmployeeId(employee.getId());
             attendance.setName(employee.getName());
             attendance.setAlias(alias);
-            attendance.setLeaveSum(getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
+            attendance.setLeaveSum(Util.getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
             attendance.setLateSum(mLateRepository.findByAlias(alias).size());
 
             target.add(attendance);
@@ -117,8 +118,8 @@ public class SumServiceImpl implements SumService {
                 String alias = employee.getAlias();
                 attendance.setAlias(alias);
 
-                attendance.setLeaveSum(getLeaveDayCount
-                        (mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
+                attendance.setLeaveSum(
+                        Util.getLeaveDayCount(mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
                 attendance.setLateSum(mLateRepository.findByLateDateAfterAndLateDateBeforeAndAlias(fromDate,toDate,alias).size());
 
                 attendanceList.add(attendance);
@@ -150,8 +151,8 @@ public class SumServiceImpl implements SumService {
                 attendance.setEmployeeId(employee.getId());
                 attendance.setName(employee.getName());
                 attendance.setAlias(alias);
-                attendance.setLeaveSum(getLeaveDayCount
-                        (mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
+                attendance.setLeaveSum(
+                        Util.getLeaveDayCount(mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
                 attendance.setLateSum(mLateRepository.findByLateDateAfterAndLateDateBeforeAndAlias(fromDate,toDate,alias).size());
 
                 target.add(attendance);
@@ -183,7 +184,7 @@ public class SumServiceImpl implements SumService {
             String alias = employee.getAlias();
             attendance.setAlias(alias);
 
-            attendance.setLeaveSum(getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
+            attendance.setLeaveSum(Util.getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
             attendance.setLateSum(mLateRepository.findByAlias(alias).size());
 
             attendanceList.add(attendance);
@@ -195,12 +196,4 @@ public class SumServiceImpl implements SumService {
         return target;
     }
 
-    private int getLeaveDayCount(List<Leave> leaveList) {
-        int sum = 0;
-        for (Leave leave : leaveList) {
-            sum += leave.getDayCount();
-        }
-
-        return sum;
-    }
 }
