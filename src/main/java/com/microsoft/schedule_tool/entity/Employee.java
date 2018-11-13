@@ -26,7 +26,7 @@ public class Employee {
     @Column(nullable = false)
     private String name;
 
-    private Integer annual;
+    private Float annual;
 
     @CreationTimestamp
     private Date createTime;
@@ -60,11 +60,11 @@ public class Employee {
         this.name = name;
     }
 
-    public Integer getAnnual() {
+    public Float getAnnual() {
         return annual;
     }
 
-    public void setAnnual(Integer annual) {
+    public void setAnnual(Float annual) {
         this.annual = annual;
     }
 

@@ -7,7 +7,8 @@ $(document).ready(
                 type: 'POST',
                 data: {
                     name: $('.name').val(),
-                    alias: $('.alias').val()
+                    alias: $('.alias').val(),
+                    annual:$('.annual').val()==''?'0':$('.annual').val()
                 },
                 success: result => {
                     $('.message').text('保存成功');

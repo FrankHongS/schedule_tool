@@ -58,6 +58,7 @@ public class SumServiceImpl implements SumService {
             attendance.setName(employee.getName());
             String alias = employee.getAlias();
             attendance.setAlias(alias);
+            attendance.setAnnualCount(employee.getAnnual());
 
             attendance.setLeaveSum(Util.getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
             attendance.setLateSum(mLateRepository.findByAlias(alias).size());
@@ -83,6 +84,7 @@ public class SumServiceImpl implements SumService {
             attendance.setEmployeeId(employee.getId());
             attendance.setName(employee.getName());
             attendance.setAlias(alias);
+            attendance.setAnnualCount(employee.getAnnual());
             attendance.setLeaveSum(Util.getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
             attendance.setLateSum(mLateRepository.findByAlias(alias).size());
 
@@ -117,6 +119,7 @@ public class SumServiceImpl implements SumService {
                 attendance.setName(employee.getName());
                 String alias = employee.getAlias();
                 attendance.setAlias(alias);
+                attendance.setAnnualCount(employee.getAnnual());
 
                 attendance.setLeaveSum(
                         Util.getLeaveDayCount(mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
@@ -151,6 +154,7 @@ public class SumServiceImpl implements SumService {
                 attendance.setEmployeeId(employee.getId());
                 attendance.setName(employee.getName());
                 attendance.setAlias(alias);
+                attendance.setAnnualCount(employee.getAnnual());
                 attendance.setLeaveSum(
                         Util.getLeaveDayCount(mLeaveRepository.findByFromAfterAndFromBeforeAndAlias(fromDate, toDate, alias)));
                 attendance.setLateSum(mLateRepository.findByLateDateAfterAndLateDateBeforeAndAlias(fromDate,toDate,alias).size());
@@ -183,6 +187,7 @@ public class SumServiceImpl implements SumService {
             attendance.setName(employee.getName());
             String alias = employee.getAlias();
             attendance.setAlias(alias);
+            attendance.setAnnualCount(employee.getAnnual());
 
             attendance.setLeaveSum(Util.getLeaveDayCount(mLeaveRepository.findByAlias(alias)));
             attendance.setLateSum(mLateRepository.findByAlias(alias).size());

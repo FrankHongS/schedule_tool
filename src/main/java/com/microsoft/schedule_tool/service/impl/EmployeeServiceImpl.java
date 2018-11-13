@@ -63,13 +63,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
-    public Employee updateEmployee(Integer id,String alias,String name) {
+    public Employee updateEmployee(Integer id,String alias,String name,Float annual) {
 
         if(mEmployeeRepository.findById(id).isPresent()){
             Employee employee=mEmployeeRepository.findById(id).get();
 
             employee.setName(name);
             employee.setAlias(alias);
+            employee.setAnnual(annual);
 
             // update tb-leave
             List<Leave> leaves=mLeaveRepository.findByEmployeeId(id);

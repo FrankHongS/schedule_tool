@@ -37,12 +37,14 @@ public class EmployeeController {
 
     @PostMapping
     public Map<String, Employee> saveEmployee(@RequestParam("alias") String alias,
-                                              @RequestParam("name") String name){
+                                              @RequestParam("name") String name,
+                                              @RequestParam(value = "annual",required = false) String annual){
         Map<String, Employee> resultMap=new HashMap<>();
 
         Employee employee=new Employee();
         employee.setAlias(alias);
         employee.setName(name);
+        employee.setAnnual(Float.valueOf(annual));
 
         Employee result=mEmployeeService.saveEmployee(employee);
         resultMap.put(KEY,result);
@@ -53,10 +55,11 @@ public class EmployeeController {
     @PostMapping("/update")
     public Map<String, Employee> updateEmployee(@RequestParam("id") Integer id,
                                                 @RequestParam("alias") String alias,
-                                              @RequestParam("name") String name){
+                                                @RequestParam("name") String name,
+                                                @RequestParam(value = "annual",required = false) String annual){
         Map<String, Employee> resultMap=new HashMap<>();
 
-        Employee employee=mEmployeeService.updateEmployee(id, alias, name);
+        Employee employee=mEmployeeService.updateEmployee(id, alias, name,Float.valueOf(annual));
 
         resultMap.put(KEY,employee);
         return resultMap;

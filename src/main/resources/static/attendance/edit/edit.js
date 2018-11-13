@@ -3,7 +3,6 @@ $(
         const edit = {};
 
         edit.buildUI = function () {
-
             const that=this;
             const render = laydate.render({
                 elem: '.datepicker',
@@ -84,11 +83,24 @@ $(
                 const typeValue=$('#item-type').children('option:selected').val();
                 switch (value) {
                     case '1':
+                        $('.half-container').show();
+                        let halfType;
+                        if($('.previous:checked').length+$('.later:checked').length==2){
+                            halfType=3;
+                        }else if($('.previous:checked').length+$('.later:checked').length==0){
+                            halfType=0;
+                        }else if($('.previous:checked').length==1&&$('.later:checked').length==0){
+                            halfType=1;
+                        }else if($('.previous:checked').length==0&&$('.later:checked').length==1){
+                            halfType=2;
+                        }
+                    
                         data = {
                             name: $('.name').val(),
                             alias: $('.alias').val(),
                             leaveType: typeValue,
                             leaveDateRange: $('.datepicker').val(),
+                            halfType: halfType,
                             dayCount: calculateDayCount($('.datepicker').val()),
                             employeeId: window.parent.title.employeeId,
                             isNormal: $('.choose input[name="isNormal"]:checked').val()==='1' ? true : false,
@@ -99,6 +111,7 @@ $(
                         url = '/schedule/leave';
                         break;
                     case '2':
+                        $('.half-container').hide();
                         data = {
                             name: $('.name').val(),
                             alias: $('.alias').val(),

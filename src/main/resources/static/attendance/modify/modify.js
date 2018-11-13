@@ -3,8 +3,9 @@ $(document).ready(
         const modify = {};
 
         modify.buildUI=function(){
-            $('.name').val(window.parent.title.name);
-            $('.alias').val(window.parent.title.alias);
+            $('.name').val(window.parent.profile.name);
+            $('.alias').val(window.parent.profile.alias);
+            $('.annual').val(window.parent.profile.annual);
         }
 
         modify.bindAjax = function () {
@@ -15,9 +16,10 @@ $(document).ready(
                     url: '/schedule/employee/update',
                     type: 'POST',
                     data: {
-                        id: window.parent.title.employeeId,
+                        id: window.parent.profile.employeeId,
                         name: $('.name').val(),
-                        alias: $('.alias').val()
+                        alias: $('.alias').val(),
+                        annual:$('.annual').val()==''?'0':$('.annual').val()
                     },
                     success: result => {
                         $('.message').text('修改成功');
@@ -37,7 +39,7 @@ $(document).ready(
                     url: '/schedule/employee/delete',
                     type: 'POST',
                     data: {
-                        id: window.parent.title.employeeId
+                        id: window.parent.profile.employeeId
                     },
                     success: result => {
                         $('.message').text('删除成功');

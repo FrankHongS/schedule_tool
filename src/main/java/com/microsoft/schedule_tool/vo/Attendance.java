@@ -12,7 +12,7 @@ public class Attendance {
 
     private String alias;
 
-    private int annualCount;
+    private Float annualCount;
 
     private int leaveSum;
 
@@ -20,7 +20,7 @@ public class Attendance {
 
     public Attendance(){}
 
-    public Attendance(int employeeId,String name, String alias, int annualCount, int leaveSum, int lateSum) {
+    public Attendance(int employeeId,String name, String alias, float annualCount, int leaveSum, int lateSum) {
         this.employeeId=employeeId;
         this.name = name;
         this.alias = alias;
@@ -53,11 +53,11 @@ public class Attendance {
         this.alias = alias;
     }
 
-    public int getAnnualCount() {
+    public Float getAnnualCount() {
         return annualCount;
     }
 
-    public void setAnnualCount(int annualCount) {
+    public void setAnnualCount(Float annualCount) {
         this.annualCount = annualCount;
     }
 

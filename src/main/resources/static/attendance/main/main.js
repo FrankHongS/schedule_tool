@@ -47,7 +47,7 @@ $(
 
             $('.name').bind('click', function (e) {
                 // $(location).attr('href','../detail/detail.html?a='+e.target.innerHTML);//重定向跳转，在当前窗口打开新页面
-                window.open('../detail/detail.html?title=' + $(this).parent('tr').attr('name')
+                window.open('../detail/detail.html?profile=' + $(this).parent('tr').attr('name')
                     + '&from=' + window.title.from + '&to=' + window.title.to);//跳转时打开新窗口
             });
 
@@ -56,7 +56,7 @@ $(
                 const tempArray = $(this).parent('tr').attr('name').split(' , ');
                 title.name = tempArray[0];
                 title.alias = tempArray[1];
-                title.employeeId = tempArray[2];
+                title.employeeId = tempArray[3];
 
                 layer.open({
                     type: 2,
@@ -167,7 +167,7 @@ $(
                 listItem[4] = item.lateSum;
                 listItem[5] = 'edit';
 
-                titleArray[i] = item.name + ' , ' + item.alias + ' , ' + item.employeeId;
+                titleArray[i] = item.name + ' , ' + item.alias +' , ' +item.annualCount+' , ' + item.employeeId;
 
                 list[i] = listItem;
             }

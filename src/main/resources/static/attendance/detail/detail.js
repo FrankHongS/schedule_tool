@@ -2,45 +2,12 @@ $(
     function () {
         const detail = {};
 
-        const datalist=[
-            [
-                '1',
-                'homebase',
-                '2018-08-12 12:20:45',
-                '2018-12-15 - 2018-12-16',
-                '2',
-                '过年回家',
-                '正常',
-                'edit'
-            ],
-            [
-                '1',
-                'homebase',
-                '2018-08-12 12:20:45',
-                '2018-12-15 - 2018-12-16',
-                '2',
-                '过年回家',
-                '正常',
-                'edit'
-            ],
-            [
-                '1',
-                'homebase',
-                '2018-08-12 12:20:45',
-                '2018-12-15 - 2018-12-16',
-                '2',
-                '过年回家',
-                '正常',
-                'edit'
-            ],
-        ];
-
         const leaveClassGroup = ['index', 'leaveType', 'created-time', 'time', 'length', 'comment', 'is-normal', 'edit','delete'];
 
         const lateClassGroup = ['index', 'lateType', 'created-time', 'time', 'comment', 'is-normal', 'edit','delete'];
 
-        //跨域传递name,alias,employeeId给modify.html
-        window.title = {};
+        //跨域传递name,alias,annual,employeeId给modify.html
+        window.profile = {};
 
         const originDataLeaveArray = [];
         window.originDataLeave = {};
@@ -53,12 +20,13 @@ $(
         let to;
 
         detail.getParameter = function () {
-            const titleArray = decodeURIComponent($.Request('title')).split(' , ');
-            if (titleArray.length > 0) {
-                title.name = titleArray[0];
-                title.alias = titleArray[1];
-                title.employeeId = titleArray[2];
-                $("#title h1").text(title.name + '(' + title.alias + ')')
+            const profileArray = decodeURIComponent($.Request('profile')).split(' , ');
+            if (profileArray.length > 0) {
+                profile.name = profileArray[0];
+                profile.alias = profileArray[1];
+                profile.annual=profileArray[2];
+                profile.employeeId = profileArray[3];
+                $("#title h1").text(profile.name + '(' + profile.alias + ')')
             }
 
             from = decodeURIComponent($.Request('from'));
@@ -218,15 +186,15 @@ $(
                 let url;
                 if (leaveType == 0) {
                     if (from == 0 && to == 0) {
-                        url = '/schedule/leave?employeeId=' + title.employeeId;
+                        url = '/schedule/leave?employeeId=' + profile.employeeId;
                     } else if (from != 0 && to != 0) {
-                        url = '/schedule/leave/range?employeeId=' + title.employeeId + '&from=' + from + '&to=' + to;
+                        url = '/schedule/leave/range?employeeId=' + profile.employeeId + '&from=' + from + '&to=' + to;
                     }
                 } else {
                     if (from == 0 && to == 0) {
-                        url = '/schedule/leave/type?employeeId=' + title.employeeId + '&leaveType=' + (leaveType - 1);
+                        url = '/schedule/leave/type?employeeId=' + profile.employeeId + '&leaveType=' + (leaveType - 1);
                     } else if (from != 0 && to != 0) {
-                        url = '/schedule/leave/range_and_type?employeeId=' + title.employeeId + '&from=' + from + '&to=' + to + '&leaveType=' + (leaveType - 1);
+                        url = '/schedule/leave/range_and_type?employeeId=' + profile.employeeId + '&from=' + from + '&to=' + to + '&leaveType=' + (leaveType - 1);
                     }
                 }
 
@@ -240,15 +208,15 @@ $(
                 let url;
                 if (lateType == 0) {
                     if (from == 0 && to == 0) {
-                        url = '/schedule/late?employeeId=' + title.employeeId;
+                        url = '/schedule/late?employeeId=' + profile.employeeId;
                     } else if (from != 0 && to != 0) {
-                        url = '/schedule/late/range?employeeId=' + title.employeeId + '&from=' + from + '&to=' + to;
+                        url = '/schedule/late/range?employeeId=' + profile.employeeId + '&from=' + from + '&to=' + to;
                     }
                 } else {
                     if (from == 0 && to == 0) {
-                        url = '/schedule/late/type?employeeId=' + title.employeeId + '&lateType=' + (lateType - 1);
+                        url = '/schedule/late/type?employeeId=' + profile.employeeId + '&lateType=' + (lateType - 1);
                     } else if (from != 0 && to != 0) {
-                        url = '/schedule/late/range_and_type?employeeId=' + title.employeeId + '&from=' + from + '&to=' + to + '&leaveType=' + (lateType - 1);
+                        url = '/schedule/late/range_and_type?employeeId=' + profile.employeeId + '&from=' + from + '&to=' + to + '&leaveType=' + (lateType - 1);
                     }
                 }
 
@@ -340,6 +308,5 @@ $(
         detail.getParameter();
         detail.buildUI();
         detail.bindAjax();
-        // detail.createTable('.leave-body', datalist, lateClassGroup, originDataLateArray);
     }
 );

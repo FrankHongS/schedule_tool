@@ -27,6 +27,7 @@ public class Leave {
     @Column(nullable = false)
     private String name;
 
+    // 0:前非后非，1:前半后非，2：前非后半，3:前半后半
     @Column(nullable = false)
     private Integer leaveType;
 
