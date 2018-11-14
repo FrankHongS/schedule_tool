@@ -26,9 +26,9 @@ public interface LeaveRepository extends JpaRepository<Leave,Integer> {
 
     List<Leave> findByFromAfterAndFromBefore(Date from, Date to);
 
-    List<Leave> findByFromAfterAndFromBeforeAndEmployeeIdAndLeaveType(Date from,Date to,Integer employeeId,Integer leaveType);
+    List<Leave> findByFromIsAfterAndFromBeforeAndEmployeeIdAndLeaveType(Date from,Date to,Integer employeeId,Integer leaveType);
 
-    List<Leave> findByFromAfterAndFromBeforeAndEmployeeId(Date from,Date to,Integer employeeId);
+    List<Leave> findByFromIsAfterAndFromBeforeAndEmployeeId(Date from,Date to,Integer employeeId);
 
     void deleteByEmployeeId(Integer employeeId);
 }

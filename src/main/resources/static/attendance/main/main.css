@@ -32,6 +32,22 @@ body {
     cursor: pointer;
 }
 
+.main-form-item .year,.main-form-item .month{
+    margin-left: 130px;
+}
+
+.main-form-item .export-year-btn,.main-form-item .export-month-btn{
+    margin-left: 25px;
+}
+
+.year-link,.month-link{
+    color: #fff;
+}
+
+.year-link:hover,.month-link:hover{
+    color: #fff;
+}
+
 .main-form-item .search-btn{
     margin-left: 130px;
 }
@@ -61,6 +77,15 @@ body {
     font-weight: 400;
     line-height: 20px;
     text-align: right;
+}
+
+.main-form-item .label-name{
+    padding: 9px 15px;
+    min-width: 100px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+    margin-left: 10px;
 }
 
 .main-form-item .range-dash{

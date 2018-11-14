@@ -40,7 +40,7 @@ public class Leave {
     private Integer halfType;
 
     @Column(nullable = false)
-    private Integer dayCount;
+    private Float dayCount;
 
     private String comment;
 
@@ -113,11 +113,11 @@ public class Leave {
         this.halfType = halfType;
     }
 
-    public Integer getDayCount() {
+    public Float getDayCount() {
         return dayCount;
     }
 
-    public void setDayCount(Integer dayCount) {
+    public void setDayCount(Float dayCount) {
         this.dayCount = dayCount;
     }
 

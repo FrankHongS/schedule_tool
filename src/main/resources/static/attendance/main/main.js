@@ -86,9 +86,30 @@ $(
 
             });
 
+            $('.year-link').bind('click',function(e){
+                const year=$('.year').val();
+                if(year==''){
+                    alert('年份不能为空！');
+                    return;
+                }
+
+                $('.year-link').attr('href','/schedule/excel/export_year?year='+year);
+            });
+
+            $('.month-link').bind('click',function(e){
+                const month=$('.month').val();
+                if(month==''){
+                    alert('月份不能为空！');
+                    return;
+                }
+
+                $('.month-link').attr('href','/schedule/excel/export_month?month='+month);
+            });
+
             $('.search-btn').bind('click', () => {
 
                 const alias = $('.alias').val();
+                const name=$('.search-name').val();
                 const from = $('.from').val();
                 const to = $('.to').val();
 
@@ -99,9 +120,22 @@ $(
 
                 let url;
 
+                if(name&&!from&&!to){
+                    url = '/schedule/sum/name?name=' + name;
+                    this.getRequest(url);
+                    return;
+                }else if(name&&from&&to){
+                    url = '/schedule/sum/range_and_name?from=' + from + '&to=' + to + '&name=' + name;
+
+                    title.from = from;
+                    title.to = to;
+                    this.getRequest(url);
+                    return;
+                }
+
                 if (alias && !from && !to) {//only alias
                     url = '/schedule/sum/alias?alias=' + alias;
-                } else if (!alias && !from && !to) {//neither alias nor range
+                } else if (!alias &&!name&& !from && !to) {//neither alias nor range
                     url = '/schedule/sum?page=0&size=' + size;
                     this.getRequest(url,false);
                     return;
@@ -188,6 +222,22 @@ $(
                 btns: ['confirm'],
             });
 
+            // bind year selector
+            laydate.render({
+                elem: '.year',
+                theme: '#393D49',
+                type: 'year',
+                btns: ['confirm']
+            });
+
+            // bind month selector
+            laydate.render({
+                elem: '.month',
+                theme: '#393D49',
+                type: 'month',
+                btns: ['confirm']
+            });
+
         };
 
         /**
@@ -230,6 +280,8 @@ $(
 
         main.buildUI=function(){
             $('#pager-container').hide();
+
+            // $('.export-year-btn').after($('<a>').addClass('export-year-link').attr('href','hahlfh'));
         };
 
         main.bindClick();

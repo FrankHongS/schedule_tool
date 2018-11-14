@@ -12,9 +12,9 @@ public class YearSum {
 
     private String name;
 
-    private List<Integer> yearSum;
+    private List<Float> yearSum;
 
-    private List<List<Integer>> monthSum;
+    private List<List<Float>> monthSum;
 
     public String getName() {
         return name;
@@ -24,19 +24,19 @@ public class YearSum {
         this.name = name;
     }
 
-    public List<Integer> getYearSum() {
+    public List<Float> getYearSum() {
         return yearSum;
     }
 
-    public void setYearSum(List<Integer> yearSum) {
+    public void setYearSum(List<Float> yearSum) {
         this.yearSum = yearSum;
     }
 
-    public List<List<Integer>> getMonthSum() {
+    public List<List<Float>> getMonthSum() {
         return monthSum;
     }
 
-    public void setMonthSum(List<List<Integer>> monthSum) {
+    public void setMonthSum(List<List<Float>> monthSum) {
         this.monthSum = monthSum;
     }
 

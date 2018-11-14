@@ -97,6 +97,7 @@ $(
                 originDataLeave.leaveDateRange = tempArray[4];
                 originDataLeave.normal = tempArray[5];
                 originDataLeave.comment = tempArray[6];
+                originDataLeave.halfType=tempArray[7];
 
                 layer.open({
                     type: 2,
@@ -255,10 +256,21 @@ $(
                 let item = dataArray[i];
                 let itemList = [];
 
+                let halfType=item.halfType;
+                let desc='';
+                if(halfType==0){
+                    desc='';
+                }else if(halfType==1){
+                    desc='  第一天为半天';
+                }else if(halfType==2){
+                    desc='  最后一天为半天';
+                }else if(halfType==3){
+                    desc='  第一天和最后一天为半天';
+                }
                 itemList[0] = i + 1;
                 itemList[1] = window.leaveTypeArray[item.leaveType + 1];
                 itemList[2] = parseUTCTime(item.createdTime);
-                itemList[3] = parseUTCTimeToYMD(item.from) + ' - ' + parseUTCTimeToYMD(item.to);
+                itemList[3] = parseUTCTimeToYMD(item.from) + ' - ' + parseUTCTimeToYMD(item.to)+desc;
                 itemList[4] = item.dayCount;
                 itemList[5] = item.comment;
                 itemList[6] = item.normal ? '正常' : '异常';
@@ -267,7 +279,7 @@ $(
 
                 list[i] = itemList;
 
-                originDataLeaveArray[i] = item.id + ' , ' + item.leaveType + ' , ' + item.name + ' , ' + item.alias + ' , ' + itemList[3] + ' , ' + item.normal + ' , ' + item.comment;
+                originDataLeaveArray[i] = item.id + ' , ' + item.leaveType + ' , ' + item.name + ' , ' + item.alias + ' , ' + itemList[3] + ' , ' + item.normal + ' , ' + item.comment+' , '+item.halfType;
             }
 
             return list;

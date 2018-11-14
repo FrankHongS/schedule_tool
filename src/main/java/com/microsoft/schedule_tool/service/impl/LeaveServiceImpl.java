@@ -48,7 +48,7 @@ public class LeaveServiceImpl implements LeaveService {
         try {
             Date fromDate=DateUtil.parseDateString(from);
             Date toDate = new Date(DateUtil.parseDateString(to).getTime() + 24 * 60 * 60 * 1000);
-            return mLeaveRepository.findByFromAfterAndFromBeforeAndEmployeeIdAndLeaveType(fromDate,toDate,employeeId,leaveType);
+            return mLeaveRepository.findByFromIsAfterAndFromBeforeAndEmployeeIdAndLeaveType(fromDate,toDate,employeeId,leaveType);
         } catch (ParseException e) {
             throw new RuntimeException("query failed, date range is not proper...");
         }
@@ -60,7 +60,7 @@ public class LeaveServiceImpl implements LeaveService {
         try {
             Date fromDate=DateUtil.parseDateString(from);
             Date toDate = new Date(DateUtil.parseDateString(to).getTime() + 24 * 60 * 60 * 1000);
-            return mLeaveRepository.findByFromAfterAndFromBeforeAndEmployeeId(fromDate, toDate, employeeId);
+            return mLeaveRepository.findByFromIsAfterAndFromBeforeAndEmployeeId(fromDate, toDate, employeeId);
         } catch (ParseException e) {
             throw new RuntimeException("query failed, date range is not proper...");
         }
@@ -91,7 +91,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Transactional
     @Override
-    public Leave saveLeave(String name, String alias, Integer leaveType, String leaveDateRange,Integer halfType, Integer dayCount, Integer employeeId, Boolean isNormal, String comment) {
+    public Leave saveLeave(String name, String alias, Integer leaveType, String leaveDateRange,Integer halfType, Float dayCount, Integer employeeId, Boolean isNormal, String comment) {
 
         if (name == null || "".equals(name))
             throw new RuntimeException("name can't be null");
@@ -134,7 +134,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Transactional
     @Override
-    public Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange,Integer halfType, Integer dayCount, String comment, Boolean isNormal) {
+    public Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange,Integer halfType, Float dayCount, String comment, Boolean isNormal) {
         if (!mLeaveRepository.findById(id).isPresent())
             throw new RuntimeException("leave not existing, can't be updated...");
 

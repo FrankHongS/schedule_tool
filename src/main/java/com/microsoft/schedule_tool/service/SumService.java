@@ -16,9 +16,13 @@ public interface SumService {
 
     List<Attendance> getSumOfAllTypesByAlias(String alias);
 
+    List<Attendance> getSumOfAllTypesByName(String name);
+
     Pager<Attendance> getSumByPage(Integer page,Integer size);
 
     Pager<Attendance> getSumByDateRangeByPage(Integer page, Integer size, String from, String to);
 
     List<Attendance> getSumByDateRangeAndAlias(String from, String to, String alias);
+
+    List<Attendance> getSumByDateRangeAndName(String from, String to, String name);
 }

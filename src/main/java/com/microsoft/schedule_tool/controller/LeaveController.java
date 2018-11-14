@@ -71,13 +71,13 @@ public class LeaveController {
             @RequestParam(name = "leaveType") Integer leaveType,
             @RequestParam(name = "leaveDateRange") String leaveDateRange,
             @RequestParam(name = "halfType",required = false) Integer halfType,
-            @RequestParam(name = "dayCount") Integer dayCount,
+            @RequestParam(name = "dayCount") String dayCount,
             @RequestParam(name = "employeeId") Integer employeeId,
             @RequestParam(name = "isNormal",required = false) Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
         Map<String, Leave> resultMap=new HashMap<>();
 
-        Leave result=leaveService.saveLeave(name, alias, leaveType, leaveDateRange,halfType, dayCount, employeeId, isNormal, comment);
+        Leave result=leaveService.saveLeave(name, alias, leaveType, leaveDateRange,halfType, Float.valueOf(dayCount), employeeId, isNormal, comment);
         resultMap.put(KEY,result);
 
         return resultMap;
@@ -89,12 +89,12 @@ public class LeaveController {
             @RequestParam(name = "leaveType") Integer leaveType,
             @RequestParam(name = "leaveDateRange") String leaveDateRange,
             @RequestParam(name = "halfType",required = false) Integer halfType,
-            @RequestParam(name = "dayCount") Integer dayCount,
+            @RequestParam(name = "dayCount") String dayCount,
             @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
         Map<String, Leave> resultMap=new HashMap<>();
 
-        Leave result=leaveService.updateLeave(id,leaveType,leaveDateRange,halfType,dayCount,comment,isNormal);
+        Leave result=leaveService.updateLeave(id,leaveType,leaveDateRange,halfType,Float.valueOf(dayCount),comment,isNormal);
         resultMap.put(KEY,result);
 
         return resultMap;

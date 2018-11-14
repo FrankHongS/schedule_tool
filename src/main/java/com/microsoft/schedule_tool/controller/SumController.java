@@ -52,6 +52,18 @@ public class SumController {
         return resultMap;
     }
 
+    @GetMapping("/name")
+    public Map<String, List<Attendance>> getAttendanceListByName(
+            @RequestParam("name") String name){
+        Map<String, List<Attendance>> resultMap=new HashMap<>();
+
+        List<Attendance> attendanceList=mSumService.getSumOfAllTypesByName(name);
+
+        resultMap.put(KEY,attendanceList);
+
+        return resultMap;
+    }
+
     @GetMapping("/range")
     public Map<String, Pager<Attendance>> getAttendanceListByRange(
             @RequestParam("page") Integer page,
@@ -75,6 +87,20 @@ public class SumController {
         Map<String, List<Attendance>> resultMap=new HashMap<>();
 
         List<Attendance> attendanceList=mSumService.getSumByDateRangeAndAlias(from, to, alias);
+
+        resultMap.put(KEY,attendanceList);
+
+        return resultMap;
+    }
+
+    @GetMapping("/range_and_name")
+    public Map<String, List<Attendance>> getAttendanceListByRangeAndName(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam("name") String name){
+        Map<String, List<Attendance>> resultMap=new HashMap<>();
+
+        List<Attendance> attendanceList=mSumService.getSumByDateRangeAndName(from, to, name);
 
         resultMap.put(KEY,attendanceList);
 

@@ -14,13 +14,13 @@ public class Attendance {
 
     private Float annualCount;
 
-    private int leaveSum;
+    private Float leaveSum;
 
     private int lateSum;
 
     public Attendance(){}
 
-    public Attendance(int employeeId,String name, String alias, float annualCount, int leaveSum, int lateSum) {
+    public Attendance(int employeeId,String name, String alias, float annualCount, Float leaveSum, int lateSum) {
         this.employeeId=employeeId;
         this.name = name;
         this.alias = alias;
@@ -61,11 +61,11 @@ public class Attendance {
         this.annualCount = annualCount;
     }
 
-    public int getLeaveSum() {
+    public Float getLeaveSum() {
         return leaveSum;
     }
 
-    public void setLeaveSum(int leaveSum) {
+    public void setLeaveSum(Float leaveSum) {
         this.leaveSum = leaveSum;
     }
 

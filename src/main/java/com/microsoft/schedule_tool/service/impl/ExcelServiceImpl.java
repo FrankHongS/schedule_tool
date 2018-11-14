@@ -10,15 +10,13 @@ import com.microsoft.schedule_tool.service.ExcelService;
 import com.microsoft.schedule_tool.util.Constants;
 import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.util.Util;
-import com.microsoft.schedule_tool.vo.leavesum.LeaveYearSum;
+import com.microsoft.schedule_tool.vo.MonthDetailSum;
 import com.microsoft.schedule_tool.vo.leavesum.YearSum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Frank Hon on 11/13/2018
@@ -63,25 +61,49 @@ public class ExcelServiceImpl implements ExcelService {
 
     }
 
+    @Override
+    public List<MonthDetailSum> getMonthDetailSum(String month) {
+        try {
+            String from=month+"-01";
+            String to=DateUtil.parseMonthString(month);
+            Date fromDate= new Date(DateUtil.parseDateString(from).getTime() - 24 * 60 * 60 * 1000);
+            Date toDate=DateUtil.parseDateString(to);
+
+            List<MonthDetailSum> monthDetailSumList =new ArrayList<>();
+
+            List<Employee> employeeList=mEmployeeRepository.findAll();
+            for(Employee employee:employeeList){
+                MonthDetailSum monthDetailSum=
+                        generateMonthDetailSum(fromDate,toDate,employee.getId(),employee.getName());
+                monthDetailSum.setMonth(month);
+                monthDetailSumList.add(monthDetailSum);
+            }
+
+            return monthDetailSumList;
+        } catch (ParseException e) {
+            throw new RuntimeException("month format is not proper...");
+        }
+    }
+
     private YearSum generateYearSum(String year, Date fromDate, Date toDate, Integer employeeId, String name) throws ParseException {
 
-        List<Integer> allYearSum=new ArrayList<>();
+        List<Float> allYearSum=new ArrayList<>();
 
         for(int i = 0; i<Constants.LEAVE.length+Constants.LATE.length;i++){
-            int count;
+            Float count;
 
             if(i<Constants.LEAVE.length){
 
-                List<Leave> leaveList=mLeaveRepository.findByFromAfterAndFromBeforeAndEmployeeIdAndLeaveType(
+                List<Leave> leaveList=mLeaveRepository.findByFromIsAfterAndFromBeforeAndEmployeeIdAndLeaveType(
                         fromDate,toDate,employeeId,i);
 
                 count=Util.getLeaveDayCount(leaveList);
             }else{
-                List<Late> lateList=mLateRepository.findByLateDateAfterAndLateDateBeforeAndEmployeeIdAndLateType(
+                List<Late> lateList=mLateRepository.findByLateDateIsAfterAndLateDateBeforeAndEmployeeIdAndLateType(
                         fromDate,toDate,employeeId,i-9
                 );
 
-                count=lateList.size();
+                count= (float) lateList.size();
             }
 
             allYearSum.add(count);
@@ -91,7 +113,7 @@ public class ExcelServiceImpl implements ExcelService {
         yearSum.setName(name);
         yearSum.setYearSum(allYearSum);
 
-        List<List<Integer>> monthSum=new ArrayList<>();
+        List<List<Float>> monthSum=new ArrayList<>();
         for(int j=0;j<12;j++){
             monthSum.add(generateMonthSum(year+"-0"+(j+1)+"-01",year+"-0"+(j+2)+"-01",employeeId));
         }
@@ -101,34 +123,62 @@ public class ExcelServiceImpl implements ExcelService {
         return yearSum;
     }
 
-    private List<Integer> generateMonthSum(String from,String to,Integer employeeId) throws ParseException {
+    private List<Float> generateMonthSum(String from,String to,Integer employeeId) throws ParseException {
 
         Date fromDate= DateUtil.parseDateString(from);
         Date toDate=DateUtil.parseDateString(to);
 
-        List<Integer> monthSum=new ArrayList<>();
+        List<Float> monthSum=new ArrayList<>();
 
         for(int i = 0; i<Constants.LEAVE.length+Constants.LATE.length;i++){
-            int count;
+            Float count;
 
             if(i<Constants.LEAVE.length){
 
-                List<Leave> leaveList=mLeaveRepository.findByFromAfterAndFromBeforeAndEmployeeIdAndLeaveType(
+                List<Leave> leaveList=mLeaveRepository.findByFromIsAfterAndFromBeforeAndEmployeeIdAndLeaveType(
                         fromDate,toDate,employeeId,i);
 
                 count=Util.getLeaveDayCount(leaveList);
             }else{
-                List<Late> lateList=mLateRepository.findByLateDateAfterAndLateDateBeforeAndEmployeeIdAndLateType(
+                List<Late> lateList=mLateRepository.findByLateDateIsAfterAndLateDateBeforeAndEmployeeIdAndLateType(
                         fromDate,toDate,employeeId,i-9
                 );
 
-                count=lateList.size();
+                count= (float) lateList.size();
             }
 
             monthSum.add(count);
         }
 
         return monthSum;
+    }
+
+    private MonthDetailSum generateMonthDetailSum(Date fromDate, Date toDate, Integer employeeId, String name){
+
+        Map<Long,String> descMap=new HashMap<>();
+
+        List<Leave> leaveList=mLeaveRepository.findByFromIsAfterAndFromBeforeAndEmployeeId(fromDate,toDate,employeeId);
+        for(Leave leave:leaveList){
+            String desc=Util.getLeaveDesc(leave);
+            descMap.put(leave.getFrom().getTime(),desc);
+        }
+
+        List<Late> lateList=mLateRepository.findByLateDateIsAfterAndLateDateBeforeAndEmployeeId(fromDate,toDate,employeeId);
+        for(Late late:lateList){
+            String desc=Util.getLateDesc(late);
+            long time=late.getLateDate().getTime();
+            if(descMap.containsKey(time)){
+                descMap.put(time,descMap.get(time)+"  "+desc);
+            }else{
+                descMap.put(time,desc);
+            }
+        }
+
+        MonthDetailSum monthDetailSum=new MonthDetailSum();
+        monthDetailSum.setName(name);
+        monthDetailSum.setDescMap(descMap);
+
+        return monthDetailSum;
     }
 
 }

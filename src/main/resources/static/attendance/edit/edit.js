@@ -24,7 +24,8 @@ $(
 
                         $('.time-label').text('请假时间');
                         $('.type-label').text('请假类型');
-                        $('.datepicker').attr('placeholder', '  -')
+                        $('.datepicker').attr('placeholder', '  -');
+                        $('.half-container').show();
                         render.config.range = '-';//设置laydate的属性
 
                         that.buildTypeMenu(window.leaveTypeArray);
@@ -34,7 +35,8 @@ $(
 
                         $('.time-label').text('时间');
                         $('.type-label').text('考勤类型');
-                        $('.datepicker').attr('placeholder', '发生日期')
+                        $('.datepicker').attr('placeholder', '发生日期');
+                        $('.half-container').hide();
                         render.config.range = false;
 
                         that.buildTypeMenu(window.lateTypeArray);
@@ -83,8 +85,7 @@ $(
                 const typeValue=$('#item-type').children('option:selected').val();
                 switch (value) {
                     case '1':
-                        $('.half-container').show();
-                        let halfType;
+                        let halfType=0;
                         if($('.previous:checked').length+$('.later:checked').length==2){
                             halfType=3;
                         }else if($('.previous:checked').length+$('.later:checked').length==0){
@@ -101,7 +102,7 @@ $(
                             leaveType: typeValue,
                             leaveDateRange: $('.datepicker').val(),
                             halfType: halfType,
-                            dayCount: calculateDayCount($('.datepicker').val()),
+                            dayCount: calculateDayCount($('.datepicker').val(),halfType),
                             employeeId: window.parent.title.employeeId,
                             isNormal: $('.choose input[name="isNormal"]:checked').val()==='1' ? true : false,
                             comment: $('.comment-text').val()
@@ -111,7 +112,6 @@ $(
                         url = '/schedule/leave';
                         break;
                     case '2':
-                        $('.half-container').hide();
                         data = {
                             name: $('.name').val(),
                             alias: $('.alias').val(),

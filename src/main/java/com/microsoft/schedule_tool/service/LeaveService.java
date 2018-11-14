@@ -25,9 +25,9 @@ public interface LeaveService {
 
     Leave saveLeave(Leave leave);
 
-    Leave saveLeave(String name, String alias, Integer leaveType, String leaveDateRange,Integer halfType, Integer dayCount, Integer employeeId, Boolean isNormal, String comment);
+    Leave saveLeave(String name, String alias, Integer leaveType, String leaveDateRange,Integer halfType, Float dayCount, Integer employeeId, Boolean isNormal, String comment);
 
-    Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange,Integer halfType, Integer dayCount, String comment, Boolean isNormal);
+    Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange,Integer halfType, Float dayCount, String comment, Boolean isNormal);
 
     boolean deleteLeave(Integer id);
 }

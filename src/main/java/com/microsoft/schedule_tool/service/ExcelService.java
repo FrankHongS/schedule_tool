@@ -1,5 +1,6 @@
 package com.microsoft.schedule_tool.service;
 
+import com.microsoft.schedule_tool.vo.MonthDetailSum;
 import com.microsoft.schedule_tool.vo.leavesum.YearSum;
 
 import java.util.List;
@@ -12,6 +13,6 @@ public interface ExcelService {
 
     List<YearSum> getYearSum(String year);
 
-
+    List<MonthDetailSum> getMonthDetailSum(String month);
 
 }
