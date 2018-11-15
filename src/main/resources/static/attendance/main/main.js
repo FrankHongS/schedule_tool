@@ -152,7 +152,7 @@ $(
                     title.from = from;
                     title.to = to;
                 } else {
-                    $('.main-form-item .message').text('查找失败，时间范围需同为空或同不为空... :)');
+                    alert('时间范围需同为空或同不为空... :)');
                     return;
                 }
 

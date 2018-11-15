@@ -1,4 +1,4 @@
-package com.microsoft.schedule_tool.vo;
+package com.microsoft.schedule_tool.vo.excel;
 
 import java.util.Date;
 import java.util.List;

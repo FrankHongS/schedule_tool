@@ -26,6 +26,14 @@ public interface Constants {
             "临时外出"
     };
 
+    // the description of leave's half day
+    String[] LEAVE_HALF_DESC={
+            "",
+            "第一天为半天",
+            "最后一天为半天",
+            "第一天和最后一天为半天"
+    };
+
     Color[] COLOR_ARRAY={
             new Color(221,139,71),
             new Color(50,142,78),

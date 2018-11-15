@@ -1,7 +1,7 @@
-package com.microsoft.schedule_tool.util;
+package com.microsoft.schedule_tool.util.excel;
 
-import com.microsoft.schedule_tool.vo.MonthDetailSum;
-import com.microsoft.schedule_tool.vo.leavesum.YearSum;
+import com.microsoft.schedule_tool.util.Constants;
+import com.microsoft.schedule_tool.vo.excel.YearSum;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,17 +15,13 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Created by Frank Hon on 11/13/2018
+ * Created by Frank Hon on 11/15/2018
  * E-mail: v-shhong@microsoft.com
  */
-public class ExcelUtil {
-
+public class ExportYearSumUtil {
     private static final String YEAR_SUFFIX="年汇总";
     private static final String MONTH_SUFFIX="月汇总";
 
@@ -36,7 +32,7 @@ public class ExcelUtil {
         exportYearSumExcel(response.getOutputStream(),allYearSumList);
     }
 
-    private static void exportYearSumExcel(OutputStream outputStream,List<YearSum> allYearSumList) throws IOException {
+    private static void exportYearSumExcel(OutputStream outputStream, List<YearSum> allYearSumList) throws IOException {
         XSSFWorkbook workbook=new XSSFWorkbook();
 
         String sheetName="sheet1";
@@ -58,7 +54,7 @@ public class ExcelUtil {
         for(int i=0;i<13;i++){
 
             if(i==0){
-                for(int j=0;j<Constants.LEAVE.length+Constants.LATE.length+1;j++){
+                for(int j = 0; j< Constants.LEAVE.length+Constants.LATE.length+1; j++){
 
                     Cell cell=titleRow.createCell(j);
                     if(j==0){
@@ -124,88 +120,5 @@ public class ExcelUtil {
         cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
         return cellStyle;
-    }
-
-    public static void exportMonthDetailSum(HttpServletResponse response, String fileName, List<MonthDetailSum> monthDetailSumList) throws IOException, ParseException {
-        response.setHeader("content-Type","application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName, "utf-8"));
-        exportMonthDetailSum(response.getOutputStream(),monthDetailSumList);
-    }
-
-    private static void exportMonthDetailSum(OutputStream outputStream,List<MonthDetailSum> monthDetailSumList) throws IOException, ParseException {
-        XSSFWorkbook workbook=new XSSFWorkbook();
-
-        String sheetName="sheet1";
-        XSSFSheet sheet=workbook.createSheet(sheetName);
-
-        // 创建表头
-        buildMonthDetailSumTableHeader(workbook, sheet,monthDetailSumList);
-
-        //创建表的主体
-        buildMonthDetailSumTableBody(workbook, sheet,monthDetailSumList);
-
-        workbook.write(outputStream);
-        outputStream.close();
-    }
-
-    private static void buildMonthDetailSumTableHeader(XSSFWorkbook workbook,XSSFSheet sheet,List<MonthDetailSum> monthDetailSumList) throws ParseException {
-
-
-        Row titleRow=sheet.createRow(0);
-
-        String month=monthDetailSumList.get(0).getMonth();
-
-        String from=month+"-01";
-        String to=DateUtil.parseMonthString(month);
-        int monthDayCount=DateUtil.getDayCountFromDate(from,to);
-
-        for(int i=0;i<monthDayCount+1;i++){
-            Cell cell=titleRow.createCell(i);
-            if(i==0) {
-                cell.setCellValue("");
-            }else if(i==1){
-                cell.setCellValue(from);
-            }else{
-                long fromTime=DateUtil.parseDateString(from).getTime();
-                Date date=new Date(fromTime+24*60*60*1000);
-                cell.setCellValue(DateUtil.parseDateToString(date));
-                from=DateUtil.parseDateToString(date);
-            }
-        }
-
-    }
-
-    private static void buildMonthDetailSumTableBody(XSSFWorkbook workbook,XSSFSheet sheet,List<MonthDetailSum> monthDetailSumList) throws ParseException {
-
-        String month=monthDetailSumList.get(0).getMonth();
-
-        String from=month+"-01";
-        String to=DateUtil.parseMonthString(month);
-        int monthDayCount=DateUtil.getDayCountFromDate(from,to);
-
-        for(int i=0;i<monthDetailSumList.size();i++){
-            Row row=sheet.createRow(i+1);
-            String name=monthDetailSumList.get(i).getName();
-
-            MonthDetailSum monthDetailSum=monthDetailSumList.get(i);
-
-            Map<Long,String> descMap=monthDetailSum.getDescMap();
-            long currDateTime=DateUtil.parseDateString(from).getTime();
-            for(int k=0;k<monthDayCount+1;k++){
-                Cell cell=row.createCell(k);
-                if(k==0){
-                    cell.setCellValue(name);
-                }else{
-                    if(descMap.containsKey(currDateTime)){
-                        cell.setCellValue(descMap.get(currDateTime));
-                        XSSFCellStyle cellStyle=createCellStyle(workbook,Constants.MONTH_DETAIL_COLOR);
-                        cell.setCellStyle(cellStyle);
-                    }else{
-                        cell.setCellValue("");
-                    }
-                    currDateTime+=24*60*60*1000;
-                }
-            }
-        }
     }
 }

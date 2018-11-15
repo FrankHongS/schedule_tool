@@ -1,7 +1,7 @@
 package com.microsoft.schedule_tool.service;
 
-import com.microsoft.schedule_tool.vo.MonthDetailSum;
-import com.microsoft.schedule_tool.vo.leavesum.YearSum;
+import com.microsoft.schedule_tool.vo.excel.MonthDetailSum;
+import com.microsoft.schedule_tool.vo.excel.YearSum;
 
 import java.util.List;
 

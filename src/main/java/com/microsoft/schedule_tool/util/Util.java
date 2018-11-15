@@ -27,6 +27,8 @@ public class Util {
                 DateUtil.parseDateToString(leave.getFrom()) +
                 "到" +
                 DateUtil.parseDateToString(leave.getTo())+
+                " "+
+                Constants.LEAVE_HALF_DESC[leave.getHalfType()==null?0:leave.getHalfType()]+
                 " 备注："+leave.getComment();
     }
 

@@ -1,9 +1,10 @@
 package com.microsoft.schedule_tool.controller;
 
 import com.microsoft.schedule_tool.service.ExcelService;
-import com.microsoft.schedule_tool.util.ExcelUtil;
-import com.microsoft.schedule_tool.vo.MonthDetailSum;
-import com.microsoft.schedule_tool.vo.leavesum.YearSum;
+import com.microsoft.schedule_tool.util.excel.ExportMonthDetailSumUtil;
+import com.microsoft.schedule_tool.util.excel.ExportYearSumUtil;
+import com.microsoft.schedule_tool.vo.excel.MonthDetailSum;
+import com.microsoft.schedule_tool.vo.excel.YearSum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +32,8 @@ public class ExcelController {
 
         List<YearSum> yearSumList=mExcelService.getYearSum(year);
 
-        String filename=System.currentTimeMillis()+".xlsx";
-        ExcelUtil.exportYearSumExcel(response,filename, yearSumList);
+        String filename=year+".xlsx";
+        ExportYearSumUtil.exportYearSumExcel(response,filename, yearSumList);
     }
 
     @GetMapping("/export_month")
@@ -40,7 +41,7 @@ public class ExcelController {
 
         List<MonthDetailSum> monthDetailSumList=mExcelService.getMonthDetailSum(month);
 
-        String filename=System.currentTimeMillis()+".xlsx";
-        ExcelUtil.exportMonthDetailSum(response,filename,monthDetailSumList);
+        String filename=month+".xlsx";
+        ExportMonthDetailSumUtil.exportMonthDetailSum(response,filename,monthDetailSumList);
     }
 }
