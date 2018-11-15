@@ -6,7 +6,9 @@ import com.microsoft.schedule_tool.dao.LeaveRepository;
 import com.microsoft.schedule_tool.entity.Employee;
 import com.microsoft.schedule_tool.entity.Late;
 import com.microsoft.schedule_tool.entity.Leave;
+import com.microsoft.schedule_tool.exception.EmployeeException;
 import com.microsoft.schedule_tool.service.EmployeeService;
+import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,28 +38,29 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<Employee> getAllEmployees() {
-        List<Employee> result=mEmployeeRepository.findAll();
-        return result;
+        return mEmployeeRepository.findAll();
     }
 
     @Transactional
     @Override
     public Employee saveEmployee(Employee employee) {
-        if(employee==null)
-            throw new RuntimeException("employee can't be null");
         if(employee.getAlias()==null||"".equals(employee.getAlias()))
-            throw new RuntimeException("employee alias can't be null");
+            throw new EmployeeException(ResultEnum.EMPLOYEE_ALIAS_NULL);
         if (employee.getName()==null||"".equals(employee.getName()))
-            throw new RuntimeException("employee name can't be null");
+            throw new EmployeeException(ResultEnum.EMPLOYEE_NAME_NULL);
+
+        if(mEmployeeRepository.findByAlias(employee.getAlias()).isPresent()){
+            throw new EmployeeException(ResultEnum.EMPLOYEE_ALIAS_EXIST);
+        }
 
         try {
             Employee result=mEmployeeRepository.save(employee);
             if (result!=null){
                 return result;
             } else
-                throw new RuntimeException("fail to save employee");
+                throw new EmployeeException(ResultEnum.EMPLOYEE_SAVE_FAIL);
         }catch (Exception e){
-            throw new RuntimeException("fail to save employee "+e.getMessage());
+            throw new EmployeeException(ResultEnum.EMPLOYEE_SAVE_FAIL);
         }
     }
 
@@ -93,11 +96,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
                 return employee;
             }catch (Exception e){
-                throw new RuntimeException("fail to save employee "+e.getMessage());
+                throw new EmployeeException(ResultEnum.EMPLOYEE_UPDATE_FAIL);
             }
 
         }else{
-            throw new RuntimeException("employee not existing,can't be updated");
+            throw new EmployeeException(ResultEnum.EMPLOYEE_NOT_EXIST);
         }
 
     }
@@ -107,33 +110,33 @@ public class EmployeeServiceImpl implements EmployeeService {
     public boolean deleteEmployee(Integer id) {
 
         if(!mEmployeeRepository.findById(id).isPresent())
-            throw new RuntimeException("employee id not existing");
+            throw new EmployeeException(ResultEnum.EMPLOYEE_ID_NOT_EXIST);
 
         try {
             mEmployeeRepository.deleteById(id);
 
             if(mEmployeeRepository.findById(id).isPresent())
-                throw new RuntimeException("fail to delete employee");
+                throw new EmployeeException(ResultEnum.EMPLOYEE_DELETE_FAIL);
         }catch (Exception e){
-            throw new RuntimeException("fail to delete employee "+e.getMessage());
+            throw new EmployeeException(ResultEnum.EMPLOYEE_DELETE_FAIL);
         }
 
         try {
             mLeaveRepository.deleteByEmployeeId(id);
 
             if(mLeaveRepository.findByEmployeeId(id).size()>0)
-                throw new RuntimeException("fail to delete employee");
+                throw new EmployeeException(ResultEnum.EMPLOYEE_DELETE_FAIL);
         }catch (Exception e){
-            throw new RuntimeException("fail to delete employee "+e.getMessage());
+            throw new EmployeeException(ResultEnum.EMPLOYEE_DELETE_FAIL);
         }
 
         try {
             mLateRepository.deleteByEmployeeId(id);
 
             if(mLateRepository.findByEmployeeId(id).size()>0)
-                throw new RuntimeException("fail to delete employee");
+                throw new EmployeeException(ResultEnum.EMPLOYEE_DELETE_FAIL);
         }catch (Exception e){
-            throw new RuntimeException("fail to delete employee "+e.getMessage());
+            throw new EmployeeException(ResultEnum.EMPLOYEE_DELETE_FAIL);
         }
 
         return true;

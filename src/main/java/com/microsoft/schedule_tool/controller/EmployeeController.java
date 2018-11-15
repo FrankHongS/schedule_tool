@@ -2,7 +2,9 @@ package com.microsoft.schedule_tool.controller;
 
 import com.microsoft.schedule_tool.entity.Employee;
 import com.microsoft.schedule_tool.service.EmployeeService;
+import com.microsoft.schedule_tool.util.ResultUtil;
 import com.microsoft.schedule_tool.vo.Attendance;
+import com.microsoft.schedule_tool.vo.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +38,9 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public Map<String, Employee> saveEmployee(@RequestParam("alias") String alias,
-                                              @RequestParam("name") String name,
-                                              @RequestParam(value = "annual",required = false) String annual){
+    public Result saveEmployee(@RequestParam("alias") String alias,
+                               @RequestParam("name") String name,
+                               @RequestParam(value = "annual",required = false) String annual){
         Map<String, Employee> resultMap=new HashMap<>();
 
         Employee employee=new Employee();
@@ -49,7 +51,7 @@ public class EmployeeController {
         Employee result=mEmployeeService.saveEmployee(employee);
         resultMap.put(KEY,result);
 
-        return resultMap;
+        return ResultUtil.success(resultMap);
     }
 
     @PostMapping("/update")
