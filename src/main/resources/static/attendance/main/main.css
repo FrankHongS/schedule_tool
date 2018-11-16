@@ -2,9 +2,102 @@ body {
     margin: 0;
 }
 
+#main-form-container{
+    width: 80%;
+    margin: 50px auto 0;
+}
+
+#main-form{
+    width: 100%;
+    display: inline-block;
+}
+
+.main-form-item {
+    margin-bottom: 15px;
+}
+
+#main-form-container .main-btn{
+    display: inline-block;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.main-form-item .year,.main-form-item .month{
+    margin-left: 130px;
+}
+
+.main-form-item .export-year-btn,.main-form-item .export-month-btn{
+    margin-left: 25px;
+}
+
+.year-link,.month-link{
+    color: #fff;
+}
+
+.year-link:hover,.month-link:hover{
+    color: #fff;
+}
+
+.main-form-item .search-btn{
+    margin-left: 130px;
+}
+
+.main-form-item .message{
+    margin-left: 100px;
+}
+
+#main-form-container .add-btn{
+    float: right;
+}
+
+.main-form-item .form-input{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+.main-form-item .label {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    min-width: 100px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+
+.main-form-item .label-name{
+    padding: 9px 15px;
+    min-width: 100px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+    margin-left: 10px;
+}
+
+.main-form-item .range-dash{
+    display: inline-block;
+    margin: 0 10px;
+    text-align: center;
+}
+
+/* employee attendance table */
 #main-container{
-    width: 60%;
-    margin: 150px auto 0;
+    width: 80%;
+    margin: 30px auto 0;
 }
 
 #main-table {
@@ -20,14 +113,42 @@ body {
 }
 
 #main-table tr :first-child{
-    width: 20%;
+    width: 10%;
     min-width: 100px;
+}
+
+#main-table tr :nth-child(2){
+    width: 10%;
+    min-width: 100px;
+}
+
+#main-table tr :nth-child(3){
+    width: 10%;
+}
+
+#main-table tr .name{
     cursor: pointer;
 }
 
+#main-table tr .name:hover{
+    color: #009688;
+}
+
+/* 子代[2,3] */
+#main-table tr :nth-child(-n+5):nth-child(n+4){
+    width: 32%;
+}
+
 #main-table tr :last-child{
-    width: 5%;
+    width: 6%;
     min-width: 50px;
+}
+
+#main-table tr .edit{
+    cursor: pointer;
+}
+#main-table tr .edit:hover{
+    color: #009688;
 }
 
 #main-table thead td{

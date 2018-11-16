@@ -1,0 +1,179 @@
+body{
+    margin: 0;
+}
+
+#title{
+    width: 95%;
+    margin: 20px auto;
+}
+
+#title h1{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.detail-btn{
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.modify-profile-btn{
+    position: relative;
+    float: right;
+    bottom: 34px;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.search-btn{
+    margin-left: 65px;
+    line-height: 25px;
+}
+
+.table-title{
+    display: inline-block;
+    text-align: left;
+    margin: 0 0 10px 20px;
+    font-weight: bold;
+    font-size: 1.8em;
+}
+
+select{
+    min-height: 38px;
+    min-width: 160px;
+    width: 15%;
+    padding-left: 10px;
+    border: 1px solid #e6e6e6;
+    margin-bottom: 10px;
+}
+
+.type-label {
+    display: inline-block;
+    width: 80px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+    margin-left: 30px;
+    padding-right: 10px;
+}
+
+.container{
+    width: 95%;
+    margin: 20px auto;
+}
+
+table{
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+table,
+table tr td {
+    border: 1px solid #0094ff;
+}
+
+table thead tr td {
+    padding: 8px;
+    font-size: 1.2em;
+}
+
+table tbody tr td {
+    padding: 10px;
+    font-size: 1.0em;
+}
+
+/* index */
+table tr :first-child{
+    width: 5%;
+}
+
+.leave tr :nth-child(2){
+    width: 8%;
+}
+
+/* create time */
+table tr :nth-child(3){
+    width: 17%;
+}
+
+.leave tr :nth-child(4){
+    width: 20%;
+}
+
+.leave tr :nth-child(5){
+    width: 12%;
+}
+
+/* 设置备注列宽度 */
+.leave tr :nth-child(6){
+    width: 18%;
+}
+
+/* normal */
+.leave tr :nth-child(7){
+    width: 10%;
+}
+
+/* edit */
+.leave tr :nth-child(8){
+    width: 5%;
+}
+
+.leave tr :nth-child(9){
+    width: 5%;
+}
+
+.edit{
+    cursor: pointer;
+}
+
+.edit:hover{
+    color: #009688;
+}
+
+.delete{
+    cursor: pointer;
+}
+
+.delete:hover{
+    color: #009688;
+}
+
+.late tr :nth-child(2){
+    width: 10%;
+}
+
+.late tr :nth-child(3){
+    width: 22%;
+}
+
+.late tr :nth-child(4){
+    width: 23%;
+}
+
+.late tr :nth-child(5){
+    width: 20%;
+}
+
+.late tr :nth-child(6){
+    width: 10%;
+}
+
+.late tr :nth-child(7){
+    width: 5%;
+}
+
+.late tr :nth-child(8){
+    width: 5%;
+}
