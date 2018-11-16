@@ -1,6 +1,6 @@
 package com.microsoft.schedule_tool.controller;
 
-import com.microsoft.schedule_tool.entity.LeaveType;
+import com.microsoft.schedule_tool.entity.Leave;
 import com.microsoft.schedule_tool.service.LeaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,45 +22,79 @@ public class LeaveController {
     @Autowired
     private LeaveService leaveService;
 
-    @GetMapping(value = "")
-    public Map<String, List<LeaveType>> getLeavesByAlias(
-            @RequestParam(name = "alias") String alias){
-        Map<String,List<LeaveType>> resultMap=new HashMap<>();
-        List<LeaveType> leaveList=leaveService.getAllLeavesByAlias(alias);
+    @GetMapping
+    public Map<String, List<Leave>> getLeavesByEmployeeId(
+            @RequestParam(name = "employeeId") Integer employeeId){
+        Map<String,List<Leave>> resultMap=new HashMap<>();
+        List<Leave> leaveList=leaveService.getAllLeavesByEmployeeId(employeeId);
         resultMap.put(KEY,leaveList);
         return resultMap;
     }
 
-    @PostMapping(value = "")
-    public Map<String, LeaveType> saveLeave(
+    @GetMapping("/type")
+    public Map<String, List<Leave>> getLeavesByEmployeeIdAndLeaveType(
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "leaveType") Integer leaveType){
+        Map<String,List<Leave>> resultMap=new HashMap<>();
+        List<Leave> leaveList=leaveService.getAllLeavesByEmployeeIdAndLeaveType(employeeId, leaveType);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @GetMapping("/range_and_type")
+    public Map<String, List<Leave>> getLeavesByEmployeeIdAndLeaveTypeAndRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "leaveType") Integer leaveType){
+        Map<String,List<Leave>> resultMap=new HashMap<>();
+        List<Leave> leaveList=leaveService.getAllLeavesByDateRangeAndEmployeeIdAndLeaveType(from, to, employeeId, leaveType);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @GetMapping("/range")
+    public Map<String, List<Leave>> getLeavesByEmployeeIdAndRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam(name = "employeeId") Integer employeeId){
+        Map<String,List<Leave>> resultMap=new HashMap<>();
+        List<Leave> leaveList=leaveService.getAllLeavesByDateRangeAndEmployeeId(from, to, employeeId);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @PostMapping
+    public Map<String, Leave> saveLeave(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "alias") String alias,
+            @RequestParam(name = "leaveType") Integer leaveType,
             @RequestParam(name = "leaveDateRange") String leaveDateRange,
+            @RequestParam(name = "halfType",required = false) Integer halfType,
+            @RequestParam(name = "dayCount") String dayCount,
+            @RequestParam(name = "employeeId") Integer employeeId,
             @RequestParam(name = "isNormal",required = false) Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
-        Map<String,LeaveType> resultMap=new HashMap<>();
-        LeaveType leave=new LeaveType();
-        leave.setName(name);
-        leave.setAlias(alias);
-        leave.setLeaveDateRange(leaveDateRange);
-        leave.setNormal(isNormal);
-        leave.setComment(comment);
+        Map<String, Leave> resultMap=new HashMap<>();
 
-        LeaveType result=leaveService.saveLeave(leave);
+        Leave result=leaveService.saveLeave(name, alias, leaveType, leaveDateRange,halfType, Float.valueOf(dayCount), employeeId, isNormal, comment);
         resultMap.put(KEY,result);
 
         return resultMap;
     }
 
     @PostMapping(value = "/update")
-    public Map<String, LeaveType> updateLeave(
+    public Map<String, Leave> updateLeave(
             @RequestParam(name = "id") Integer id,
-            @RequestParam(name = "leaveDateRange",required = false) String leaveDateRange,
-            @RequestParam(name = "isNormal",required = false) Boolean isNormal,
+            @RequestParam(name = "leaveType") Integer leaveType,
+            @RequestParam(name = "leaveDateRange") String leaveDateRange,
+            @RequestParam(name = "halfType",required = false) Integer halfType,
+            @RequestParam(name = "dayCount") String dayCount,
+            @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
-        Map<String,LeaveType> resultMap=new HashMap<>();
+        Map<String, Leave> resultMap=new HashMap<>();
 
-        LeaveType result=leaveService.updateLeave(id,leaveDateRange,comment,isNormal);
+        Leave result=leaveService.updateLeave(id,leaveType,leaveDateRange,halfType,Float.valueOf(dayCount),comment,isNormal);
         resultMap.put(KEY,result);
 
         return resultMap;

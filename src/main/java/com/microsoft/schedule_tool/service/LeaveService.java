@@ -1,7 +1,8 @@
 package com.microsoft.schedule_tool.service;
 
-import com.microsoft.schedule_tool.entity.LeaveType;
+import com.microsoft.schedule_tool.entity.Leave;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,11 +11,23 @@ import java.util.List;
  */
 public interface LeaveService {
 
-    List<LeaveType> getAllLeavesByAlias(String alias);
+    List<Leave> getAllLeavesByEmployeeId(Integer employeeId);
 
-    LeaveType saveLeave(LeaveType leave);
+    List<Leave> getAllLeavesByEmployeeIdAndLeaveType(Integer employeeId, Integer leaveType);
 
-    LeaveType updateLeave(Integer id,String leaveDateRange, String comment,Boolean isNormal);
+    List<Leave> getAllLeavesByDateRangeAndAlias(Date from, Date to, String alias);
+
+    List<Leave> getAllLeavesByDateRange(Date from, Date to);
+
+    List<Leave> getAllLeavesByDateRangeAndEmployeeIdAndLeaveType(String from, String to, Integer employeeId, Integer leaveType);
+
+    List<Leave> getAllLeavesByDateRangeAndEmployeeId(String from, String to, Integer employeeId);
+
+    Leave saveLeave(Leave leave);
+
+    Leave saveLeave(String name, String alias, Integer leaveType, String leaveDateRange,Integer halfType, Float dayCount, Integer employeeId, Boolean isNormal, String comment);
+
+    Leave updateLeave(Integer id, Integer leaveType, String leaveDateRange,Integer halfType, Float dayCount, String comment, Boolean isNormal);
 
     boolean deleteLeave(Integer id);
 }

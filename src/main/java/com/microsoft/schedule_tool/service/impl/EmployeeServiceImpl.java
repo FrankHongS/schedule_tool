@@ -1,9 +1,17 @@
 package com.microsoft.schedule_tool.service.impl;
 
 import com.microsoft.schedule_tool.dao.EmployeeRepository;
+import com.microsoft.schedule_tool.dao.LateRepository;
+import com.microsoft.schedule_tool.dao.LeaveRepository;
 import com.microsoft.schedule_tool.entity.Employee;
+import com.microsoft.schedule_tool.entity.Late;
+import com.microsoft.schedule_tool.entity.Leave;
 import com.microsoft.schedule_tool.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +27,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepository mEmployeeRepository;
+
+    @Autowired
+    private LeaveRepository mLeaveRepository;
+
+    @Autowired
+    private LateRepository mLateRepository;
 
     @Override
     public List<Employee> getAllEmployees() {
@@ -49,13 +63,30 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
-    public Employee updateEmployee(Integer id,String alias,String name) {
+    public Employee updateEmployee(Integer id,String alias,String name,Float annual) {
 
         if(mEmployeeRepository.findById(id).isPresent()){
             Employee employee=mEmployeeRepository.findById(id).get();
 
             employee.setName(name);
             employee.setAlias(alias);
+            employee.setAnnual(annual);
+
+            // update tb-leave
+            List<Leave> leaves=mLeaveRepository.findByEmployeeId(id);
+            for(Leave leave:leaves){
+                leave.setName(name);
+                leave.setAlias(alias);
+                mLeaveRepository.save(leave);
+            }
+
+            // update tb-late
+            List<Late> lates=mLateRepository.findByEmployeeId(id);
+            for(Late late:lates){
+                late.setName(name);
+                late.setAlias(alias);
+                mLateRepository.save(late);
+            }
 
             try{
                 mEmployeeRepository.save(employee);
@@ -73,19 +104,44 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
-    public boolean deleteEmployee(String alias) {
+    public boolean deleteEmployee(Integer id) {
 
-        if(!mEmployeeRepository.findByAlias(alias).isPresent())
-            throw new RuntimeException("employee alias not existing");
+        if(!mEmployeeRepository.findById(id).isPresent())
+            throw new RuntimeException("employee id not existing");
+
         try {
-            mEmployeeRepository.deleteByAlias(alias);
+            mEmployeeRepository.deleteById(id);
 
-            if(!mEmployeeRepository.findByAlias(alias).isPresent())
-                return true;
-            else
+            if(mEmployeeRepository.findById(id).isPresent())
                 throw new RuntimeException("fail to delete employee");
         }catch (Exception e){
             throw new RuntimeException("fail to delete employee "+e.getMessage());
         }
+
+        try {
+            mLeaveRepository.deleteByEmployeeId(id);
+
+            if(mLeaveRepository.findByEmployeeId(id).size()>0)
+                throw new RuntimeException("fail to delete employee");
+        }catch (Exception e){
+            throw new RuntimeException("fail to delete employee "+e.getMessage());
+        }
+
+        try {
+            mLateRepository.deleteByEmployeeId(id);
+
+            if(mLateRepository.findByEmployeeId(id).size()>0)
+                throw new RuntimeException("fail to delete employee");
+        }catch (Exception e){
+            throw new RuntimeException("fail to delete employee "+e.getMessage());
+        }
+
+        return true;
+    }
+
+    @Override
+    public Page<Employee> getEmployeesByPageNoCriteria(Integer page, Integer size) {
+        Pageable pageable=PageRequest.of(page,size, Sort.Direction.ASC,"id");
+        return mEmployeeRepository.findAll(pageable);
     }
 }

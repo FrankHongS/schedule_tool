@@ -48,3 +48,8 @@ body{
 .modify-form-item .modify-btn{
     margin-left: 130px; 
 }
+
+.message-container{
+    margin-left: 130px;
+    margin-top: 20px; 
+}

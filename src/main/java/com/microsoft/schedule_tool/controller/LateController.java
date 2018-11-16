@@ -1,11 +1,10 @@
 package com.microsoft.schedule_tool.controller;
 
-import com.microsoft.schedule_tool.entity.LateType;
+import com.microsoft.schedule_tool.entity.Late;
 import com.microsoft.schedule_tool.service.LateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,46 +22,77 @@ public class LateController {
     
     @Autowired
     private LateService mLateService;
-    
-    @GetMapping(value = "")
-    public Map<String, List<LateType>> getLatesByAlias(
-            @RequestParam(name = "alias") String alias){
-        Map<String,List<LateType>> resultMap=new HashMap<>();
-        List<LateType> leaveList=mLateService.getAllLatesByAlias(alias);
+
+    @GetMapping
+    public Map<String, List<Late>> getLatesByEmployeeId(
+            @RequestParam(name = "employeeId") Integer employeeId){
+        Map<String,List<Late>> resultMap=new HashMap<>();
+        List<Late> leaveList=mLateService.getAllLatesByEmployeeId(employeeId);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @GetMapping("/type")
+    public Map<String, List<Late>> getLatesByEmployeeIdAndLateType(
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "lateType") Integer lateType){
+        Map<String,List<Late>> resultMap=new HashMap<>();
+        List<Late> leaveList=mLateService.getAllLatesByEmployeeIdAndLateType(employeeId, lateType);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+
+    @GetMapping("/range_and_type")
+    public Map<String, List<Late>> getLeavesByEmployeeIdAndLeaveTypeAndRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "leaveType") Integer lateType){
+        Map<String,List<Late>> resultMap=new HashMap<>();
+        List<Late> leaveList=mLateService.getAllLatesByDateRangeAndEmployeeIdAndLeaveType(from, to, employeeId, lateType);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
+    @GetMapping("/range")
+    public Map<String, List<Late>> getLeavesByEmployeeIdAndRange(
+            @RequestParam("from") String from,
+            @RequestParam("to") String to,
+            @RequestParam(name = "employeeId") Integer employeeId){
+        Map<String,List<Late>> resultMap=new HashMap<>();
+        List<Late> leaveList=mLateService.getAllLatesByDateRangeAndEmployeeId(from, to, employeeId);
         resultMap.put(KEY,leaveList);
         return resultMap;
     }
 
     @PostMapping(value = "")
-    public Map<String, LateType> saveLate(
+    public Map<String, Late> saveLate(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "alias") String alias,
+            @RequestParam(name = "lateType") Integer lateType,
             @RequestParam(name = "lateDate") String lateDate,
-            @RequestParam(name = "isNormal",required = false) Boolean isNormal,
+            @RequestParam(name = "employeeId") Integer employeeId,
+            @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
-        Map<String,LateType> resultMap=new HashMap<>();
-        LateType late=new LateType();
-        late.setName(name);
-        late.setAlias(alias);
-        late.setLateDate(lateDate);
-        late.setNormal(isNormal);
-        late.setComment(comment);
+        Map<String, Late> resultMap=new HashMap<>();
 
-        LateType result=mLateService.saveLate(late);
+        Late result=mLateService.saveLate(name, alias, lateType, lateDate, employeeId, isNormal, comment);
         resultMap.put(KEY,result);
 
         return resultMap;
     }
 
     @PostMapping(value = "/update")
-    public Map<String, LateType> updateLate(
+    public Map<String, Late> updateLate(
             @RequestParam(name = "id") Integer id,
-            @RequestParam(name = "lateDate",required = false) String lateDate,
-            @RequestParam(name = "isNormal",required = false) Boolean isNormal,
+            @RequestParam(name = "lateType") Integer lateType,
+            @RequestParam(name = "lateDate") String lateDate,
+            @RequestParam(name = "isNormal") Boolean isNormal,
             @RequestParam(name = "comment",required = false) String comment){
-        Map<String,LateType> resultMap=new HashMap<>();
+        Map<String, Late> resultMap=new HashMap<>();
 
-        LateType result=mLateService.updateLate(id,lateDate,comment,isNormal);
+        Late result=mLateService.updateLate(id,lateType,lateDate,comment,isNormal);
         resultMap.put(KEY,result);
 
         return resultMap;

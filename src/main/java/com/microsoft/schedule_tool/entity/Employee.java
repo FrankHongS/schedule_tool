@@ -26,6 +26,8 @@ public class Employee {
     @Column(nullable = false)
     private String name;
 
+    private Float annual;
+
     @CreationTimestamp
     private Date createTime;
 
@@ -33,6 +35,14 @@ public class Employee {
     private Date lastUpdatedTime;
 
     public Employee(){}
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getAlias() {
         return alias;
@@ -48,6 +58,14 @@ public class Employee {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Float getAnnual() {
+        return annual;
+    }
+
+    public void setAnnual(Float annual) {
+        this.annual = annual;
     }
 
     public Date getCreateTime() {

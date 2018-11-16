@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.service;
 
 import com.microsoft.schedule_tool.vo.Attendance;
+import com.microsoft.schedule_tool.vo.Pager;
 
 import java.util.List;
 
@@ -11,5 +12,17 @@ import java.util.List;
 
 public interface SumService {
 
-    List<Attendance> getSumOfAllTypes();
+    Pager<Attendance> getSumOfAllTypes();
+
+    List<Attendance> getSumOfAllTypesByAlias(String alias);
+
+    List<Attendance> getSumOfAllTypesByName(String name);
+
+    Pager<Attendance> getSumByPage(Integer page,Integer size);
+
+    Pager<Attendance> getSumByDateRangeByPage(Integer page, Integer size, String from, String to);
+
+    List<Attendance> getSumByDateRangeAndAlias(String from, String to, String alias);
+
+    List<Attendance> getSumByDateRangeAndName(String from, String to, String name);
 }

@@ -10,11 +10,12 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * Created by Frank Hon on 11/6/2018
- * E-mail: v-shhong@microsoft.com
+ * Created by Frank Hon on 2018/11/4
+ * E-mail: frank_hon@foxmail.com
  */
-@Entity
-public class LateType {
+
+@Entity(name = "tb_leave")
+public class Leave {
 
     @Id
     @GeneratedValue
@@ -26,12 +27,27 @@ public class LateType {
     @Column(nullable = false)
     private String name;
 
+    // 0:前非后非，1:前半后非，2：前非后半，3:前半后半
     @Column(nullable = false)
-    private String lateDate;
+    private Integer leaveType;
+
+    @Column(name = "leave_date_from", nullable = false)
+    private Date from;
+
+    @Column(name = "leave_date_to", nullable = false)
+    private Date to;
+
+    private Integer halfType;
+
+    @Column(nullable = false)
+    private Float dayCount;
 
     private String comment;
 
     private Boolean isNormal;
+
+    @Column(nullable = false)
+    private Integer employeeId;
 
     @CreationTimestamp
     private Date createdTime;
@@ -39,7 +55,7 @@ public class LateType {
     @UpdateTimestamp
     private Date lastUpdatedTime;
 
-    public LateType(){}
+    public Leave(){}
 
     public Integer getId() {
         return id;
@@ -65,12 +81,44 @@ public class LateType {
         this.name = name;
     }
 
-    public String getLateDate() {
-        return lateDate;
+    public Integer getLeaveType() {
+        return leaveType;
     }
 
-    public void setLateDate(String lateDate) {
-        this.lateDate = lateDate;
+    public void setLeaveType(Integer leaveType) {
+        this.leaveType = leaveType;
+    }
+
+    public Date getFrom() {
+        return from;
+    }
+
+    public void setFrom(Date from) {
+        this.from = from;
+    }
+
+    public Date getTo() {
+        return to;
+    }
+
+    public void setTo(Date to) {
+        this.to = to;
+    }
+
+    public Integer getHalfType() {
+        return halfType;
+    }
+
+    public void setHalfType(Integer halfType) {
+        this.halfType = halfType;
+    }
+
+    public Float getDayCount() {
+        return dayCount;
+    }
+
+    public void setDayCount(Float dayCount) {
+        this.dayCount = dayCount;
     }
 
     public String getComment() {
@@ -87,6 +135,14 @@ public class LateType {
 
     public void setNormal(Boolean normal) {
         isNormal = normal;
+    }
+
+    public Integer getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public Date getCreatedTime() {

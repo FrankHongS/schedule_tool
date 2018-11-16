@@ -6,31 +6,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Detail</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="detai.css" />
+    <link rel="icon" href="../../favicon.ico"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="detail.css" />
     <script src="../../jquery/jquery-3.3.1.js" type="text/javascript"></script>
     <script src="../../jquery/getParameter.js" type="text/javascript"></script>
     <script src="../../plugin/layer/layer.min.js"></script>
+    <script src="../util/constants.js"></script>
+    <script src="../util/util.js"></script>
     <script src="detail.js" type="text/javascript"></script>
 </head>
 
 <body>
     <div id="title">
         <h1></h1>
-        <button type="button" class="modify-profile-btn">修改成员信息</button>
+        <button type="button" class="detail-btn modify-profile-btn">修改成员信息</button>
     </div>
 
     <!-- 请假表 -->
     <div class="container leave-container">
+        <span class="table-title">请假情况</span>
+        <label for="leave-type" class="type-label">类型</label>
+        <select id="leave-type" class="leave-type">
+        </select>
+        <button type="button" class="detail-btn search-btn leave-search">search</button>
         <table class="leave">
-            <caption>请假情况</caption>
             <thead>
                 <tr>
-                    <td class='index'>序号</td>
-                    <td class="created-time">创建时间</td>
-                    <td class='time'>请假时间</td>
-                    <td class="length">请假时长(/天)</td>
-                    <td class="comment">备注</td>
-                    <td class="is-normal">是否异常</td>
+                    <td>序号</td>
+                    <td>类型</td>
+                    <td>创建时间</td>
+                    <td>请假时间</td>
+                    <td>请假时长(/天)</td>
+                    <td>备注</td>
+                    <td>是否异常</td>
+                    <td>编辑</td>
+                    <td>删除</td>
                 </tr>
             </thead>
             <tbody class="leave-body">
@@ -38,17 +48,24 @@
         </table>
     </div>
 
-    <!-- 迟到早退表 -->
+    <!-- 考勤异常表 -->
     <div class="container late-container">
+        <span class="table-title">考勤异常情况</span>
+        <label for="late-type" class="type-label">类型</label>
+        <select id="late-type" class="late-type">
+        </select>
+        <button type="button" class="detail-btn search-btn late-search">search</button>
         <table class="late">
-            <caption>迟到早退情况</caption>
             <thead>
                 <tr>
-                    <td class='index'>序号</td>
-                    <td class="created-time">创建时间</td>
-                    <td class="time">迟到日期</td>
-                    <td class="comment">备注</td>
-                    <td class="is-normal">是否异常</td>
+                    <td>序号</td>
+                    <td>类型</td>
+                    <td>创建时间</td>
+                    <td>考勤异常日期</td>
+                    <td>备注</td>
+                    <td>是否异常</td>
+                    <td>编辑</td>
+                    <td>删除</td>
                 </tr>
             </thead>
             <tbody class="late-body">
@@ -56,23 +73,6 @@
         </table>
     </div>
 
-    <!-- homebase表 -->
-    <div class="container homebase-container">
-        <table class="homebase">
-            <caption>homebase 情况</caption>
-            <thead>
-                <tr>
-                    <td class='index'>序号</td>
-                    <td class="created-time">创建时间</td>
-                    <td class="time">发生日期</td>
-                    <td class="comment">备注</td>
-                    <td class="is-normal">是否异常</td>
-                </tr>
-            </thead>
-            <tbody class="homebase-body">
-            </tbody>
-        </table>
-    </div>
 </body>
 
 </html>

@@ -6,24 +6,35 @@ package com.microsoft.schedule_tool.vo;
  */
 public class Attendance {
 
+    private int employeeId;
+
     private String name;
 
     private String alias;
 
-    private int leaveSum;
+    private Float annualCount;
+
+    private Float leaveSum;
 
     private int lateSum;
 
-    private int homebaseSum;
-
     public Attendance(){}
 
-    public Attendance(String name, String alias, int leaveSum, int lateSum, int homebaseSum) {
+    public Attendance(int employeeId,String name, String alias, float annualCount, Float leaveSum, int lateSum) {
+        this.employeeId=employeeId;
         this.name = name;
         this.alias = alias;
+        this.annualCount=annualCount;
         this.leaveSum = leaveSum;
         this.lateSum = lateSum;
-        this.homebaseSum = homebaseSum;
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -42,11 +53,19 @@ public class Attendance {
         this.alias = alias;
     }
 
-    public int getLeaveSum() {
+    public Float getAnnualCount() {
+        return annualCount;
+    }
+
+    public void setAnnualCount(Float annualCount) {
+        this.annualCount = annualCount;
+    }
+
+    public Float getLeaveSum() {
         return leaveSum;
     }
 
-    public void setLeaveSum(int leaveSum) {
+    public void setLeaveSum(Float leaveSum) {
         this.leaveSum = leaveSum;
     }
 
@@ -58,11 +77,4 @@ public class Attendance {
         this.lateSum = lateSum;
     }
 
-    public int getHomebaseSum() {
-        return homebaseSum;
-    }
-
-    public void setHomebaseSum(int homebaseSum) {
-        this.homebaseSum = homebaseSum;
-    }
 }

@@ -18,21 +18,38 @@
     overflow: hidden;
 }
 
-.name{
+.choose .note{
+    margin-left: 30px;
+    line-height: 0.8em;
+}
+
+.name-container{
     min-width: 200px;
     width: 20%;
 }
 
-.alias{
+.alias-container{
     min-width: 240px;
     width: 25%;
 }
 
 .time{
+    display: inline-block;
+    margin-left: 0;
     min-width: 260px;
     width: 30%;
 }
 
+.half-container{
+    display: inline-block;
+    margin-left: 10px;
+}
+
 .comment{
     padding-right: 30px;
+}
+
+.message-container{
+    margin-left: 110px;
+    margin-top: 20px; 
 }

@@ -10,12 +10,11 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * Created by Frank Hon on 2018/11/4
- * E-mail: frank_hon@foxmail.com
+ * Created by Frank Hon on 11/6/2018
+ * E-mail: v-shhong@microsoft.com
  */
-
-@Entity
-public class LeaveType {
+@Entity(name = "tb_late")
+public class Late {
 
     @Id
     @GeneratedValue
@@ -28,11 +27,17 @@ public class LeaveType {
     private String name;
 
     @Column(nullable = false)
-    private String leaveDateRange;
+    private Integer lateType;
+
+    @Column(nullable = false)
+    private Date lateDate;
 
     private String comment;
 
     private Boolean isNormal;
+
+    @Column(nullable = false)
+    private Integer employeeId;
 
     @CreationTimestamp
     private Date createdTime;
@@ -40,7 +45,7 @@ public class LeaveType {
     @UpdateTimestamp
     private Date lastUpdatedTime;
 
-    public LeaveType(){}
+    public Late(){}
 
     public Integer getId() {
         return id;
@@ -66,12 +71,20 @@ public class LeaveType {
         this.name = name;
     }
 
-    public String getLeaveDateRange() {
-        return leaveDateRange;
+    public Integer getLateType() {
+        return lateType;
     }
 
-    public void setLeaveDateRange(String leaveDateRange) {
-        this.leaveDateRange = leaveDateRange;
+    public void setLateType(Integer lateType) {
+        this.lateType = lateType;
+    }
+
+    public Date getLateDate() {
+        return lateDate;
+    }
+
+    public void setLateDate(Date lateDate) {
+        this.lateDate = lateDate;
     }
 
     public String getComment() {
@@ -88,6 +101,14 @@ public class LeaveType {
 
     public void setNormal(Boolean normal) {
         isNormal = normal;
+    }
+
+    public Integer getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public Date getCreatedTime() {

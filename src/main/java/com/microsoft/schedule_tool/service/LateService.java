@@ -1,6 +1,6 @@
 package com.microsoft.schedule_tool.service;
 
-import com.microsoft.schedule_tool.entity.LateType;
+import com.microsoft.schedule_tool.entity.Late;
 
 import java.util.Date;
 import java.util.List;
@@ -11,11 +11,23 @@ import java.util.List;
  */
 public interface LateService {
 
-    List<LateType> getAllLatesByAlias(String alias);
+    List<Late> getAllLatesByEmployeeId(Integer employeeId);
 
-    LateType saveLate(LateType late);
+    List<Late> getAllLatesByEmployeeIdAndLateType(Integer employeeId,Integer LateType);
 
-    LateType updateLate(Integer id, String lateDate, String comment, Boolean isNormal);
+    List<Late> getAllLatesByDateRangeAndAlias(Date from, Date to, String alias);
+
+    List<Late> getAllLatesByDateRange(Date from, Date to);
+
+    List<Late> getAllLatesByDateRangeAndEmployeeIdAndLeaveType(String from, String to, Integer employeeId, Integer lateType);
+
+    List<Late> getAllLatesByDateRangeAndEmployeeId(String from, String to, Integer employeeId);
+
+    Late saveLate(Late late);
+
+    Late saveLate(String name, String alias, Integer lateType, String lateDate, Integer employeeId, Boolean isNormal, String comment);
+
+    Late updateLate(Integer id, Integer lateType, String lateDate, String comment, Boolean isNormal);
 
     boolean deleteLate(Integer id);
 }

@@ -1,17 +1,22 @@
 $(document).ready(
     function () {
         $('.save-btn').bind('click', function (e) {
-            console.log('start ajax...');
-
+            $('.message').text('正在保存...');
             $.ajax({
                 url: '/schedule/employee',
                 type: 'POST',
                 data: {
                     name: $('.name').val(),
-                    alias: $('.alias').val()
+                    alias: $('.alias').val(),
+                    annual:$('.annual').val()==''?'0':$('.annual').val()
                 },
                 success: result => {
+                    $('.message').text('保存成功');
                     console.log(result);
+                },
+                error:(xhr,e)=>{
+                    $('.message').text('保存失败...'+e);
+                    console.log(e);
                 }
             });
         });

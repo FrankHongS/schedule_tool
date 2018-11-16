@@ -15,16 +15,23 @@
     <div id="main-container">
         <form id='add-form'>
             <div class="add-form-item">
-                <label for="" class="label">姓名</label>
-                <input type="text" class="form-input name" placeholder="不能为空" name="name">
+                <label for="name" class="label">姓名</label>
+                <input id='name' type="text" class="form-input name" placeholder="不能为空" name="name">
             </div>
             <div class="add-form-item">
-                <label for="" class="label">alias</label>
-                <input type="text" class="form-input alias" placeholder="不能为空" name="alias">
+                <label for="alias" class="label">alias</label>
+                <input id='alias' type="text" class="form-input alias" placeholder="不能为空" name="alias">
+            </div>
+            <div class="add-form-item">
+                <label for="annual" class="label">年假天数</label>
+                <input id='annual' type="number" min='0' value='0' step='0.5' class="form-input annual" name="alias">
             </div>
             <div class="add-form-item">
                 <button type="button" class="save-btn">保存</button>
                 <button type="button" class="cancel-btn">取消</button>
+            </div>
+            <div class="message-container">
+                <span class="message"></span>
             </div>
         </form>
 
