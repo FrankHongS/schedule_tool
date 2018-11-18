@@ -1,5 +1,4 @@
-$(
-    function () {
+window.attendance_main=function () {
 
         const main = {};
 
@@ -47,7 +46,7 @@ $(
 
             $('.name').bind('click', function (e) {
                 // $(location).attr('href','../detail/detail.html?a='+e.target.innerHTML);//重定向跳转，在当前窗口打开新页面
-                window.open('../detail/detail.html?profile=' + $(this).parent('tr').attr('name')
+                window.open('/schedule/attendance/detail/detail.html?profile=' + $(this).parent('tr').attr('name')
                     + '&from=' + window.title.from + '&to=' + window.title.to);//跳转时打开新窗口
             });
 
@@ -65,7 +64,7 @@ $(
                     fix: true, //不固定
                     maxmin: true,
                     scrollbar: false,//屏蔽父窗口滚动条
-                    content: '../edit/edit.html'
+                    content: '/schedule/attendance/edit/edit.html'
                 });
             });
 
@@ -81,7 +80,7 @@ $(
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
-                    content: '../add/add.html'
+                    content: '/schedule/attendance/add/add.html'
                 });
 
             });
@@ -287,5 +286,4 @@ $(
         main.bindClick();
         main.bindLaydate();
         main.buildUI();
-    }
-);
+    };

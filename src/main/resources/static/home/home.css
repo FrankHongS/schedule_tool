@@ -1,0 +1,59 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+
+.img-navigation{
+    width: 24px;
+    height: 24px;
+    padding: 10px;
+}
+
+.img-navigation:hover{
+    cursor: pointer;
+}
+
+.home-navigation{
+    position: absolute;
+    display: inline-block;
+    top:40px;
+    left: -100px;
+}
+
+ul{
+    border: 1px solid gray;
+    list-style: none;
+    padding-left:0;
+    display: inline-block;
+    border-radius: 5px;
+    margin: 0;
+}
+
+li{
+    padding:10px;
+}
+
+.unselected:hover{
+    cursor:pointer;
+    border-radius: 5px;
+    background-color: #00b2a5;
+    color: aliceblue;
+}
+
+.selected{
+    border-radius: 5px;
+    background-color: #009688;
+    color: aliceblue;
+}
+
+.selected:hover{
+    cursor:pointer;
+}
+
+.show{
+    display: block;
+}
+
+.hide{
+    display:none;
+}
