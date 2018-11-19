@@ -5,14 +5,14 @@ $(
 
         $('.home-navigation')
             .bind('click', 'li', function (e) {
-                let currItem = $(e.target);
-                if (!currItem.hasClass('selected')) {
-                    currItem.addClass('selected');
-                    if(currItem.hasClass('unselected')){
-                        currItem.removeClass('unselected');
+                const currItem = $(e.target);
+                if (!currItem.hasClass('active')) {
+                    currItem.addClass('active');
+                    if(currItem.hasClass('selected')){
+                        currItem.removeClass('selected');
                     }
                     if (activeItem) {
-                        activeItem.removeClass('selected');
+                        activeItem.removeClass('active');
                     }
                     activeItem = currItem;
                 }
@@ -22,6 +22,7 @@ $(
                         $('#attendance').removeClass('show')
                                         .addClass('hide');
                     }
+                    
                 }else if(index==1){
                     if(!$('#attendance').hasClass('hide')){
                         $('#attendance').load('../attendance/main/main.html ',function(){
@@ -33,9 +34,9 @@ $(
                 }
             })
             .on('mouseenter','li',function(e){
-                let currItem = $(e.target);
-                if(!currItem.hasClass('selected')){
-                    currItem.addClass('unselected');
+                const currItem = $(e.target);
+                if(!currItem.hasClass('active')&&!currItem.hasClass('selected')){
+                    currItem.addClass('selected');
                 }
             });
 

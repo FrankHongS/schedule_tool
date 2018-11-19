@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Schedule</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../..//plugin/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+
+    <script src="../../jquery/jquery-3.3.1.js"></script>
+    <script src="../../plugin/laydate/laydate.js"></script>
+    <script src="../../plugin/layui/layui.all.js"></script>
+    <script src="../util/constants.js"></script>
+    <script src="main.js"></script>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="program-container">
+            <div class="title-container"><span class="title">节目表</span></div>
+            <div class="img-icon-container">
+                <img class='add-program' src="../../img/add.png" alt="add">
+                <img class='delete-program' src="../../img/delete.png" alt="delete">
+                <img class='edit-program' src="../../img/edit.png" alt="edit">
+            </div>
+            <div class="item-container">
+                <ul>
+                </ul>
+            </div>
+        </div>
+
+        <div class="employee-container">
+            <div class="title-container"><span class="title">人员表</span></div>
+            <div class="img-icon-container">
+                <img class='add-employee' src="../../img/add.png" alt="add">
+                <img class='delete-employee' src="../../img/delete.png" alt="delete">
+                <img class='edit-employee' src="../../img/edit.png" alt="edit">
+            </div>
+            <div class="item-container">
+                <ul>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="sub-container">
+        <div class="other-container">
+            <div class="program-select">
+                <label for="sub-program">节目名</label>
+                <select name="sub-program" id="sub-program">
+                    <option value="1">看东方</option>
+                    <option value="2">你早京津冀</option>
+                    <option value="3">今日十万加</option>
+                </select>
+            </div>
+            <div class="date-picker">
+                <label for="sub-date">替班日期</label>
+                <input id='sub-date' type="text" class="date-input sub-date" placeholder="请输入替班日期">
+            </div>
+            <div class="holiday">
+                <label for="sub-hol">节假日</label>
+                <input id='sub-hol' type="checkbox">
+            </div>
+        </div>
+        <div class="person-container">
+            <div class="img-icon-container">
+                <img class='sub-add-employee' src="../../img/add.png" alt="add">
+                <img class='sub-delete-employee' src="../../img/delete.png" alt="delete">
+            </div>
+            <div class="item-container">
+                <ul>
+                    <li>王洛一</li>
+                    <li>门征</li>
+                    <li>杨帆</li>
+                    <li>张威</li>
+                    <li>Lisa</li>
+                    <li>武文斌</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="spec-employees-container">
+        <div class="desc-container"><span class="desc">特殊员工表</span><span><br>(注：此处指不能在同一节目中同时出现)</span></div>
+        <div class="spec-employees">
+            <div class="img-icon-container">
+                <img class='sub-add-employee' src="../../img/add.png" alt="add">
+                <img class='sub-delete-employee' src="../../img/delete.png" alt="delete">
+            </div>
+            <div class="item-container">
+                <ul>
+                    <li>王洛一</li>
+                    <li>门征</li>
+                    <li>杨帆</li>
+                    <li>张威</li>
+                    <li>Lisa</li>
+                    <li>武文斌</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="export-container">
+        <div class="date-range-picker">
+            <label for="export-date">排班日期范围</label>
+            <input id='export-date' type="text" class="date-input export-from" placeholder="from"><span class="dash">--</span><input type="text" class="date-input export-to" placeholder="to">
+        </div>
+        <div class="export-btns">
+            <button type="button" class="export"><a>导出</a></button>
+        </div>
+    </div>
+
+</body>
+
+</html>

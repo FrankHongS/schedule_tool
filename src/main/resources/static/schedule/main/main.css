@@ -1,0 +1,215 @@
+body{
+    padding: 0;
+    margin: 0;
+    background: #fdfdfd;
+}
+
+/* 当ul的item被点击选中时的样式 */
+.active{
+    background: #707070;
+    color: aliceblue;
+}
+
+.selected:hover{
+    background: #bfbfbf;
+}
+
+.main-container{
+    width: 60%;
+    margin: 30px auto;
+}
+
+.program-container{
+    width: 20%;
+    display: inline-block;
+    float: left;
+}
+
+.title{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.img-icon-container{
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.img-icon-container img{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.img-icon-container :nth-child(3){
+    float: right;
+}
+
+.item-container{
+    width: 100%;
+}
+
+.item-container ul{
+    width: 100%;
+    height: 138px;
+    overflow-x: hidden;
+	overflow-y: scroll;
+    list-style: none;
+    border: 1px solid #2c2c2c;
+    display: inline-block;
+    padding-left:0;
+    margin: 0; 
+}
+
+.item-container ul li{
+    padding:5px;
+    line-height: 1.0em;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+}
+
+.employee-container{
+    width: 20%;
+    display: inline-block;
+    margin-left: 10%;
+}
+
+.sub-container{
+    width: 60%;
+    margin: 30px auto;
+}
+
+label {
+    min-width: 60px;
+    font-weight: 400;
+    text-align: center;
+    margin-right: 20px;
+    font-size: 1.0em;
+}
+
+.sub-container select{
+    min-height: 38px;
+    min-width: 160px;
+    height: 100%;
+    width: 15%;
+    padding-left: 10px; 
+    border: 1px solid #c6c6c6;
+}
+
+.program-select{
+    display: inline-block;
+}
+
+.date-input{
+    height: 30px;
+    line-height: 30px;
+    width: 200px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+.date-picker{
+    display: inline-block;
+}
+
+.sub-container .date-picker label{
+    margin-left: 20px;
+}
+
+.holiday{
+    display: inline-block;
+}
+
+.holiday label{
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+.person-container{
+    display: inline-block;
+    width: 20%;
+    margin-left: 20px;
+}
+
+.person-container ul{
+    height: 115px;
+}
+
+.person-container .img-icon-container{
+    margin: 10px 0;
+}
+
+.other-container{
+    display: inline-block;
+    position: relative;
+    bottom:60px;
+}
+
+.spec-employees-container{
+    width: 60%;
+    margin: 30px auto;
+}
+
+.spec-employees-container .spec-employees{
+    width: 20%;
+    display: inline-block;
+}
+
+.spec-employees-container .desc-container{
+    display: inline-block;
+    width: 120px;
+}
+
+.spec-employees-container .desc{
+    display: inline-block;
+    padding-bottom: 5px;
+    padding-left: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.export-container{
+    width: 60%;
+    margin: 30px auto;
+}
+
+.export-container label{
+    display: inline-block;
+    width: 100px;
+}
+
+.export-container .dash{
+    display: inline-block;
+    padding: 0 5px;
+}
+
+.export-container button{
+    display: inline-block;
+    width: 85px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.export-btns{
+    margin: 15px 0 15px 120px;
+}
+
+.export-container button a{
+    color: aliceblue;
+}
+
+.export-container button a:hover{
+    color: aliceblue;
+}

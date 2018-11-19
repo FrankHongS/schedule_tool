@@ -20,7 +20,7 @@ body{
     left: -100px;
 }
 
-ul{
+.home-navigation ul{
     border: 1px solid gray;
     list-style: none;
     padding-left:0;
@@ -29,25 +29,21 @@ ul{
     margin: 0;
 }
 
-li{
+.home-navigation ul li{
     padding:10px;
+    cursor: pointer;
 }
 
-.unselected:hover{
+.home-navigation ul .selected:hover{
     cursor:pointer;
     border-radius: 5px;
     background-color: #00b2a5;
-    color: aliceblue;
 }
 
-.selected{
+.home-navigation ul .active{
     border-radius: 5px;
     background-color: #009688;
     color: aliceblue;
-}
-
-.selected:hover{
-    cursor:pointer;
 }
 
 .show{
