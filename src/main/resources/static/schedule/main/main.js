@@ -1,53 +1,56 @@
 $(
     function () {
-        const main={};
+        const main = {};
+
+        let programArray;
+        let employeeArray;
 
         let activeProgramItem;
         let activeEmployeeItem;
 
-        window.inputLabel={};
+        window.inputLabel = {};
 
-        main.checkIfActive=function(container){
+        main.checkIfActive = function (container) {
             let activeItem;
 
             $(container)
-                .on('click', 'li', function(e) {
+                .on('click', 'li', function (e) {
                     const currItem = $(e.target);
-    
+
                     if (!currItem.hasClass('active')) {
                         currItem.addClass('active');
-                        if(currItem.hasClass('selected')){
+                        if (currItem.hasClass('selected')) {
                             currItem.removeClass('selected');
                         }
                         if (activeItem) {
                             activeItem.removeClass('active');
                         }
                         activeItem = currItem;
-                        if($(this).parents().hasClass('program-container')){
-                            activeProgramItem=activeItem;
-                        }else if($(this).parents().hasClass('employee-container')){
-                            activeEmployeeItem=activeItem;
+                        if ($(this).parents().hasClass('program-container')) {
+                            activeProgramItem = activeItem;
+                        } else if ($(this).parents().hasClass('employee-container')) {
+                            activeEmployeeItem = activeItem;
                         }
                     }
                 })
-                .on('mouseenter','li',function(e){
-                    const currItem=$(e.target);
-                    if(!currItem.hasClass('active')&&!currItem.hasClass('selected')){
+                .on('mouseenter', 'li', function (e) {
+                    const currItem = $(e.target);
+                    if (!currItem.hasClass('active') && !currItem.hasClass('selected')) {
                         currItem.addClass('selected');
                     }
                 });
         };
 
-        main.bindClick=function(){
-            $('.program-container ul').on('click','li',e=>{
-                const currItem=$(e.target);
-                const index=currItem.index();
-                this.buildEmployees(index);
+        main.bindClick = function () {
+            // 根据点击节目的item加载对应的人员
+            $('.program-container ul').on('click', 'li', e => {
+                queryEmployees();
             });
 
+            //添加节目
             $('.add-program').on('click', function (e) {
-                inputLabel={
-                    name:'节目名称',
+                inputLabel = {
+                    name: '节目名称',
                     type: 0
                 };
                 layer.open({
@@ -63,21 +66,40 @@ $(
             });
 
             $('.delete-program').on('click', function (e) {
-                if(!activeProgramItem){
+                if (!activeProgramItem) {
                     alert('请选中节目之后再删除');
                     return;
                 }
 
-                alert('确认删除？');
+                if(confirm('确认删除？')){
+                    const id=programArray[activeProgramItem.index()].id;
+                    console.log(id);
+                    $.ajax({
+                        url:'/schedule/program/delete',
+                        type:'POST',
+                        data:{
+                            id:id
+                        },
+                        success:result=>{
+                            if(result.code==0){
+                                alert('删除'+activeProgramItem.text()+'成功');
+                                queryPrograms();
+                            }
+                        }
+                    });
+                }
             });
 
             $('.edit-program').on('click', function () {
-                if(!activeProgramItem){
+                if (!activeProgramItem) {
                     alert('请选中节目之后再编辑');
                     return;
                 }
-                inputLabel={
-                    name:'节目名称',
+                const id=programArray[activeProgramItem.index()].id;
+                inputLabel = {
+                    name: '节目名称',
+                    id:id,
+                    value:activeProgramItem.text(),
                     type: 1
                 };
                 layer.open({
@@ -92,9 +114,12 @@ $(
 
             });
 
+            //添加人员
             $('.add-employee').on('click', function (e) {
-                inputLabel={
-                    name:'人员名字',
+                const id=programArray[activeProgramItem.index()].id;
+                inputLabel = {
+                    name: '人员名字',
+                    programId: id,
                     type: 2
                 };
                 layer.open({
@@ -108,25 +133,44 @@ $(
                 });
 
             });
-
+            //删除人员
             $('.delete-employee').on('click', function (e) {
-                if(!activeEmployeeItem){
+                if (!activeEmployeeItem) {
                     alert('请选中人员之后再删除');
                     return;
                 }
 
-                alert('确认删除？');
+                if(confirm('确认删除？')){
+                    const id=employeeArray[activeEmployeeItem.index()].id;
+                    console.log(id);
+                    $.ajax({
+                        url:'/schedule/program_employee/delete',
+                        type:'POST',
+                        data:{
+                            id:id
+                        },
+                        success:result=>{
+                            if(result.code==0){
+                                alert('删除'+activeEmployeeItem.text()+'成功');
+                                queryEmployees();
+                            }
+                        }
+                    });
+                }
             });
-
+            //编辑人员
             $('.edit-employee').on('click', function (e) {
 
-                if(!activeEmployeeItem){
-                    alert('请选中节目之后再编辑');
+                if (!activeEmployeeItem) {
+                    alert('请选中人员之后再编辑');
                     return;
                 }
 
-                inputLabel={
-                    name:'人员名字',
+                const id=employeeArray[activeEmployeeItem.index()].id;
+                inputLabel = {
+                    name: '人员名字',
+                    id:id,
+                    value:activeEmployeeItem.text(),
                     type: 3
                 };
                 layer.open({
@@ -143,20 +187,7 @@ $(
 
         };
 
-        main.buildEmployees=function(index){
-            const employeeItems=window.employees[index].map(
-                employee=>{
-                    return $('<li>')
-                            .text(employee);
-                }
-            );
-            
-            $('.employee-container ul')
-                .html('')
-                .append(employeeItems);
-        };
-
-        main.bindLayer=function(){
+        main.bindLayer = function () {
             laydate.render({
                 elem: '.sub-date',
                 theme: '#393D49',
@@ -177,20 +208,70 @@ $(
             });
         };
 
+        window.queryPrograms = function () {
+            $.ajax({
+                url: '/schedule/program',
+                success: result => {
+                    if (result.code == 0) {
+                        main.buildPrograms(result.data.program);
+                        programArray=result.data.program;
+                        console.log(result);
+                        activeProgramItem=undefined;
+                    }
+                }
+            });
+        };
+
+        window.queryEmployees=function(){
+            const id=programArray[activeProgramItem.index()].id;
+            $.ajax({
+                url:'/schedule/program_employee?programId='+id,
+                success:result=>{
+                    if(result.code==0){
+                        console.log(result);
+                        main.buildEmployees(result.data.program_employee);
+                        employeeArray=result.data.program_employee;
+                        activeEmployeeItem=undefined;
+                    }
+                }
+            });
+        };
+
         main.checkIfActive('.program-container ul');
         main.checkIfActive('.employee-container ul');
         main.checkIfActive('.sub-container ul');
         main.checkIfActive('.spec-employees-container ul');
         main.bindClick();
         main.bindLayer();
+        window.queryPrograms();
 
-        const programItems=window.programs.map(
-            item=>{
-                return $('<li>')
-                        .text(item);
-            }
-        );
 
-        $('.program-container ul').append(programItems);
+
+        main.buildPrograms = function (programsArray) {
+            const programItems = programsArray.map(
+                item => {
+                    return $('<li>')
+                        .text(item.name);
+                }
+            );
+
+            $('.program-container ul').html('');
+            $('.program-container ul').append(programItems);
+        };
+
+        main.buildEmployees = function (employeeArray) {
+            const employeeItems = employeeArray.map(
+                employee => {
+                    return $('<li>')
+                        .text(employee.name);
+                }
+            );
+
+            $('.employee-container ul')
+                .html('')
+                .append(employeeItems);
+            
+        };
+
     }
 );

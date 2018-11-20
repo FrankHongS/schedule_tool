@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.exception.handle;
 
 import com.microsoft.schedule_tool.exception.EmployeeException;
+import com.microsoft.schedule_tool.exception.schedule.ProgramException;
 import com.microsoft.schedule_tool.util.ResultUtil;
 import com.microsoft.schedule_tool.vo.result.Result;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @ControllerAdvice
 @Component
-public class AttendanceExceptionHandle {
+public class MyProjectExceptionHandle {
 
-    private static final Logger logger=LoggerFactory.getLogger(AttendanceExceptionHandle.class);
+    private static final Logger logger=LoggerFactory.getLogger(MyProjectExceptionHandle.class);
 
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
@@ -28,6 +29,9 @@ public class AttendanceExceptionHandle {
         if(e instanceof EmployeeException){
             EmployeeException employeeException= (EmployeeException) e;
             return ResultUtil.error(employeeException.getCode(),employeeException.getMessage());
+        }else if(e instanceof ProgramException){
+            ProgramException programException= (ProgramException) e;
+            return ResultUtil.error(programException.getCode(),programException.getMessage());
         }else{
             logger.info("exception",e);
             return ResultUtil.error(ResultEnum.UNKNOWN.getCode(),ResultEnum.UNKNOWN.getMessage());
