@@ -86,6 +86,19 @@ $(
 
             });
 
+            //添加查看最近插入信息功能
+            $('.recent-insert-btn').on('click',function(e){
+                layer.open({
+                    type: 2,
+                    title: '添加新成员',
+                    area: ['450px', '400px'],
+                    fix: false,
+                    maxmin: false,
+                    scrollbar: false,
+                    content: '../add/add.html'
+                });
+            });
+
             $('.year-link').bind('click',function(e){
                 const year=$('.year').val();
                 if(year==''){
