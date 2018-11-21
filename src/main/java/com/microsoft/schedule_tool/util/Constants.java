@@ -47,4 +47,16 @@ public interface Constants {
     };
 
     Color MONTH_DETAIL_COLOR=new Color(238,31,26);
+
+    Color SCHEDULE_ODD_WEEK_COLOR=new Color(64,184,200);
+
+    String[] DAY_OF_WEEK={
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+    };
 }

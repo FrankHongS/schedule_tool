@@ -26,13 +26,6 @@ import java.util.Map;
  * E-mail: v-shhong@microsoft.com
  */
 public class ExportMonthDetailSumUtil {
-    private static XSSFCellStyle createCellStyle(XSSFWorkbook workbook, Color color){
-        XSSFCellStyle cellStyle=workbook.createCellStyle();
-        cellStyle.setFillForegroundColor(new XSSFColor(color));
-        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-        return cellStyle;
-    }
 
     public static void exportMonthDetailSum(HttpServletResponse response, String fileName, java.util.List<MonthDetailSum> monthDetailSumList) throws IOException, ParseException {
         response.setHeader("content-Type","application/vnd.ms-excel");
@@ -93,9 +86,9 @@ public class ExportMonthDetailSumUtil {
 
         for(int i=0;i<monthDetailSumList.size();i++){
             Row row=sheet.createRow(i+1);
-            String name=monthDetailSumList.get(i).getName();
 
             MonthDetailSum monthDetailSum=monthDetailSumList.get(i);
+            String name=monthDetailSum.getName();
 
             Map<Long,String> descMap=monthDetailSum.getDescMap();
             long currDateTime=DateUtil.parseDateString(from).getTime();
@@ -115,5 +108,13 @@ public class ExportMonthDetailSumUtil {
                 }
             }
         }
+    }
+
+    private static XSSFCellStyle createCellStyle(XSSFWorkbook workbook, Color color){
+        XSSFCellStyle cellStyle=workbook.createCellStyle();
+        cellStyle.setFillForegroundColor(new XSSFColor(color));
+        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+        return cellStyle;
     }
 }
