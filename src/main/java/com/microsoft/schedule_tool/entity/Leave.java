@@ -160,4 +160,23 @@ public class Leave {
     public void setLastUpdatedTime(Date lastUpdatedTime) {
         this.lastUpdatedTime = lastUpdatedTime;
     }
+
+    @Override
+    public String toString() {
+        return "Leave{" +
+                "id=" + id +
+                ", alias='" + alias + '\'' +
+                ", name='" + name + '\'' +
+                ", leaveType=" + leaveType +
+                ", from=" + from +
+                ", to=" + to +
+                ", halfType=" + halfType +
+                ", dayCount=" + dayCount +
+                ", comment='" + comment + '\'' +
+                ", isNormal=" + isNormal +
+                ", employeeId=" + employeeId +
+                ", createdTime=" + createdTime +
+                ", lastUpdatedTime=" + lastUpdatedTime +
+                '}';
+    }
 }

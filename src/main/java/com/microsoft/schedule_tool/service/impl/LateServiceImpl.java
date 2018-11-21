@@ -5,6 +5,10 @@ import com.microsoft.schedule_tool.entity.Late;
 import com.microsoft.schedule_tool.service.LateService;
 import com.microsoft.schedule_tool.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +66,13 @@ public class LateServiceImpl implements LateService {
         } catch (ParseException e) {
             throw new RuntimeException("query failed, date is not proper...");
         }
+    }
+
+    @Override
+    public List<Late> getAllLatesOrderByCreatedTime(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdTime");
+        Page<Late> latePages=mLateRepository.findAll(pageable);
+        return latePages.getContent();
     }
 
     @Transactional

@@ -55,9 +55,16 @@ body {
 .main-form-item .message{
     margin-left: 100px;
 }
-
-#main-form-container .add-btn{
+#main-form-container .func-btn-container{
     float: right;
+}
+#main-form-container .add-btn{
+    display: block;
+    margin-bottom: 18px;
+}
+
+#main-form-container .recent-insert-btn{
+    display: block;
 }
 
 .main-form-item .form-input{
