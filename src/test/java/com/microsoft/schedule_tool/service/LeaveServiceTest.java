@@ -27,6 +27,9 @@ public class LeaveServiceTest {
     @Autowired
     private LeaveRepository mLeaveRepository;
 
+    @Autowired
+    private LeaveService mLeaveService;
+
     @Test
     @Ignore
     public void getAllLeavesByAlias() {
@@ -90,5 +93,12 @@ public class LeaveServiceTest {
         boolean result=mLeaveRepository.findById(id).isPresent();
 
         assertTrue(!result);
+    }
+
+    @Test
+    public void getAllLeavesOrderByCreatedTime() {
+        List<Leave> leaves=mLeaveService.getAllLeavesOrderByCreatedTime(0,2);
+        System.out.println(leaves);
+        assertEquals(2,leaves.size());
     }
 }

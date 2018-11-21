@@ -90,12 +90,12 @@ $(
             $('.recent-insert-btn').on('click',function(e){
                 layer.open({
                     type: 2,
-                    title: '添加新成员',
-                    area: ['450px', '400px'],
+                    title: '查看最近添加',
+                    area: ['1200px', '560px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
-                    content: '../add/add.html'
+                    content: '../recent/recent.html'
                 });
             });
 

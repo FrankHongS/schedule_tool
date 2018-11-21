@@ -75,8 +75,7 @@ public class LeaveServiceImpl implements LeaveService {
     public List<Leave> getAllLeavesOrderByCreatedTime(Integer page,Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdTime");
         Page<Leave> LeavePages = mLeaveRepository.findAll(pageable);
-        List<Leave> leaves = LeavePages.getContent();
-        return null;
+        return LeavePages.getContent();
     }
 
     @Transactional
