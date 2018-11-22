@@ -1,0 +1,108 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.btn-container{
+    margin: 15px 0;
+}
+
+.recent-btn{
+    display: inline-block;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.search-btn{
+    margin-left: 50px;
+}
+
+.range-dash{
+    display: inline-block;
+    padding: 5px;
+}
+
+.tb-container{
+    width: 95%;
+    margin: 0 auto;
+}
+
+.leave-container,.late-container{
+    margin: 15px 0;
+}
+
+.tb-container caption{
+    padding-bottom: 5px;
+}
+
+.tb-container table{
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.tb-container table,
+.tb-container table tr td {
+    border: 1px solid #0094ff;
+}
+
+.tb-container table thead tr td {
+    padding: 8px;
+    font-size: 1.2em;
+}
+
+.tb-container table tbody tr td {
+    padding: 10px;
+    font-size: 1.0em;
+}
+
+/* index */
+.tb-container table tr :first-child{
+    width: 5%;
+}
+
+.tb-container table tr :nth-child(2){
+    width: 8%;
+}
+
+.tb-container table tr :nth-child(3){
+    width: 8%;
+}
+
+.tb-container table tr :nth-child(4){
+    width: 10%;
+}
+
+.tb-container table tr :nth-child(5){
+    width: 17%;
+}
+
+.leave tr :nth-child(6){
+    width: 22%;
+}
+
+.leave tr :nth-child(7){
+    width: 12%;
+}
+
+.leave tr :nth-child(8){
+    width: 18%;
+}
+
+.late tr :nth-child(6){
+    width: 22%;
+}
+
+.late tr :nth-child(7){
+    width: 30%;
+}

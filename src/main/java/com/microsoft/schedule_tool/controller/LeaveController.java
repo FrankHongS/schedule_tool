@@ -64,6 +64,15 @@ public class LeaveController {
         return resultMap;
     }
 
+    @GetMapping("/recent")
+    public Map<String, List<Leave>> getRecentLeaves(@RequestParam("page") Integer page,
+                                                    @RequestParam("size") Integer size){
+        Map<String,List<Leave>> resultMap=new HashMap<>();
+        List<Leave> leaveList=leaveService.getAllLeavesOrderByCreatedTime(page, size);
+        resultMap.put(KEY,leaveList);
+        return resultMap;
+    }
+
     @PostMapping
     public Map<String, Leave> saveLeave(
             @RequestParam(name = "name") String name,

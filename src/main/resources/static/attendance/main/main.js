@@ -85,6 +85,19 @@ window.attendance_main=function () {
 
             });
 
+            //添加查看最近插入信息功能
+            $('.recent-insert-btn').on('click',function(e){
+                layer.open({
+                    type: 2,
+                    title: '查看最近添加',
+                    area: ['1200px', '560px'],
+                    fix: false,
+                    maxmin: false,
+                    scrollbar: false,
+                    content: '../recent/recent.html'
+                });
+            });
+
             $('.year-link').bind('click',function(e){
                 const year=$('.year').val();
                 if(year==''){

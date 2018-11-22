@@ -23,6 +23,8 @@ public interface LateService {
 
     List<Late> getAllLatesByDateRangeAndEmployeeId(String from, String to, Integer employeeId);
 
+    List<Late> getAllLatesOrderByCreatedTime(Integer page,Integer size);
+
     Late saveLate(Late late);
 
     Late saveLate(String name, String alias, Integer lateType, String lateDate, Integer employeeId, Boolean isNormal, String comment);
