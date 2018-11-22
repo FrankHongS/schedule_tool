@@ -12,9 +12,9 @@ public interface ProgramEmployeeService {
 
     List<ProgramEmployee> getAllProgramEmployeesByProgramId(Integer programId);
 
-    ProgramEmployee saveProgramEmployee(ProgramEmployee programEmployee);
+    ProgramEmployee saveProgramEmployee(ProgramEmployee programEmployee,Integer programId);
 
     ProgramEmployee updateProgramEmployee(Integer id,String name);
 
-    boolean deleteProgramEmployee(Integer id);
+    boolean deleteProgramEmployee(Integer id,Integer programId);
 }

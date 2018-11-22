@@ -65,6 +65,7 @@ $(
 
             });
 
+            //删除节目
             $('.delete-program').on('click', function (e) {
                 if (!activeProgramItem) {
                     alert('请选中节目之后再删除');
@@ -90,6 +91,7 @@ $(
                 }
             });
 
+            //编辑节目
             $('.edit-program').on('click', function () {
                 if (!activeProgramItem) {
                     alert('请选中节目之后再编辑');
@@ -116,10 +118,14 @@ $(
 
             //添加人员
             $('.add-employee').on('click', function (e) {
-                const id=programArray[activeProgramItem.index()].id;
+                if (!activeProgramItem) {
+                    alert('请选中节目之后再添加人员');
+                    return;
+                }
+                const programId=programArray[activeProgramItem.index()].id;
                 inputLabel = {
                     name: '人员名字',
-                    programId: id,
+                    programId: programId,
                     type: 2
                 };
                 layer.open({
@@ -142,12 +148,14 @@ $(
 
                 if(confirm('确认删除？')){
                     const id=employeeArray[activeEmployeeItem.index()].id;
-                    console.log(id);
+                    const programId=programArray[activeProgramItem.index()].id;
+                    console.log(id+','+programId);
                     $.ajax({
                         url:'/schedule/program_employee/delete',
                         type:'POST',
                         data:{
-                            id:id
+                            id:id,
+                            programId:programId
                         },
                         success:result=>{
                             if(result.code==0){
@@ -183,6 +191,19 @@ $(
                     content: '../add/add.html'
                 });
 
+            });
+
+            $('.export-link').on('click',function(){
+
+                const from=$('.export-from').val();
+                const to=$('.export-to').val();
+
+                if(from==''||to==''){
+                    alert('时间范围不能为空！');
+                    return;
+                }
+
+                $(this).attr('href','/schedule/schedule_excel/table?from='+from+'&to='+to);
             });
 
         };

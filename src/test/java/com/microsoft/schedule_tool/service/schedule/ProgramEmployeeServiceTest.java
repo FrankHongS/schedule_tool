@@ -35,8 +35,8 @@ public class ProgramEmployeeServiceTest {
     public void saveProgramEmployee() {
         ProgramEmployee programEmployee=new ProgramEmployee();
         programEmployee.setName("王洛伊");
-        programEmployee.setProgramId(79);
-        ProgramEmployee result=mProgramEmployeeService.saveProgramEmployee(programEmployee);
+        Integer programId=79;
+        ProgramEmployee result=mProgramEmployeeService.saveProgramEmployee(programEmployee,programId);
         assertNotNull(result);
     }
 
@@ -56,7 +56,7 @@ public class ProgramEmployeeServiceTest {
     public void deleteProgramEmployee() {
         List<ProgramEmployee> programEmployeeList=mProgramEmployeeService.getAllProgramEmployeesByProgramId(79);
         ProgramEmployee programEmployee=programEmployeeList.get(0);
-        boolean result=mProgramEmployeeService.deleteProgramEmployee(programEmployee.getId());
+        boolean result=mProgramEmployeeService.deleteProgramEmployee(programEmployee.getId(),0);
         assertTrue(result);
     }
 }

@@ -40,9 +40,8 @@ public class ProgramEmployeeController {
 
         ProgramEmployee programEmployee=new ProgramEmployee();
         programEmployee.setName(name);
-        programEmployee.setProgramId(programId);
 
-        ProgramEmployee result=mProgramEmployeeService.saveProgramEmployee(programEmployee);
+        ProgramEmployee result=mProgramEmployeeService.saveProgramEmployee(programEmployee,programId);
 
         resultMap.put(KEY,result);
 
@@ -60,8 +59,8 @@ public class ProgramEmployeeController {
     }
 
     @PostMapping("/delete")
-    public Result deleteProgramEmployee(@RequestParam("id") Integer id){
-        mProgramEmployeeService.deleteProgramEmployee(id);
+    public Result deleteProgramEmployee(@RequestParam("id") Integer id,@RequestParam("programId") Integer programId){
+        mProgramEmployeeService.deleteProgramEmployee(id,programId);
 
         return ResultUtil.success();
     }

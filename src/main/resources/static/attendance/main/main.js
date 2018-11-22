@@ -94,7 +94,7 @@ window.attendance_main=function () {
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
-                    content: '../recent/recent.html'
+                    content: '/schedule/attendance/recent/recent.html'
                 });
             });
 

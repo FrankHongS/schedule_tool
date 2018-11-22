@@ -4,6 +4,7 @@ import com.microsoft.schedule_tool.dao.schedule.ProgramEmployeeRepository;
 import com.microsoft.schedule_tool.dao.schedule.ProgramRepository;
 import com.microsoft.schedule_tool.entity.schedule.Program;
 import com.microsoft.schedule_tool.entity.schedule.ProgramEmployee;
+import com.microsoft.schedule_tool.service.schedule.ProgramEmployeeService;
 import com.microsoft.schedule_tool.service.schedule.ScheduleExcelService;
 import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.vo.schedule.ProgramSchedule;
@@ -26,7 +27,7 @@ public class ScheduleExcelServiceImpl implements ScheduleExcelService {
     private ProgramRepository mProgramRepository;
 
     @Autowired
-    private ProgramEmployeeRepository mProgramEmployeeRepository;
+    private ProgramEmployeeService mProgramEmployeeService;
 
     @Override
     public ProgramScheduleContainer getProgramSchedule(String from, String to) {
@@ -46,7 +47,7 @@ public class ScheduleExcelServiceImpl implements ScheduleExcelService {
                 ProgramSchedule programSchedule=new ProgramSchedule();
                 programSchedule.setProgramName(program.getName());
 
-                List<ProgramEmployee> employees=mProgramEmployeeRepository.findByProgramId(program.getId());
+                List<ProgramEmployee> employees=mProgramEmployeeService.getAllProgramEmployeesByProgramId(program.getId());
                 if(employees.size()>=2){
                     List<String> nameList=new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package com.microsoft.schedule_tool.service.impl.schedule;
 
+import com.microsoft.schedule_tool.dao.schedule.ProgramAndEmployeeRepository;
 import com.microsoft.schedule_tool.dao.schedule.ProgramRepository;
 import com.microsoft.schedule_tool.entity.schedule.Program;
 import com.microsoft.schedule_tool.exception.schedule.ProgramException;
@@ -20,6 +21,9 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Autowired
     private ProgramRepository mProgramRepository;
+
+    @Autowired
+    private ProgramAndEmployeeRepository mProgramAndEmployeeRepository;
 
     @Override
     public List<Program> getAllPrograms() {
@@ -86,10 +90,16 @@ public class ProgramServiceImpl implements ProgramService {
 
         mProgramRepository.deleteById(id);
 
-        if(!mProgramRepository.findById(id).isPresent()){
-            return true;
-        }else{
+        if(mProgramRepository.findById(id).isPresent()){
             throw new ProgramException(ResultEnum.PROGRAM_DELETE_FAIL);
         }
+
+        mProgramAndEmployeeRepository.deleteByProgramId(id);
+
+        if(mProgramAndEmployeeRepository.findByProgramId(id).size()>0){
+            throw new ProgramException(ResultEnum.PROGRAM_DELETE_FAIL);
+        }
+
+        return true;
     }
 }

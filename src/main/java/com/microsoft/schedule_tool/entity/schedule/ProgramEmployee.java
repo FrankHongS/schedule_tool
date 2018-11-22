@@ -19,9 +19,6 @@ public class ProgramEmployee {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private Integer programId;
-
     public Integer getId() {
         return id;
     }
@@ -36,13 +33,5 @@ public class ProgramEmployee {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getProgramId() {
-        return programId;
-    }
-
-    public void setProgramId(Integer programId) {
-        this.programId = programId;
     }
 }

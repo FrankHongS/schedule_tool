@@ -186,14 +186,14 @@ label {
     padding: 0 5px;
 }
 
-.export-container button{
+.export-container .export-link{
     display: inline-block;
+    text-decoration: none;
     width: 85px;
     height: 30px;
     line-height: 30px;
-    padding: 0 18px;
     background-color: #009688;
-    color: #fff;
+    color: aliceblue;
     white-space: nowrap;
     text-align: center;
     font-size: 14px;
@@ -204,12 +204,4 @@ label {
 
 .export-btns{
     margin: 15px 0 15px 120px;
-}
-
-.export-container button a{
-    color: aliceblue;
-}
-
-.export-container button a:hover{
-    color: aliceblue;
 }
