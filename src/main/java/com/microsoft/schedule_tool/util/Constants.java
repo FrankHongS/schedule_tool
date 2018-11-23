@@ -59,4 +59,14 @@ public interface Constants {
             "Sat",
             "Sun"
     };
+
+    String[] PROGRAMS={
+            "看东方",
+            "你早京津冀",
+            "今日十万加",
+            "脑壳秀",
+            "天气播报",
+            "监测",
+            "Demo"
+    };
 }

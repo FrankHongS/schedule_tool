@@ -12,9 +12,17 @@ public interface ProgramEmployeeService {
 
     List<ProgramEmployee> getAllProgramEmployeesByProgramId(Integer programId);
 
+    /**
+     *
+     * @param programId 节目id
+     * @param employeeType 员工类型
+     * @return
+     */
+    List<ProgramEmployee> getAllProgramEmployeesByProgramIdAndEmployeeType(Integer programId, Integer employeeType);
+
     ProgramEmployee saveProgramEmployee(ProgramEmployee programEmployee,Integer programId);
 
-    ProgramEmployee updateProgramEmployee(Integer id,String name);
+    ProgramEmployee updateProgramEmployee(Integer id,String name, Integer employeeType);
 
     boolean deleteProgramEmployee(Integer id,Integer programId);
 }

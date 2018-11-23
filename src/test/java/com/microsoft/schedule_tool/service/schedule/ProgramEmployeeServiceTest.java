@@ -46,7 +46,7 @@ public class ProgramEmployeeServiceTest {
         List<ProgramEmployee> programEmployeeList=mProgramEmployeeService.getAllProgramEmployeesByProgramId(79);
         ProgramEmployee programEmployee=programEmployeeList.get(0);
 
-        ProgramEmployee result=mProgramEmployeeService.updateProgramEmployee(programEmployee.getId(),"王洛一");
+        ProgramEmployee result=mProgramEmployeeService.updateProgramEmployee(programEmployee.getId(),"王洛一",0);
 
         assertNotNull(result);
     }

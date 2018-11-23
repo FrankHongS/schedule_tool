@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface ProgramEmployeeRepository extends JpaRepository<ProgramEmployee,Integer> {
 
     Optional<ProgramEmployee> findByName(String name);
+
+    List<ProgramEmployee> findByEmployeeType(Integer employeeType);
 }

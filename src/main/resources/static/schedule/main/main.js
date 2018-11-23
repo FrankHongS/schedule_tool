@@ -131,11 +131,11 @@ $(
                 layer.open({
                     type: 2,
                     title: '添加人员',
-                    area: ['350px', '230px'],
+                    area: ['380px', '230px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
-                    content: '../add/add.html'
+                    content: '../addEmployee/addEmployee.html'
                 });
 
             });
@@ -175,20 +175,22 @@ $(
                 }
 
                 const id=employeeArray[activeEmployeeItem.index()].id;
+                const employeeType=employeeArray[activeEmployeeItem.index()].employeeType;
                 inputLabel = {
                     name: '人员名字',
                     id:id,
                     value:activeEmployeeItem.text(),
+                    employeeType:employeeType,
                     type: 3
                 };
                 layer.open({
                     type: 2,
                     title: '编辑人员',
-                    area: ['350px', '230px'],
+                    area: ['380px', '230px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
-                    content: '../add/add.html'
+                    content: '../addEmployee/addEmployee.html'
                 });
 
             });

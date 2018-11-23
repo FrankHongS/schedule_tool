@@ -35,11 +35,13 @@ public class ProgramEmployeeController {
     }
 
     @PostMapping
-    public Result saveProgramEmployee(@RequestParam("name") String name,@RequestParam("programId") Integer programId){
+    public Result saveProgramEmployee(@RequestParam("name") String name,@RequestParam("employeeType") Integer employeeType
+            ,@RequestParam("programId") Integer programId){
         Map<String,ProgramEmployee> resultMap=new HashMap<>();
 
         ProgramEmployee programEmployee=new ProgramEmployee();
         programEmployee.setName(name);
+        programEmployee.setEmployeeType(employeeType);
 
         ProgramEmployee result=mProgramEmployeeService.saveProgramEmployee(programEmployee,programId);
 
@@ -49,10 +51,11 @@ public class ProgramEmployeeController {
     }
 
     @PostMapping("/update")
-    public Result updateProgramEmployee(@RequestParam("id") Integer id,@RequestParam("name") String name){
+    public Result updateProgramEmployee(@RequestParam("id") Integer id,@RequestParam("name") String name,
+                                        @RequestParam("employeeType") Integer employeeType){
         Map<String,ProgramEmployee> resultMap=new HashMap<>();
 
-        ProgramEmployee result=mProgramEmployeeService.updateProgramEmployee(id, name);
+        ProgramEmployee result=mProgramEmployeeService.updateProgramEmployee(id, name,employeeType);
         resultMap.put(KEY,result);
 
         return ResultUtil.success(resultMap);

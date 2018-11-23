@@ -45,6 +45,23 @@ public class ProgramEmployeeServiceImpl implements ProgramEmployeeService {
         return programEmployeeList;
     }
 
+    @Override
+    public List<ProgramEmployee> getAllProgramEmployeesByProgramIdAndEmployeeType(Integer programId, Integer employeeType) {
+
+        List<ProgramEmployee> programEmployeeList=new ArrayList<>();
+
+        List<ProgramEmployee> programEmployees=mProgramEmployeeRepository.findByEmployeeType(employeeType);
+
+        for(ProgramEmployee programEmployee:programEmployees){
+            boolean present=mProgramAndEmployeeRepository.findByProgramIdAndEmployeeId(programId,programEmployee.getId()).isPresent();
+            if(present){
+                programEmployeeList.add(programEmployee);
+            }
+        }
+
+        return programEmployeeList;
+    }
+
     @Transactional
     @Override
     public ProgramEmployee saveProgramEmployee(ProgramEmployee programEmployee, Integer programId) {
@@ -93,7 +110,7 @@ public class ProgramEmployeeServiceImpl implements ProgramEmployeeService {
 
     @Transactional
     @Override
-    public ProgramEmployee updateProgramEmployee(Integer id, String name) {
+    public ProgramEmployee updateProgramEmployee(Integer id, String name, Integer employeeType) {
 
         if (!mProgramEmployeeRepository.findById(id).isPresent()) {
             throw new ProgramEmployeeException(ResultEnum.PROGRAM_EMPLOYEE_ID_NOT_EXIST);
@@ -101,11 +118,16 @@ public class ProgramEmployeeServiceImpl implements ProgramEmployeeService {
 
         ProgramEmployee programEmployee = mProgramEmployeeRepository.findById(id).get();
 
-        if (mProgramEmployeeRepository.findByName(name).isPresent()) {
+        if (!programEmployee.getName().equals(name)&&mProgramEmployeeRepository.findByName(name).isPresent()) {
             throw new ProgramEmployeeException(ResultEnum.PROGRAM_EMPLOYEE_EXIST);
         }
 
-        programEmployee.setName(name);
+        if(programEmployee.getName().equals(name)){
+            programEmployee.setEmployeeType(employeeType);
+        }else{
+            programEmployee.setName(name);
+            programEmployee.setEmployeeType(employeeType);
+        }
 
         try {
             ProgramEmployee result = mProgramEmployeeRepository.save(programEmployee);

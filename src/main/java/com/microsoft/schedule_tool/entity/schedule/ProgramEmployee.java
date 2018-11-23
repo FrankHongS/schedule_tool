@@ -19,6 +19,10 @@ public class ProgramEmployee {
     @Column(nullable = false)
     private String name;
 
+    // 0 1~11, 1 A~C, 2 a~b
+    @Column(nullable = false)
+    private Integer employeeType;
+
     public Integer getId() {
         return id;
     }
@@ -33,5 +37,13 @@ public class ProgramEmployee {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getEmployeeType() {
+        return employeeType;
+    }
+
+    public void setEmployeeType(Integer employeeType) {
+        this.employeeType = employeeType;
     }
 }
