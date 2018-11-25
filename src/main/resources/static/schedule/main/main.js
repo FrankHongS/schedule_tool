@@ -56,7 +56,7 @@ $(
                 layer.open({
                     type: 2,
                     title: '添加节目',
-                    area: ['350px', '230px'],
+                    area: ['400px', '230px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
@@ -98,16 +98,18 @@ $(
                     return;
                 }
                 const id=programArray[activeProgramItem.index()].id;
+                const workInWeekend=programArray[activeProgramItem.index()].workInWeekend;
                 inputLabel = {
                     name: '节目名称',
                     id:id,
                     value:activeProgramItem.text(),
+                    workInWeekend:workInWeekend,
                     type: 1
                 };
                 layer.open({
                     type: 2,
                     title: '编辑节目',
-                    area: ['350px', '230px'],
+                    area: ['400px', '230px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
@@ -131,7 +133,7 @@ $(
                 layer.open({
                     type: 2,
                     title: '添加人员',
-                    area: ['380px', '230px'],
+                    area: ['400px', '230px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
@@ -186,7 +188,7 @@ $(
                 layer.open({
                     type: 2,
                     title: '编辑人员',
-                    area: ['380px', '230px'],
+                    area: ['400px', '230px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,

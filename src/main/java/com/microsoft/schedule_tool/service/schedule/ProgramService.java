@@ -14,7 +14,7 @@ public interface ProgramService {
 
     Program saveProgram(Program program);
 
-    Program updateProgram(Integer id,String name);
+    Program updateProgram(Integer id,String name,Boolean workInWeekend);
 
     boolean deleteProgram(Integer id);
 }

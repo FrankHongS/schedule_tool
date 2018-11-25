@@ -6,17 +6,19 @@ import java.util.Map;
 /**
  * Created by Frank Hon on 11/23/2018
  * E-mail: v-shhong@microsoft.com
+ * 
+ * 每一周所有的节目与人员映射关系
  */
 public class ProgramScheduleTest {
 
     // K 节目名  V 每周值班人员
-    private List<Map<String,String>> programMapList;
+    private Map<String,String> programMap;
 
-    public List<Map<String, String>> getProgramMapList() {
-        return programMapList;
+    public Map<String,String> getProgramMap() {
+        return programMap;
     }
 
-    public void setProgramMapList(List<Map<String, String>> programMapList) {
-        this.programMapList = programMapList;
+    public void setProgramMap(Map<String,String> programMap) {
+        this.programMap = programMap;
     }
 }

@@ -19,6 +19,8 @@ public class Program {
     @Column(nullable = false,name = "program_name")
     private String name;
 
+    private Boolean workInWeekend;
+
     public Integer getId() {
         return id;
     }
@@ -33,5 +35,13 @@ public class Program {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getWorkInWeekend() {
+        return workInWeekend;
+    }
+
+    public void setWorkInWeekend(Boolean workInWeekend) {
+        this.workInWeekend = workInWeekend;
     }
 }

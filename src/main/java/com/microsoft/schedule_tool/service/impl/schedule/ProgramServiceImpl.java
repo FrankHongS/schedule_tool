@@ -56,18 +56,20 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Transactional
     @Override
-    public Program updateProgram(Integer id, String name) {
+    public Program updateProgram(Integer id, String name, Boolean workInWeekend) {
 
         if(!mProgramRepository.findById(id).isPresent()){
             throw new ProgramException(ResultEnum.PROGRAM_ID_NOT_EXIST);
         }
 
-        if(mProgramRepository.findByName(name).isPresent()){
+        Program program=mProgramRepository.findById(id).get();
+
+        if(!program.getName().equals(name)&&mProgramRepository.findByName(name).isPresent()){
             throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
         }
 
-        Program program=mProgramRepository.findById(id).get();
         program.setName(name);
+        program.setWorkInWeekend(workInWeekend);
         try{
             Program result=mProgramRepository.save(program);
             if(result==null){

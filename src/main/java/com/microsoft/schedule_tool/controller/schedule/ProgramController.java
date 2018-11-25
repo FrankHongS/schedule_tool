@@ -35,9 +35,11 @@ public class ProgramController {
     }
 
     @PostMapping
-    public Result saveProgram(@RequestParam("name") String name){
+    public Result saveProgram(@RequestParam("name") String name,
+                              @RequestParam(value = "workInWeekend",required = false) Boolean workInWeekend){
         Program program=new Program();
         program.setName(name);
+        program.setWorkInWeekend(workInWeekend);
 
         Program result=mProgramService.saveProgram(program);
         Map<String,Program> resultMap=new HashMap<>();
@@ -47,8 +49,9 @@ public class ProgramController {
     }
 
     @PostMapping("/update")
-    public Result updateProgram(@RequestParam("id") Integer id,@RequestParam("name") String name){
-        Program result=mProgramService.updateProgram(id, name);
+    public Result updateProgram(@RequestParam("id") Integer id,@RequestParam("name") String name,
+                                @RequestParam(value = "workInWeekend",required = false) Boolean workInWeekend){
+        Program result=mProgramService.updateProgram(id, name,workInWeekend);
         Map<String,Program> resultMap=new HashMap<>();
         resultMap.put(KEY,result);
 

@@ -69,4 +69,9 @@ public interface Constants {
             "监测",
             "Demo"
     };
+
+    String[] PROGRAM_ROLES={
+            "值日",
+            "审核"
+    };
 }

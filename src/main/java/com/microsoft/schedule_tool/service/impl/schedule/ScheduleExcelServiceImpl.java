@@ -10,6 +10,7 @@ import com.microsoft.schedule_tool.util.Constants;
 import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.vo.schedule.ProgramSchedule;
 import com.microsoft.schedule_tool.vo.schedule.ProgramScheduleContainer;
+import com.microsoft.schedule_tool.vo.schedule.ProgramScheduleContainerTest;
 import com.microsoft.schedule_tool.vo.schedule.ProgramScheduleTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,55 +79,115 @@ public class ScheduleExcelServiceImpl implements ScheduleExcelService {
         }
     }
 
-    private void test(){
+    @Override
+    public ProgramScheduleContainerTest getProgramScheduleTest(String from, String to) {
+
+        try {
+            return test(from, to);
+        } catch (ParseException e) {
+            throw new RuntimeException("date format is not proper...");
+        }
+    }
+
+    private ProgramScheduleContainerTest test(String from , String to) throws ParseException {
+
+        int fromWeek= DateUtil.getWeekOfYear(from);
+        int toWeek=DateUtil.getWeekOfYear(to);
+        int weekCount=toWeek-fromWeek+1;
+
         List<ProgramScheduleTest> target=new ArrayList<>();
         List<Program> programs=mProgramRepository.findAll();
 
-        ProgramScheduleTest programSchedule=new ProgramScheduleTest();
-        List<Map<String,String>> programMapList=new ArrayList<>();
-        int index0=0;
-        int index1=0;
-        int index2=0;
-        for (Program program:programs){
-            Map<String,String> programMap=new HashMap<>();
-            String programName=program.getName();
-            if(programName.equals(Constants.PROGRAMS[0])){
-                List<ProgramEmployee> employees0=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),0);
-                programMap.put(programName,employees0.get(index0%employees0.size())+","+employees0.get((index0+1)%employees0.size()));
-                index0+=2;
-                programMapList.add(programMap);
-            }else if(programName.equals(Constants.PROGRAMS[1])){
-                List<ProgramEmployee> employees0=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),0);
-                List<ProgramEmployee> employees1=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),1);
-                programMap.put(programName,employees1.get(index1%employees1.size())+","+employees0.get(index0%employees0.size()));
-                index0++;
-                index1++;
-                programMapList.add(programMap);
-            }else if(programName.equals(Constants.PROGRAMS[6])){
-                List<ProgramEmployee> employees0=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),0);
-                programMap.put(programName,employees0.get(index0%employees0.size())+","+employees0.get((index0+1)%employees0.size()));
-                index0+=2;
-                programMapList.add(programMap);
-            }else if(programName.equals(Constants.PROGRAMS[2])){
-                List<ProgramEmployee> employees0=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),0);
-                List<ProgramEmployee> employees1=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),1);
-                List<ProgramEmployee> employees2=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),2);
 
-                int delta=employees1.size()-employees2.size();
-                if(delta>0){//todo
-                    if(index2%employees2.size()==0){
-                        programMap.put(programName,employees1.get(index1%employees1.size())+","+employees2.get(index2%employees2.size()));
-                        index1++;
-                        index2++;
-                    }else{
-                        programMap.put(programName,employees1.get(index1%employees1.size())+","+employees0.get(index0%employees0.size()));
-                        index1++;
-                        index0++;
+        int index0=0;
+
+        int index1_0=0;
+        int index1_1=index1_0+1;
+
+        int index2_0=0;
+        int index2_1=index2_0+1;
+
+        String nizaoA="";
+        String nizaoB="";
+
+        for(int i=0;i<weekCount;i++){
+
+            Map<String,String> programMap=new HashMap<>();
+
+            for (Program program:programs){
+                String programName=program.getName();
+                if(programName.equals(Constants.PROGRAMS[0])){//kandongfang
+                    List<ProgramEmployee> employees0=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),0);
+                    programMap.put(programName,employees0.get(index0%employees0.size()).getName()+","+employees0.get((index0+1)%employees0.size()).getName());
+                    index0+=2;
+                }else if(programName.equals(Constants.PROGRAMS[1])){//nizaojingjinji
+                    List<ProgramEmployee> employees0=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),0);
+                    List<ProgramEmployee> employees1=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),1);
+                    nizaoA=employees1.get(index1_0%employees1.size()).getName();
+                    nizaoB=employees0.get(index0%employees0.size()).getName();
+                    programMap.put(programName,nizaoA+","+nizaoB);
+                    index0++;
+                    index1_0++;
+                }else if(programName.equals(Constants.PROGRAMS[6])){
+                    List<ProgramEmployee> employees0=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),0);
+                    programMap.put(programName,employees0.get(index0%employees0.size()).getName()+","+employees0.get((index0+1)%employees0.size()).getName());
+                    index0+=2;
+                }else if(programName.equals(Constants.PROGRAMS[2])){//jinrishiwanjia
+                    List<ProgramEmployee> employees0=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),0);
+                    List<ProgramEmployee> employees1=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),1);
+                    List<ProgramEmployee> employees2=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),2);
+
+                    int delta=employees1.size()-employees2.size();
+                    if(delta>0&&employees1.size()%employees2.size()!=0){// 类别A~C的人数大于类别a~b人数
+                        if((index1_1-1)%employees1.size()>employees2.size()||(index1_1-1)%employees1.size()==0){
+                            programMap.put(programName,employees1.get(index1_1%employees1.size()).getName()+","+employees0.get(index0%employees0.size()).getName());
+                            index1_1++;
+                            index0++;
+
+                            index2_0++;//important,轮空系数也要递增
+                        }else{
+                            programMap.put(programName,employees1.get(index1_1%employees1.size()).getName()+","+employees2.get(index2_0%employees2.size()).getName());
+                            index1_1++;
+                            index2_0++;
+                        }
+                    }else if(delta<0&&employees2.size()%employees1.size()!=0){// 类别A~C的人数小于类别a~b人数
+                        if(index2_0%employees2.size()>employees1.size()||index2_0%employees2.size()==0){
+                            programMap.put(programName,employees0.get(index0%employees0.size()).getName()+","+employees2.get(index2_0%employees2.size()).getName());
+                            index0++;
+                            index2_0++;
+
+                            index1_1++;//important,轮空系数也要递增
+                        }else{
+                            programMap.put(programName,employees1.get(index1_1%employees1.size()).getName()+","+employees2.get(index2_0%employees2.size()).getName());
+                            index1_1++;
+                            index2_0++;
+                        }
+                    }else{// 类别A~C的人数等于类别a~b人数
+                        programMap.put(programName,employees1.get(index1_1%employees1.size()).getName()+","+employees2.get(index2_0%employees2.size()).getName());
+                        index1_1++;
+                        index2_0++;
                     }
-                    programMapList.add(programMap);
+                }else if(programName.equals(Constants.PROGRAMS[3])){// naokexiu
+                    List<ProgramEmployee> employees2=mProgramEmployeeService.getAllProgramEmployeesByProgramIdAndEmployeeType(program.getId(),2);
+                    programMap.put(programName,employees2.get(index2_1%employees2.size()).getName());
+                    index2_1++;
+                }else if(programName.equals(Constants.PROGRAMS[5])){// jiance
+                    programMap.put(programName,programMap.get(Constants.PROGRAMS[3]));
+                }else if(programName.equals(Constants.PROGRAMS[4])){//tianqibobao
+                    programMap.put(programName,nizaoB);
                 }
             }
+
+            ProgramScheduleTest programSchedule=new ProgramScheduleTest();
+            programSchedule.setProgramMap(programMap);
+            target.add(programSchedule);
         }
+
+        ProgramScheduleContainerTest container=new ProgramScheduleContainerTest();
+        container.setFrom(from);
+        container.setTo(to);
+        container.setProgramScheduleList(target);
+        return container;
     }
 
     private int[][] transfer1(int count){
