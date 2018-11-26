@@ -14,11 +14,21 @@ public class ProgramScheduleTest {
     // K 节目名  V 每周值班人员
     private Map<String,String> programMap;
 
+    private Map<String,Boolean> workInWeekendMap;
+
     public Map<String,String> getProgramMap() {
         return programMap;
     }
 
     public void setProgramMap(Map<String,String> programMap) {
         this.programMap = programMap;
+    }
+
+    public Map<String, Boolean> getWorkInWeekendMap() {
+        return workInWeekendMap;
+    }
+
+    public void setWorkInWeekendMap(Map<String, Boolean> workInWeekendMap) {
+        this.workInWeekendMap = workInWeekendMap;
     }
 }

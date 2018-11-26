@@ -4,9 +4,13 @@ $(
 
         let programArray;
         let employeeArray;
+        // special employee array
+        let specialEmployeeArray;
 
         let activeProgramItem;
         let activeEmployeeItem;
+        // active special employee item
+        let activeSpecialEmployeeItem;
 
         window.inputLabel = {};
 
@@ -30,6 +34,8 @@ $(
                             activeProgramItem = activeItem;
                         } else if ($(this).parents().hasClass('employee-container')) {
                             activeEmployeeItem = activeItem;
+                        } else if ($(this).parents().hasClass('spec-employees-container')) {
+                            activeSpecialEmployeeItem = activeItem;
                         }
                     }
                 })
@@ -72,18 +78,18 @@ $(
                     return;
                 }
 
-                if(confirm('确认删除？')){
-                    const id=programArray[activeProgramItem.index()].id;
+                if (confirm('确认删除？')) {
+                    const id = programArray[activeProgramItem.index()].id;
                     console.log(id);
                     $.ajax({
-                        url:'/schedule/program/delete',
-                        type:'POST',
-                        data:{
-                            id:id
+                        url: '/schedule/program/delete',
+                        type: 'POST',
+                        data: {
+                            id: id
                         },
-                        success:result=>{
-                            if(result.code==0){
-                                alert('删除'+activeProgramItem.text()+'成功');
+                        success: result => {
+                            if (result.code == 0) {
+                                alert('删除' + activeProgramItem.text() + '成功');
                                 queryPrograms();
                             }
                         }
@@ -97,13 +103,13 @@ $(
                     alert('请选中节目之后再编辑');
                     return;
                 }
-                const id=programArray[activeProgramItem.index()].id;
-                const workInWeekend=programArray[activeProgramItem.index()].workInWeekend;
+                const id = programArray[activeProgramItem.index()].id;
+                const workInWeekend = programArray[activeProgramItem.index()].workInWeekend;
                 inputLabel = {
                     name: '节目名称',
-                    id:id,
-                    value:activeProgramItem.text(),
-                    workInWeekend:workInWeekend,
+                    id: id,
+                    value: activeProgramItem.text(),
+                    workInWeekend: workInWeekend,
                     type: 1
                 };
                 layer.open({
@@ -124,7 +130,7 @@ $(
                     alert('请选中节目之后再添加人员');
                     return;
                 }
-                const programId=programArray[activeProgramItem.index()].id;
+                const programId = programArray[activeProgramItem.index()].id;
                 inputLabel = {
                     name: '人员名字',
                     programId: programId,
@@ -148,20 +154,20 @@ $(
                     return;
                 }
 
-                if(confirm('确认删除？')){
-                    const id=employeeArray[activeEmployeeItem.index()].id;
-                    const programId=programArray[activeProgramItem.index()].id;
-                    console.log(id+','+programId);
+                if (confirm('确认删除？')) {
+                    const id = employeeArray[activeEmployeeItem.index()].id;
+                    const programId = programArray[activeProgramItem.index()].id;
+                    console.log(id + ',' + programId);
                     $.ajax({
-                        url:'/schedule/program_employee/delete',
-                        type:'POST',
-                        data:{
-                            id:id,
-                            programId:programId
+                        url: '/schedule/program_employee/delete',
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            programId: programId
                         },
-                        success:result=>{
-                            if(result.code==0){
-                                alert('删除'+activeEmployeeItem.text()+'成功');
+                        success: result => {
+                            if (result.code == 0) {
+                                alert('删除' + activeEmployeeItem.text() + '成功');
                                 queryEmployees();
                             }
                         }
@@ -176,13 +182,13 @@ $(
                     return;
                 }
 
-                const id=employeeArray[activeEmployeeItem.index()].id;
-                const employeeType=employeeArray[activeEmployeeItem.index()].employeeType;
+                const id = employeeArray[activeEmployeeItem.index()].id;
+                const employeeType = employeeArray[activeEmployeeItem.index()].employeeType;
                 inputLabel = {
                     name: '人员名字',
-                    id:id,
-                    value:activeEmployeeItem.text(),
-                    employeeType:employeeType,
+                    id: id,
+                    value: activeEmployeeItem.text(),
+                    employeeType: employeeType,
                     type: 3
                 };
                 layer.open({
@@ -197,17 +203,61 @@ $(
 
             });
 
-            $('.export-link').on('click',function(){
+            //添加特殊人员
+            $('.spec-add-employee').on('click', function () {
 
-                const from=$('.export-from').val();
-                const to=$('.export-to').val();
+                inputLabel = {
+                    name: '人员名字',
+                    type: 0
+                };
 
-                if(from==''||to==''){
+                layer.open({
+                    type: 2,
+                    title: '编辑人员',
+                    area: ['400px', '230px'],
+                    fix: false,
+                    maxmin: false,
+                    scrollbar: false,
+                    content: '../addSpecial/addSpecial.html'
+                });
+            });
+
+            //删除特殊人员
+            $('.spec-delete-employee').on('click', function () {
+                if(!activeSpecialEmployeeItem){
+                    alert('请选中人员之后再删除');
+                    return;
+                }
+
+                if (confirm('确认删除？')) {
+                    const id = specialEmployeeArray[activeSpecialEmployeeItem.index()].id;
+                    $.ajax({
+                        url: '/schedule/special/delete',
+                        type: 'POST',
+                        data: {
+                            id: id,
+                        },
+                        success: result => {
+                            if (result.code == 0) {
+                                alert('删除' + activeSpecialEmployeeItem.text() + '成功');
+                                querySpecialEmployees();
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('.export-link').on('click', function () {
+
+                const from = $('.export-from').val();
+                const to = $('.export-to').val();
+
+                if (from == '' || to == '') {
                     alert('时间范围不能为空！');
                     return;
                 }
 
-                $(this).attr('href','/schedule/schedule_excel/table?from='+from+'&to='+to);
+                $(this).attr('href', '/schedule/schedule_excel/table?from=' + from + '&to=' + to);
             });
 
         };
@@ -239,24 +289,38 @@ $(
                 success: result => {
                     if (result.code == 0) {
                         main.buildPrograms(result.data.program);
-                        programArray=result.data.program;
+                        programArray = result.data.program;
                         console.log(result);
-                        activeProgramItem=undefined;
+                        activeProgramItem = undefined;
                     }
                 }
             });
         };
 
-        window.queryEmployees=function(){
-            const id=programArray[activeProgramItem.index()].id;
+        window.queryEmployees = function () {
+            const id = programArray[activeProgramItem.index()].id;
             $.ajax({
-                url:'/schedule/program_employee?programId='+id,
-                success:result=>{
-                    if(result.code==0){
+                url: '/schedule/program_employee?programId=' + id,
+                success: result => {
+                    if (result.code == 0) {
                         console.log(result);
                         main.buildEmployees(result.data.program_employee);
-                        employeeArray=result.data.program_employee;
-                        activeEmployeeItem=undefined;
+                        employeeArray = result.data.program_employee;
+                        activeEmployeeItem = undefined;
+                    }
+                }
+            });
+        };
+
+        window.querySpecialEmployees = function () {
+            $.ajax({
+                url: '/schedule/special',
+                success: result => {
+                    if (result.code == 0) {
+                        console.log(result);
+                        main.buildSpecialEmployees(result.data.special);
+                        specialEmployeeArray=result.data.special;
+                        activeSpecialEmployeeItem=undefined;
                     }
                 }
             });
@@ -269,6 +333,7 @@ $(
         main.bindClick();
         main.bindLayer();
         window.queryPrograms();
+        window.querySpecialEmployees();
 
 
 
@@ -280,8 +345,9 @@ $(
                 }
             );
 
-            $('.program-container ul').html('');
-            $('.program-container ul').append(programItems);
+            $('.program-container ul')
+                .html('')
+                .append(programItems);
         };
 
         main.buildEmployees = function (employeeArray) {
@@ -295,7 +361,20 @@ $(
             $('.employee-container ul')
                 .html('')
                 .append(employeeItems);
-            
+
+        };
+
+        main.buildSpecialEmployees = function (specialEmployeeArray) {
+            const employeeItems = specialEmployeeArray.map(
+                employee => {
+                    return $('<li>')
+                        .text(employee.name);
+                }
+            );
+
+            $('.spec-employees-container ul')
+                .html('')
+                .append(employeeItems);
         };
 
     }

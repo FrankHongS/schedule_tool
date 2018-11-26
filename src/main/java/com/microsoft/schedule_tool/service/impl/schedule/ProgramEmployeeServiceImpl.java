@@ -96,7 +96,7 @@ public class ProgramEmployeeServiceImpl implements ProgramEmployeeService {
                     ProgramAndEmployee programAndEmployee = new ProgramAndEmployee();
                     programAndEmployee.setProgramId(programId);
                     programAndEmployee.setEmployeeId(employeeId);
-                    mProgramAndEmployeeRepository.save(programAndEmployee);
+                    mProgramAndEmployeeRepository.save(programAndEmployee);//保存至关系表
                     return result;
                 } else {
                     throw new ProgramEmployeeException(ResultEnum.PROGRAM_EMPLOYEE_SAVE_FAIL);

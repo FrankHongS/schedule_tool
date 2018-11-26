@@ -2,6 +2,7 @@ package com.microsoft.schedule_tool.util.schedule;
 
 import com.microsoft.schedule_tool.util.Constants;
 import com.microsoft.schedule_tool.util.DateUtil;
+import com.microsoft.schedule_tool.util.Util;
 import com.microsoft.schedule_tool.vo.schedule.ProgramSchedule;
 import com.microsoft.schedule_tool.vo.schedule.ProgramScheduleContainer;
 import com.microsoft.schedule_tool.vo.schedule.ProgramScheduleContainerTest;
@@ -107,12 +108,15 @@ public class ExportScheduleUtilTest {
 
 
             ProgramScheduleTest programSchedule = programScheduleList.get(i);
+            Map<String,Boolean> workInWeekendMap=programSchedule.getWorkInWeekendMap();
             Map<String, String> programMap = programSchedule.getProgramMap();
 
             int keyIndex=0;
             for (String key : programMap.keySet()) {
 
                 Row row=rowList.get(keyIndex);
+
+                boolean workInWeekend=workInWeekendMap.get(key);
 
                 if (i == 0) {//第一周
                     Cell nameCell = row.createCell(0);
@@ -122,17 +126,44 @@ public class ExportScheduleUtilTest {
                 if (i == 0) {
                     for (int j = 0; j < 8 - day; j++) {
                         Cell cell = row.createCell(j + 1);
-                        writeProgramRoles(cell,programMap.get(key));
+                        if (!workInWeekend){
+                            if(j!=7-day&&j!=6-day){
+                                writeProgramRoles(cell,programMap.get(key));
+                            }
+                        }else{
+                            writeProgramRoles(cell,programMap.get(key));
+                        }
                     }
                 } else if (i < programScheduleList.size() - 1) {
                     for (int j = 0; j < 7; j++) {
                         Cell cell = row.createCell(createdCount + j + 1);
-                        writeProgramRoles(cell,programMap.get(key));
+                        if(!workInWeekend){
+                            if(j!=5&&j!=6){
+                                writeProgramRoles(cell,programMap.get(key));
+                            }
+                        }else{
+                            writeProgramRoles(cell,programMap.get(key));
+                        }
                     }
                 } else if (i == programScheduleList.size() - 1) {
                     for (int j = 0; j < dayCount - createdCount; j++) {
                         Cell cell = row.createCell(createdCount + j + 1);
-                        writeProgramRoles(cell,programMap.get(key));
+                        if(!workInWeekend){
+                            if(DateUtil.getDayOfWeek(to)==7){
+                                if(j!=dayCount - createdCount-1){
+                                    writeProgramRoles(cell,programMap.get(key));
+                                }
+                            }else if(DateUtil.getDayOfWeek(to)==1){
+                                if(j!=dayCount - createdCount-1&&j!=dayCount - createdCount-2){
+                                    writeProgramRoles(cell,programMap.get(key));
+                                }
+                            }else{
+                                writeProgramRoles(cell,programMap.get(key));
+                            }
+
+                        }else{
+                            writeProgramRoles(cell,programMap.get(key));
+                        }
                     }
                 }
 
