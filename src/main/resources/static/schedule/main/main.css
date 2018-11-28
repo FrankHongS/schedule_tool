@@ -88,66 +88,6 @@ label {
     font-size: 1.0em;
 }
 
-.sub-container select{
-    min-height: 38px;
-    min-width: 160px;
-    height: 100%;
-    width: 15%;
-    padding-left: 10px; 
-    border: 1px solid #c6c6c6;
-}
-
-.program-select{
-    display: inline-block;
-}
-
-.date-input{
-    height: 30px;
-    line-height: 30px;
-    width: 200px;
-    border: 1px solid #000;
-    background-color: #fff;
-    border-radius: 2px;
-    padding-left: 10px;
-}
-
-.date-picker{
-    display: inline-block;
-}
-
-.sub-container .date-picker label{
-    margin-left: 20px;
-}
-
-.holiday{
-    display: inline-block;
-}
-
-.holiday label{
-    margin-left: 20px;
-    margin-right: 0;
-}
-
-.person-container{
-    display: inline-block;
-    width: 20%;
-    margin-left: 20px;
-}
-
-.person-container ul{
-    height: 115px;
-}
-
-.person-container .img-icon-container{
-    margin: 10px 0;
-}
-
-.other-container{
-    display: inline-block;
-    position: relative;
-    bottom:60px;
-}
-
 .spec-employees-container{
     width: 60%;
     margin: 30px auto;
@@ -204,4 +144,24 @@ label {
 
 .export-btns{
     margin: 15px 0 15px 120px;
+}
+
+
+.export-container .info-input{
+    height: 30px;
+    line-height: 30px;
+    width: 200px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+.substitute-container{
+    width: 60%;
+    margin: 30px auto;
+}
+
+.substitute-container .link-container{
+    margin-left: 120px;
 }

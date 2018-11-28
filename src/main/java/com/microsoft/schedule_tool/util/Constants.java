@@ -74,4 +74,11 @@ public interface Constants {
             "值日",
             "审核"
     };
+
+    String[] SUBSTITUTE_HEADER={
+            "替班员工姓名",
+            "替班节目名称",
+            "替班时间",
+            "节假日"
+    };
 }

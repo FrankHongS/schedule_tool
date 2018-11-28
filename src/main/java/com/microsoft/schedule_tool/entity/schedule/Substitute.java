@@ -26,6 +26,9 @@ public class Substitute {
     @Column(nullable = false)
     private String employeeName;
 
+    @Column(nullable = false)
+    private Boolean holiday;
+
     public Integer getId() {
         return id;
     }
@@ -56,5 +59,13 @@ public class Substitute {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
+    }
+
+    public Boolean getHoliday() {
+        return holiday;
+    }
+
+    public void setHoliday(Boolean holiday) {
+        this.holiday = holiday;
     }
 }

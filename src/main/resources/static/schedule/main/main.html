@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Schedule</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../..//plugin/layui/css/layui.css">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 
     <script src="../../jquery/jquery-3.3.1.js"></script>
@@ -56,42 +55,7 @@
             </div>
         </div>
     </div>
-    <div class="sub-container">
-        <div class="other-container">
-            <div class="program-select">
-                <label for="sub-program">节目名</label>
-                <select name="sub-program" id="sub-program">
-                    <option value="1">看东方</option>
-                    <option value="2">你早京津冀</option>
-                    <option value="3">今日十万加</option>
-                </select>
-            </div>
-            <div class="date-picker">
-                <label for="sub-date">替班日期</label>
-                <input id='sub-date' type="text" class="date-input sub-date" placeholder="请输入替班日期">
-            </div>
-            <div class="holiday">
-                <label for="sub-hol">节假日</label>
-                <input id='sub-hol' type="checkbox">
-            </div>
-        </div>
-        <div class="person-container">
-            <div class="img-icon-container">
-                <img class='sub-add-employee' src="../../img/add.png" alt="add">
-                <img class='sub-delete-employee' src="../../img/delete.png" alt="delete">
-            </div>
-            <div class="item-container">
-                <ul>
-                    <li>王洛一</li>
-                    <li>门征</li>
-                    <li>杨帆</li>
-                    <li>张威</li>
-                    <li>Lisa</li>
-                    <li>武文斌</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    
     <div class="spec-employees-container">
         <div class="desc-container"><span class="desc">特殊员工表</span><span><br>(注：此处指不能在同一节目中同时出现)</span></div>
         <div class="spec-employees">
@@ -115,10 +79,17 @@
     <div class="export-container">
         <div class="date-range-picker">
             <label for="export-date">排班日期范围</label>
-            <input id='export-date' type="text" class="date-input export-from" placeholder="from"><span class="dash">--</span><input type="text" class="date-input export-to" placeholder="to">
+            <input id='export-date' type="text" class="info-input date-input export-from" placeholder="from"><span class="dash">--</span><input type="text" class="info-input date-input export-to" placeholder="to">
         </div>
         <div class="export-btns">
             <a class="export-link">导出</a>
+        </div>
+    </div>
+
+    <div class="substitute-container">
+        <span class="title">替班情况</span>
+        <div class="link-container">
+            <a href="../substitute/substitute.html">操作替班</a>
         </div>
     </div>
 
