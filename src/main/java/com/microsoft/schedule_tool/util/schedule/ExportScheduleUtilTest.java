@@ -58,7 +58,7 @@ public class ExportScheduleUtilTest {
         String to = container.getTo();
 
         int day = DateUtil.getDayOfWeek(from);
-        int dayCount = DateUtil.getDayCountFromDate(from, to);
+        int dayCount = DateUtil.getDayCountFromDate(from, to)+1;
 
         for (int i = 0; i < dayCount + 1; i++) {
             Cell cell = titleRow.createCell(i);
@@ -88,7 +88,7 @@ public class ExportScheduleUtilTest {
         String to = container.getTo();
 
         int day = DateUtil.getDayOfWeek(from);//第一天为星期几
-        int dayCount = DateUtil.getDayCountFromDate(from, to);
+        int dayCount = DateUtil.getDayCountFromDate(from, to)+1;
 
         int createdCount = 0;
 
