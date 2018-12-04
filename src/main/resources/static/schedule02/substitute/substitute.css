@@ -1,4 +1,4 @@
-.main-container{
+.substitute-main-container{
     width: 80%;
     margin: 30px auto;
 }
@@ -37,7 +37,7 @@
     margin-top: 10px; 
 }
 
-.btns-container{
+.substitute-main-container .btns-container{
     margin-left: 130px;
 }
 
@@ -57,7 +57,7 @@
     cursor: pointer;
 }
 
-.btns-container .export-link{
+.substitute-main-container .btns-container .export-link{
     display: inline-block;
     text-decoration: none;
     width: 85px;
@@ -73,53 +73,53 @@
     cursor: pointer;
 }
 
-.tb-container{
+.substitute-main-container .tb-container{
     width: 95%;
     margin: 0 auto;
 }
 
-.tb-container caption{
+.substitute-main-container .tb-container caption{
     padding-bottom: 5px;
 }
 
-.tb-container table{
+.substitute-main-container .tb-container table{
     width: 100%;
     text-align: center;
     border-collapse: collapse;
 }
 
-.tb-container table,
-.tb-container table tr td {
+.substitute-main-container .tb-container table,
+.substitute-main-container .tb-container table tr td {
     border: 1px solid #0094ff;
 }
 
-.tb-container table thead tr td {
+.substitute-main-container .tb-container table thead tr td {
     padding: 8px;
-    font-size: 1.2em;
-}
-
-.tb-container table tbody tr td {
-    padding: 10px;
     font-size: 1.0em;
 }
 
+.substitute-main-container .tb-container table tbody tr td {
+    padding: 10px;
+    font-size: 1.2em;
+}
+
 /* index */
-.tb-container table tr :first-child{
+.substitute-main-container .tb-container table tr :first-child{
     width: 8%;
 }
 
-.tb-container table tr :nth-child(2){
+.substitute-main-container .tb-container table tr :nth-child(2){
     width: 28%;
 }
 
-.tb-container table tr :nth-child(3){
+.substitute-main-container .tb-container table tr :nth-child(3){
     width: 28%;
 }
 
-.tb-container table tr :nth-child(4){
+.substitute-main-container .tb-container table tr :nth-child(4){
     width: 28%;
 }
 
-.tb-container table tr :nth-child(5){
+.substitute-main-container .tb-container table tr :nth-child(5){
     width: 8%;
 }

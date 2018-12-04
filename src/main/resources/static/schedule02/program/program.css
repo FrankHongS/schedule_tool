@@ -1,14 +1,14 @@
-.employee-main-container{
+.program-main-container{
     width: 90%;
     margin: 25px auto 0;
 }
 
-.employee-container{
+.program-container{
     width: 25%;
     margin: 0 200px;
 }
 
-.employee-container ul{
+.program-container ul{
     width: 100%;
     height: 200px;
     overflow-x: hidden;
@@ -20,7 +20,7 @@
     margin: 0; 
 }
 
-.employee-container ul li{
+.program-container ul li{
     padding:5px;
     padding-left: 20px;
     line-height: 1.0em;
@@ -28,15 +28,15 @@
     cursor: pointer;
 }
 
-.employee-main-container .btns-container{
+.program-main-container .btns-container{
     margin-left: 200px;
     margin-top: 30px;
 }
 
-.employee-main-container .btns-container button{
+.program-main-container .btns-container button{
     display: inline-block;
     text-decoration: none;
-    width: 85px;
+    width: 100px;
     height: 30px;
     line-height: 30px;
     background-color: #009688;
@@ -47,14 +47,18 @@
     border: none;
     border-radius: 2px;
     cursor: pointer;
-    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
-.employee-container .active{
+.program-main-container .btns-container :last-child{
+    display: block;
+}
+
+.program-container .active{
     background: #707070;
     color: aliceblue;
 }
 
-.employee-container .unactive:hover{
+.program-container .unactive:hover{
     background: #bfbfbf;
 }

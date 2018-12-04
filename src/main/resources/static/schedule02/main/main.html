@@ -6,7 +6,16 @@
     <title>Schedule</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" href="../employee/employee.css">
+    <link rel="stylesheet" href="../program/program.css">
+    <link rel="stylesheet" href="../substitute/substitute.css">
     <script src="../../jquery/jquery-3.3.1.js"></script>
+    <script src="../../plugin/laydate/laydate.js"></script>
+    <script src="../../plugin/layui/layui.all.js"></script>
+    <script src="../employee/employee.js"></script>
+    <script src="../program/program.js"></script>
+    <script src="../substitute/substitute.js"></script>
+    <script src="../util/util.js"></script>
     <script src="main.js"></script>
 </head>
 <body>
@@ -18,6 +27,15 @@
                 <li>管理替班</li>
                 <li>生成排班</li>
             </ul>
+        </div>
+        <div class="content-container">
+            <div id="employee"></div>
+
+            <div id="program"></div>
+
+            <div id="substitute"></div>
+
+            <div id="export"></div>
         </div>
     </div>
 </body>
