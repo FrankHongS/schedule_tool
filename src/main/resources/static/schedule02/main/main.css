@@ -19,17 +19,17 @@
     cursor: pointer;
 }
 
-.active{
+.nav-container .active{
     color: black;
     border-bottom: 2px #009688 solid;
     /* box-shadow: #009688 0 2px; */
 }
 
-.unactive{
+.nav-container .unactive{
     color: #888;
 }
 
-.unactive:hover{
+.nav-container .unactive:hover{
     color: #666;
 }
 

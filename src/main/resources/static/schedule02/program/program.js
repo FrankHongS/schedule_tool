@@ -75,7 +75,8 @@ window.program = function () {
                 alert('请先选中节目');
                 return;
             }
-            $(location).attr('href', '/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + $current.text());
+            // $(location).attr('href', '/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + $current.text());
+            window.open('/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + $current.text());
         });
     };
 
