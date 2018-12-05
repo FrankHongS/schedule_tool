@@ -30,7 +30,7 @@ window.substitute = function () {
             });
         });
 
-        $('.export-link').on('click', function () {
+        $('.substitute-main-container .export-link').on('click', function () {
 
             const from = $('.from').val();
             const to = $('.to').val();

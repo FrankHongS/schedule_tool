@@ -8,44 +8,53 @@ $(
                 $(this).addClass('active').removeClass('unactive')
                     .siblings().removeClass('active').addClass('unactive');
 
-                const index = $(this).index();
+                const index=$(this).index();
 
                 switch (index) {
                     case 0:
-                    if(!$('#employee').hasClass('loaded')){
-                        $('#employee').load('../employee/employee.html ',function(){
-                            window.employee();
-                        });
-                        $('#employee').addClass('loaded');
-                    }
+                        if (!$('#employee').hasClass('loaded')) {
+                            $('#employee').load('../employee/employee.html ', function () {
+                                window.employee();
+                            });
+                            $('#employee').addClass('loaded');
+                        }
 
-                    $('#employee').show()
-                                  .siblings().hide();
+                        $('#employee').show()
+                            .siblings().hide();
 
                         break;
                     case 1:
-                    if(!$('#program').hasClass('loaded')){
-                        $('#program').load('../program/program.html ',function(){
-                            window.program();
-                        });
-                        $('#program').addClass('loaded');
-                    }
+                        if (!$('#program').hasClass('loaded')) {
+                            $('#program').load('../program/program.html ', function () {
+                                window.program();
+                            });
+                            $('#program').addClass('loaded');
+                        }
 
-                    $('#program').show()
-                                  .siblings().hide();
+                        $('#program').show()
+                            .siblings().hide();
                         break;
                     case 2:
-                    if(!$('#substitute').hasClass('loaded')){
-                        $('#substitute').load('../substitute/substitute.html ',function(){
-                            window.substitute();
-                        });
-                        $('#substitute').addClass('loaded');
-                    }
+                        if (!$('#substitute').hasClass('loaded')) {
+                            $('#substitute').load('../substitute/substitute.html ', function () {
+                                window.substitute();
+                            });
+                            $('#substitute').addClass('loaded');
+                        }
 
-                    $('#substitute').show()
-                                  .siblings().hide();
+                        $('#substitute').show()
+                            .siblings().hide();
                         break;
                     case 3:
+                    if (!$('#export').hasClass('loaded')) {
+                        $('#export').load('../exportSchedule/exportSchedule.html ', function () {
+                            window.exportSchedule();
+                        });
+                        $('#export').addClass('loaded');
+                    }
+
+                    $('#export').show()
+                        .siblings().hide();
                         break;
                     default:
                         break;
@@ -56,6 +65,6 @@ $(
         };
 
         main.bindClick();
-
+        $('.nav-container li:first-child').trigger('click');
     }
 );

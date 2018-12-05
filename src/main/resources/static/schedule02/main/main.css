@@ -20,19 +20,16 @@
 }
 
 .active{
-    background-color: aquamarine;
     color: black;
+    border-bottom: 2px #009688 solid;
+    /* box-shadow: #009688 0 2px; */
+}
+
+.unactive{
+    color: #888;
 }
 
 .unactive:hover{
-    background-color: #8fffe4;
+    color: #666;
 }
-
-/* .show{
-    display: block;
-}
-
-.hide{
-    display: none;
-} */
 
