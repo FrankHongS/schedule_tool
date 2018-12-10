@@ -37,6 +37,16 @@ public enum ResultEnum {
     PROGRAM_EMPLOYEE_DELETE_FAIL(122, "fail to delete employee"),
 
     STATION_NOT_EXTST(123, "station not exist"),
+
+    PROGRAM_ROLE_NAME_IS_NULL(126, "program_role_name_is_null"),
+    PROGRAM_ROLE_NAME_REPEAT(127, "program_role_name_repeat"),
+    PROGRAM_ROLE_WRONG_CYCLE(128, "program_role_wrong_cycle"),
+    PROGRAM_ROLE_SAVE_FAILED(129, "program_role_save_failed"),
+    PROGRAM_ROLE_ID_NOT_EXIST(130, "program_role_id_not_exist"),
+    PROGRAM_ROLE_REMOVE_FAILED(131, "program_role_remove_failed"),
+    PROGRAM_ROLE_WRONG_WORKDAYS(132,"program_role_wrong_workdays"),
+    PROGRAM_ROLE_UPDATE_FAILED(133,"program_role_update_failed"),
+    PROGRAM_ROLE_FIND_FAILED(134,"program_role_find_failed")
     ;
 
     private int code;

@@ -44,7 +44,7 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
             throw new ProgramException(ResultEnum.PROGRAM_NAME_NULL);
         }
 
-        Optional<RadioProgram> programOptional = radioProgramRepository.findByName(name);
+        Optional<RadioProgram> programOptional = radioProgramRepository.findByNameAndRadioStation(name, radioStation);
         if (programOptional.isPresent()) {
             throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
         }
@@ -88,9 +88,15 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
             throw new ProgramException(ResultEnum.PROGRAM_NAME_NULL);
         }
 
-        Optional<RadioProgram> optional = radioProgramRepository.findByName(newName);
-        if (optional.isPresent()) {
-            throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
+        Optional<RadioProgram> byId = radioProgramRepository.findById(id);
+        if (byId.isPresent()) {
+            RadioStation radioStation = byId.get().getRadioStation();
+            Optional<RadioProgram> optional = radioProgramRepository.findByNameAndRadioStation(newName, radioStation);
+            if (optional.isPresent()) {
+                throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
+            }
+        } else {
+            throw new ProgramException(ResultEnum.PROGRAM_ID_NOT_EXIST);
         }
 
         try {

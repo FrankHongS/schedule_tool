@@ -1,8 +1,7 @@
 package com.microsoft.schedule_tool.schedule.domain.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +9,21 @@ import java.util.Date;
  * @time 2018/12/7
  **/
 @Entity(name = "tb1_radio_schedule")
-public class RadioSchedule extends IdEntity {
+public class RadioSchedule implements Serializable {
+
+    private static final long serialVersionUID = 7L;
+
+    @Id
+    @GeneratedValue
+    protected Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     private Date date;
 
     @ManyToOne

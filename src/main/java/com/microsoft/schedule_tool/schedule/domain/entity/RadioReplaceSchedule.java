@@ -2,17 +2,30 @@ package com.microsoft.schedule_tool.schedule.domain.entity;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author kb_jay
  * @time 2018/12/7
  **/
 @Entity(name = "tb1_radio_replace_schedule")
-public class RadioReplaceSchedule extends IdEntity {
+public class RadioReplaceSchedule implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    protected Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @OneToOne
     @JoinColumn(name = "schedule_id")
     private RadioSchedule radioSchedule;

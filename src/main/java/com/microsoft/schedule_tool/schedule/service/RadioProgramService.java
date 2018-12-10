@@ -15,7 +15,7 @@ import java.util.List;
 
 //2：remove
 
-//3：changeName
+//3：update
 
 //4：addSome
 

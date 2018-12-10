@@ -2,9 +2,8 @@ package com.microsoft.schedule_tool.schedule.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,14 +14,29 @@ import java.util.Set;
  * @time 2018/12/7
  **/
 @Entity(name = "tb1_radio_station")
-public class RadioStation extends IdEntity {
+public class RadioStation implements Serializable {
+
+    private static final long serialVersionUID = 8L;
+
+    @Id
+    @GeneratedValue
+    protected Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Column(nullable = false)
     private String name;
 
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "radioStation")
-    private List<RadioProgram> radioProgramSet=new ArrayList<>();
+    private List<RadioProgram> radioProgramSet = new ArrayList<>();
 
 
     public RadioStation() {

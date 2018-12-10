@@ -1,19 +1,35 @@
 package com.microsoft.schedule_tool.schedule.domain.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author kb_jay
  * @time 2018/12/7
  **/
 @Entity(name = "tb1_program_role")
-public class ProgramRole extends IdEntity {
+public class ProgramRole implements Serializable {
+
+    private static final long serialVersionUID = 11L;
+
+    @Id
+    @GeneratedValue
+    protected Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Column(nullable = false)
     private String name;
     private String cycle;
     //连续工作时长
     private int workDays;
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "radia_program_id")

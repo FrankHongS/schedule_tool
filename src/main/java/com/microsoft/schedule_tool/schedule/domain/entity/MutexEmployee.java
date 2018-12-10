@@ -1,15 +1,28 @@
 package com.microsoft.schedule_tool.schedule.domain.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author kb_jay
  * @time 2018/12/7
  **/
 @Entity(name = "tb1_mutex_employee")
-public class MutexEmployee extends IdEntity {
+public class MutexEmployee implements Serializable {
+
+    private static final long serialVersionUID = 5L;
+
+    @Id
+    @GeneratedValue
+    protected Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @ManyToOne
     @JoinColumn(name = "employee_id_1")

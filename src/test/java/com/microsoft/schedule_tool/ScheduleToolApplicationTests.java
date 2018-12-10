@@ -29,11 +29,7 @@ public class ScheduleToolApplicationTests {
 
     @Test
     public void getAllProgramByStationId() {
-        Optional<RadioProgram> name =
-                radioProgramRepository.findByName("节目1");
-        if(name.isPresent()){
-            System.out.println("name存在！！！！");
-        }
+
     }
 
     @Test

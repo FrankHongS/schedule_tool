@@ -2,13 +2,30 @@ package com.microsoft.schedule_tool.schedule.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * @author kb_jay
  * @time 2018/12/7
  **/
 @Entity(name = "tb1_station_employee")
-public class StationEmployee extends IdEntity {
+public class StationEmployee implements Serializable {
+
+    private static final long serialVersionUID = 4L;
+
+    @Id
+    @GeneratedValue
+    protected Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)

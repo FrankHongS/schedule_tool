@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.schedule.domain.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +12,22 @@ import java.util.Set;
  * @time 2018/12/7
  **/
 @Entity(name = "tb1_radio_program")
-public class RadioProgram extends IdEntity {
+public class RadioProgram implements Serializable {
+
+    private static final long serialVersionUID = 6L;
+
+    @Id
+    @GeneratedValue
+    protected Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Column(nullable = false)
     private String name;
     private Boolean isDeleted;
