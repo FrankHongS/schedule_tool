@@ -14,7 +14,7 @@ import java.util.Set;
 public class RadioProgram extends IdEntity {
     @Column(nullable = false)
     private String name;
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "radio_station_id")
