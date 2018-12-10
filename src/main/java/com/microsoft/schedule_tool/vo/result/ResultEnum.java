@@ -16,6 +16,7 @@ public enum ResultEnum {
     EMPLOYEE_NOT_EXIST(25, "employee not existing,can't be updated"),
     EMPLOYEE_ID_NOT_EXIST(26, "employee id not existing"),
     EMPLOYEE_DELETE_FAIL(27, "fail to delete employee"),
+    EMPLOYEE_ALIAS_REPEAT(135, "employee_alias_repeat"),
 
     // schedule program
     PROGRAM_NAME_NULL(110, "program name can't be empty"),
@@ -35,6 +36,8 @@ public enum ResultEnum {
     PROGRAM_EMPLOYEE_ID_NOT_EXIST(120, "employee id not existing"),
     PROGRAM_EMPLOYEE_UPDATE_FAIL(121, "fail to update employee"),
     PROGRAM_EMPLOYEE_DELETE_FAIL(122, "fail to delete employee"),
+    PROGRAM_EMPLOYEE_WRONG_SAVE_PARAMS(136, "program_employee_wrong_save_params"),
+    EMPLOYEE_FIND_FAILED(138,"employee_find_failed"),
 
     STATION_NOT_EXTST(123, "station not exist"),
 
@@ -44,10 +47,10 @@ public enum ResultEnum {
     PROGRAM_ROLE_SAVE_FAILED(129, "program_role_save_failed"),
     PROGRAM_ROLE_ID_NOT_EXIST(130, "program_role_id_not_exist"),
     PROGRAM_ROLE_REMOVE_FAILED(131, "program_role_remove_failed"),
-    PROGRAM_ROLE_WRONG_WORKDAYS(132,"program_role_wrong_workdays"),
-    PROGRAM_ROLE_UPDATE_FAILED(133,"program_role_update_failed"),
-    PROGRAM_ROLE_FIND_FAILED(134,"program_role_find_failed")
-    ;
+    PROGRAM_ROLE_WRONG_WORKDAYS(132, "program_role_wrong_workdays"),
+    PROGRAM_ROLE_UPDATE_FAILED(133, "program_role_update_failed"),
+    PROGRAM_ROLE_FIND_FAILED(134, "program_role_find_failed"),
+    PROGRAM_ROLE_WRONG_SAVE_PARAMS(137, "program_role_wrong_save_params");
 
     private int code;
 

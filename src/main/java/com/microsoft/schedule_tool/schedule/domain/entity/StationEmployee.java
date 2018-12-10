@@ -30,7 +30,7 @@ public class StationEmployee implements Serializable {
     private String name;
     @Column(nullable = false)
     private String alias;
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     public StationEmployee() {
     }

@@ -1,38 +1,29 @@
 package com.microsoft.schedule_tool.schedule.service;
 
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioProgram;
-import com.microsoft.schedule_tool.schedule.domain.entity.RadioStation;
+import com.microsoft.schedule_tool.schedule.domain.entity.StationEmployee;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * @author kb_jay
- * @time 2018/12/7
+ * @time 2018/12/10
  **/
 
-//1：add
-
-
-//2：remove
-
-//3：update
-
-//4：addSome
-
-//5：findAllByStation
-public interface RadioProgramService {
+public interface StationEmployeeService {
     //add a program
-    long save(long stationId, String name);
+    long save(String name, String alias);
 
     //remove a program
     void remove(long id);
 
     //change program name;
-    void changeName(long id, String newName);
+    void update(long id, String name, String alias);
 
     //save some programs one time
     long[] saveSome(String jsonData);
 
     //get all programs
-    List<RadioProgram> findAllByStation(long stationId);
+    List<StationEmployee> findAll();
 }

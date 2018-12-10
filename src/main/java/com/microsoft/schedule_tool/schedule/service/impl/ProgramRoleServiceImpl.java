@@ -139,7 +139,7 @@ public class ProgramRoleServiceImpl implements ProgramRoleService {
                 throw new Exception();
             }
         } catch (Exception e) {
-            throw new ProgramException(ResultEnum.PROGRAM_WRONG_SAVE_PARAMS);
+            throw new ProgramException(ResultEnum.PROGRAM_ROLE_WRONG_SAVE_PARAMS);
         }
         long[] re = new long[roles.size()];
         for (int i = 0; i < re.length; i++) {
