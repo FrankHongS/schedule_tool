@@ -5,4 +5,5 @@ package com.microsoft.schedule_tool.schedule.service;
  * @time 2018/12/7
  **/
 public interface RadioStationService {
+    void init();
 }
