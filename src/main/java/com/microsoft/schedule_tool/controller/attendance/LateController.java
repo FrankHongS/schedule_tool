@@ -1,4 +1,4 @@
-package com.microsoft.schedule_tool.controller;
+package com.microsoft.schedule_tool.controller.attendance;
 
 import com.microsoft.schedule_tool.entity.Late;
 import com.microsoft.schedule_tool.service.LateService;

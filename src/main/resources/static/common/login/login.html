@@ -6,24 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../styles/reset.css">
     <link rel="stylesheet" href="login.css">
+    <script src="../../jquery/jquery-3.3.1.js"></script>
+    <script src="../../cookie/js.cookie.js"></script>
+    <script src="../../crypto-js/crypto-js.js"></script>
+    <script src="login.js"></script>
     <title>log in</title>
 </head>
 <body>
     <div class="login-main-container">
         <div class="wel-wrapper">
-            <span>welcome</span>
+            <span>Welcome :)</span>
         </div>
         <div class="input-wrapper">
-            <div class="username-wrapper">
-                <label for="">用户名<input type="text"></label>
-            </div>
-            <div class="password-wrapper">
-                <label for="">密码<input type="text"></label>
-            </div>
+            <input type="text" class='username' placeholder="用户名">
+            <input type="password" class='password' placeholder="密码">
         </div>
         <div class="btns-wrapper">
             <button type="button" class="login">登录</button>
-            <button type="button" class="reset">重置</button>
         </div>
     </div>
 </body>
