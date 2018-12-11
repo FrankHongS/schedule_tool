@@ -13,14 +13,10 @@ public class RelationRoleAndEmployee implements Serializable {
     private static final long serialVersionUID = 1918446199175160460L;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private ProgramRole role;
+    private Long roleId;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private StationEmployee employee;
+    private Long employeeId;
 
     //权重
     private double ratio;
@@ -28,31 +24,26 @@ public class RelationRoleAndEmployee implements Serializable {
     public RelationRoleAndEmployee() {
     }
 
-    public RelationRoleAndEmployee(ProgramRole role, StationEmployee employee, double ratio) {
-        this.role = role;
-        this.employee = employee;
-        this.ratio = ratio;
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public ProgramRole getRole() {
-        return role;
-    }
-
-    public void setRole(ProgramRole role) {
-        this.role = role;
-    }
-
-    public StationEmployee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(StationEmployee employee) {
-        this.employee = employee;
-    }
 
     public double getRatio() {
         return ratio;
@@ -65,9 +56,8 @@ public class RelationRoleAndEmployee implements Serializable {
     @Override
     public String toString() {
         return "RelationRoleAndEmployee{" +
-                "role=" + role.toString() +
-                ", employee=" + employee.toString() +
                 ", ratio=" + ratio +
                 '}';
     }
+
 }

@@ -8,26 +8,26 @@ import java.io.Serializable;
  **/
 public class RoleEmployeeMultiKeysClass implements Serializable {
 
-    private ProgramRole role;
-    private StationEmployee employee;
+    private Long roleId;
+    private Long employeeId;
 
     public RoleEmployeeMultiKeysClass() {
     }
 
-    public ProgramRole getRole() {
-        return role;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole(ProgramRole role) {
-        this.role = role;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
-    public StationEmployee getEmployee() {
-        return employee;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployee(StationEmployee employee) {
-        this.employee = employee;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     @Override
@@ -43,22 +43,23 @@ public class RoleEmployeeMultiKeysClass implements Serializable {
         }
 
         RoleEmployeeMultiKeysClass temp = (RoleEmployeeMultiKeysClass) obj;
-        if (role == null) {
-            if (temp.role != null) {
-                return false;
-            }
-        } else if (!role.equals(temp.role)) {
+        if (roleId != temp.roleId) {
             return false;
         }
 
-        if (employee == null) {
-            if (temp.employee != null) {
-                return false;
-            }
-        } else if (!employee.equals(temp.employee)) {
+        if (employeeId != temp.employeeId) {
             return false;
         }
 
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + ((roleId == null) ? 0 : roleId.hashCode());
+        result = PRIME * result + ((employeeId == null) ? 0 : employeeId.hashCode());
+        return result;
     }
 }

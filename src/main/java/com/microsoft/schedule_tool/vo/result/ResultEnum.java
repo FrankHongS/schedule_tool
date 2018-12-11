@@ -50,8 +50,12 @@ public enum ResultEnum {
     PROGRAM_ROLE_WRONG_WORKDAYS(132, "program_role_wrong_workdays"),
     PROGRAM_ROLE_UPDATE_FAILED(133, "program_role_update_failed"),
     PROGRAM_ROLE_FIND_FAILED(134, "program_role_find_failed"),
-    PROGRAM_ROLE_WRONG_SAVE_PARAMS(137, "program_role_wrong_save_params");
-
+    PROGRAM_ROLE_WRONG_SAVE_PARAMS(137, "program_role_wrong_save_params"),
+    PROGRAM_ROLE_AND_EMPLOYEE_FIND_ERROR(139,"program_role_and_employee_find_error"),
+    PROGRAM_ROLE_SAVE_EMPLOYEE_ERROR(140,"program_role_save_employee_error"),
+    PROGRAM_ROLE_REMOVE_EMPLOYEE_ERROR(141,"program_role_remove_employee_error"),
+    PROGRAM_ROLE_AND_EMPLOYEE_WRONG_RATIO(142,"program_role_and_employee_wrong_ratio"),
+    PROGRAM_ROLE_AND_EMPLOYEE_CHANGE_RATIO_ERROR(143,"program_role_and_employee_change_ratio_error");
     private int code;
 
     private String message;
