@@ -19,10 +19,12 @@ public interface RelationRoleAndEmployeeService {
 
     List<StationEmployee> getAllWorkersByRoleId(long id);
 
-    void addWorkers2Role(long employeeId, long roleId, double ratio);
+    void addWorkers2Role(long employeeId, long roleId, int ratio);
 
     void removeWorkersByRole(long employeeId, long roleId);
 
-    void changeRatio(long employeeId, long roleId, double ratio);
+    void changeRatio(long employeeId, long roleId, int ratio);
+
+    int getRatio(long employeeId, long roleId);
 
 }

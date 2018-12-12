@@ -19,7 +19,7 @@ public class RelationRoleAndEmployee implements Serializable {
     private Long employeeId;
 
     //权重
-    private double ratio;
+    private int ratio;
 
     public RelationRoleAndEmployee() {
     }
@@ -44,12 +44,11 @@ public class RelationRoleAndEmployee implements Serializable {
         return serialVersionUID;
     }
 
-
-    public double getRatio() {
+    public int getRatio() {
         return ratio;
     }
 
-    public void setRatio(double ratio) {
+    public void setRatio(int ratio) {
         this.ratio = ratio;
     }
 

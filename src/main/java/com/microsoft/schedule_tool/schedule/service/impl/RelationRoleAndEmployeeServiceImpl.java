@@ -48,9 +48,9 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
             for (int i = 0; i < allByRole.size(); i++) {
                 Long employeeId = allByRole.get(i).getEmployeeId();
                 Optional<StationEmployee> byId1 = stationEmployeeRepository.findById(employeeId);
-                if(byId1.isPresent()){
+                if (byId1.isPresent()) {
                     StationEmployee stationEmployee = byId1.get();
-                    if(!stationEmployee.isDeleted()){
+                    if (!stationEmployee.isDeleted()) {
                         employees.add(stationEmployee);
                     }
                 }
@@ -62,7 +62,7 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
     }
 
     @Override
-    public void addWorkers2Role(long employeeId, long roleId, double ratio) {
+    public void addWorkers2Role(long employeeId, long roleId, int ratio) {
         //check params
         Optional<StationEmployee> employeeRepositoryById = stationEmployeeRepository.findById(employeeId);
         if (!employeeRepositoryById.isPresent()) {
@@ -76,7 +76,7 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
         }
         ProgramRole programRole = byId.get();
 
-        if (ratio < 0 || ratio > 1) {
+        if (ratio < 0) {
             throw new ProgramEmployeeException(ResultEnum.PROGRAM_ROLE_AND_EMPLOYEE_WRONG_RATIO);
         }
 
@@ -116,7 +116,7 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
     }
 
     @Override
-    public void changeRatio(long employeeId, long roleId, double ratio) {
+    public void changeRatio(long employeeId, long roleId, int ratio) {
         //check params
         Optional<StationEmployee> employeeRepositoryById = stationEmployeeRepository.findById(employeeId);
         if (!employeeRepositoryById.isPresent()) {
@@ -128,7 +128,7 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
             throw new ProgramException(ResultEnum.PROGRAM_ROLE_ID_NOT_EXIST);
         }
 
-        if (ratio < 0 || ratio > 1) {
+        if (ratio < 0) {
             throw new ProgramEmployeeException(ResultEnum.PROGRAM_ROLE_AND_EMPLOYEE_WRONG_RATIO);
         }
         try {
@@ -146,5 +146,19 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
             throw new ProgramEmployeeException(ResultEnum.PROGRAM_ROLE_AND_EMPLOYEE_CHANGE_RATIO_ERROR);
         }
 
+    }
+
+    @Override
+    public int getRatio(long employeeId, long roleId) {
+
+        RoleEmployeeMultiKeysClass id = new RoleEmployeeMultiKeysClass();
+        id.setRoleId(roleId);
+        id.setEmployeeId(employeeId);
+
+        Optional<RelationRoleAndEmployee> repositoryById = repository.findById(id);
+        if (repositoryById.isPresent()) {
+            return repositoryById.get().getRatio();
+        }
+        return -1;
     }
 }
