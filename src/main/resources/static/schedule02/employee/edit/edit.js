@@ -1,16 +1,100 @@
 $(
-    function(){
-        const originData=window.parent.originData;
+    function () {
+        const originData = window.parent.originData;
 
-        if(originData){
-            switch(originData.type){
+        const editEmployee = {};
+
+        let ifRequestSuccess=false;
+
+        editEmployee.bindOrigiData = function () {
+            switch (originData.type) {
                 case 0:
-                break;
+                    break;
                 case 1:
-                break;
+                    $('.name').val(originData.name);
+                    $('.alias').val(originData.alias);
+                    break;
                 default:
-                break;
+                    break;
             }
-        }
+        };
+
+        editEmployee.bindClick = function () {
+
+            $('.save-btn').click(() => {
+                let url;
+                let data;
+                let msg;
+
+                const name = $('.name').val();
+                const alias = $('.alias').val();
+
+                if (!name || !alias) {
+                    $('.message-container .message').text('名字或alias不能为空');
+                    return;
+                }
+
+                switch (originData.type) {
+                    case 0://save employee
+                        url = '/schedule/station_employee/add';
+                        data = {
+                            name: name,
+                            alias: alias
+                        };
+                        msg = {
+                            success: '添加成功',
+                            failure: '添加失败...'
+                        };
+                        break;
+                    case 1://modify employee
+                    url = '/schedule/station_employee/update';
+                    data = {
+                        id:originData.id,
+                        name: name,
+                        alias: alias
+                    };
+                    msg = {
+                        success: '更新成功',
+                        failure: '更新失败...'
+                    };
+                        break;
+                    default:
+                        break;
+                }
+
+                this.request(url, data, msg);
+            });
+
+            $('.cancel-btn').click(function () {
+                const index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+                if(ifRequestSuccess){
+                    window.parent.queryEmployees();
+                }
+            });
+        };
+
+        editEmployee.request = function (url, data, msg) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: result => {
+                    if (result.code === 0) {
+                        ifRequestSuccess=true;
+                        $('.message-container .message').text(msg.success);
+                    } else {
+                        ifRequestSuccess=false;
+                        $('.message-container .message').text(msg.failure + result.message);
+                    }
+                },
+                error:(xhr,e)=>{
+                    $('.message-container .message').text(msg.failure);
+                }
+            });
+        };
+
+        editEmployee.bindOrigiData();
+        editEmployee.bindClick();
     }
 );

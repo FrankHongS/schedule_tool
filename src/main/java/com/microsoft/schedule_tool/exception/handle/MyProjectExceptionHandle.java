@@ -2,6 +2,7 @@ package com.microsoft.schedule_tool.exception.handle;
 
 import com.microsoft.schedule_tool.exception.EmployeeException;
 import com.microsoft.schedule_tool.exception.schedule.ProgramException;
+import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
 import com.microsoft.schedule_tool.util.ResultUtil;
 import com.microsoft.schedule_tool.vo.result.Result;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
@@ -26,12 +27,12 @@ public class MyProjectExceptionHandle {
     @ExceptionHandler(value = Exception.class)
     public Result handle(Exception e){
 
-        if(e instanceof EmployeeException){
+        if(e instanceof EmployeeException){// for attendance
             EmployeeException employeeException= (EmployeeException) e;
             return ResultUtil.error(employeeException.getCode(),employeeException.getMessage());
-        }else if(e instanceof ProgramException){
-            ProgramException programException= (ProgramException) e;
-            return ResultUtil.error(programException.getCode(),programException.getMessage());
+        }else if(e instanceof ScheduleException){//for schedule
+            ScheduleException scheduleException= (ScheduleException) e;
+            return ResultUtil.error(scheduleException.getCode(),scheduleException.getMessage());
         }else{
             logger.info("exception",e);
             return ResultUtil.error(ResultEnum.UNKNOWN.getCode(),ResultEnum.UNKNOWN.getMessage());

@@ -3,9 +3,11 @@ window.program = function () {
 
     window.originData = {};
 
+    let programArray;
+
     program.bindClick = function () {
-        $('.program-container li').click(function () {
-            $(this).addClass('active').removeClass('unactive')
+        $('.program-container ul').click('li',function (e) {
+            $(e.target).addClass('active').removeClass('unactive')
                 .siblings().removeClass('active').addClass('unactive');
 
             return false;
@@ -20,11 +22,12 @@ window.program = function () {
             layer.open({
                 type: 2,
                 title: '添加节目',
-                area: ['400px', '260px'],
+                area: ['900px', '460px'],
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
                 content: '/schedule/schedule02/program/edit/edit.html'
+                // content:'./edit/edit.html'
             });
         });
 
@@ -45,7 +48,7 @@ window.program = function () {
             layer.open({
                 type: 2,
                 title: '修改节目',
-                area: ['400px', '260px'],
+                area: ['900px', '460px'],
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
@@ -80,5 +83,33 @@ window.program = function () {
         });
     };
 
+    window.queryPrograms = function () {
+        $.ajax({
+            url: '/schedule/sprogram/programs?stationId='+1,
+            success: result => {
+                if (result.code == 0) {
+                    programArray = result.data.programs;
+                    program.buildPrograms(programArray);
+                }else{
+                    console.log(result);
+                }
+            }
+        });
+    };
+
+    program.buildPrograms = function (programsArray) {
+        const programItems = programsArray.map(
+            item => {
+                return $('<li>')
+                    .text(item.name);
+            }
+        );
+
+        $('.program-container ul')
+            .html('')
+            .append(programItems);
+    };
+
     program.bindClick();
+    window.queryPrograms();
 };

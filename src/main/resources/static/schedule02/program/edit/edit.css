@@ -1,5 +1,6 @@
 .edit-item{
     margin: 15px 0;
+    overflow: hidden;
 }
 
 .form-input{
@@ -15,7 +16,7 @@
 label {
     float: left;
     display: block;
-    padding: 9px 15px;
+    padding: 7px 15px;
     min-width: 80px;
     font-weight: 400;
     line-height: 20px;
@@ -55,4 +56,56 @@ button{
 
 .btns-container{
     margin-left: 110px;
+}
+
+.message-container .message{
+    margin-left: 110px;
+}
+
+.program-name-wrapper{
+    float: left;
+}
+
+.add-role-wrapper{
+    overflow: hidden;
+    padding-left: 25px;
+    padding-top: 4px;
+    display: flex;
+    align-content: center;
+}
+
+.add-role-wrapper span{
+    line-height: 20px;
+}
+
+.add-role-wrapper img{
+    height: 18px;
+    width: 18px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.role-wrapper{
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    padding: 10px 0;
+    display: flex;
+}
+
+.role-wrapper .day-wrapper{
+    display: flex;
+    align-content: center;
+}
+
+.discard-wrapper{
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.discard-wrapper img{
+    height: 15px;
+    width: 15px;
+    padding-right: 5px;
+    cursor: pointer;
 }

@@ -73,19 +73,21 @@ public class StationEmployeeServiceImpl implements StationEmployeeService {
 
     @Override
     public void update(long id, String name, String alias) {
-        Optional<StationEmployee> byId = stationEmployeeRepository.findById(id);
-        if (!byId.isPresent()) {
-            throw new ProgramEmployeeException(ResultEnum.EMPLOYEE_ID_NOT_EXIST);
-        }
-
         if (StringUtils.isEmpty(alias)) {
             throw new ProgramEmployeeException(ResultEnum.EMPLOYEE_ALIAS_NULL);
         }
         if (StringUtils.isEmpty(name)) {
             throw new ProgramEmployeeException(ResultEnum.EMPLOYEE_NAME_NULL);
         }
-        Optional<StationEmployee> byAlias = stationEmployeeRepository.findByAlias(alias);
-        if (byAlias.isPresent()) {
+
+        Optional<StationEmployee> byId = stationEmployeeRepository.findById(id);
+        if (!byId.isPresent()) {
+            throw new ProgramEmployeeException(ResultEnum.EMPLOYEE_ID_NOT_EXIST);
+        }
+
+        StationEmployee originalEmployee=byId.get();
+
+        if (!alias.equals(originalEmployee.getAlias())&&stationEmployeeRepository.findByAlias(alias).isPresent()) {
             throw new ProgramEmployeeException(ResultEnum.EMPLOYEE_ALIAS_REPEAT);
         }
 

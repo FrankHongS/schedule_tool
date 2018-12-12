@@ -4,9 +4,11 @@ window.employee = function () {
 
     window.originData = {};
 
+    let curEmployeeArray;
+
     employee.bindClick = function () {
-        $('.employee-container li').click(function () {
-            $(this).addClass('active').removeClass('unactive')
+        $('.employee-container ul').click('li',function (e) {
+            $(e.target).addClass('active').removeClass('unactive')
                 .siblings().removeClass('active').addClass('unactive');
 
             return false;
@@ -38,9 +40,13 @@ window.employee = function () {
                 return;
             }
 
+            const curEmployee=curEmployeeArray[$current.index()];
+
             originData = {
                 type: 1,
-                name: $current.text()
+                id:curEmployee.id,
+                name: curEmployee.name,
+                alias: curEmployee.alias
             }
 
             layer.open({
@@ -63,16 +69,59 @@ window.employee = function () {
                 return;
             }
 
+            const curEmployee=curEmployeeArray[$current.index()];
+
             if (confirm('确认删除')) {
-                const name = $current.text();
+                const name = curEmployee.name;
+                $.ajax({
+                    url:'/schedule/station_employee/delete?id='+curEmployee.id,
+                    success:result=>{
+                        if(result.code===0){
+                            alert('删除' + name + '成功');
+                            window.queryEmployees();
+                        }else{
+                            alert('删除失败...'+result.message);
+                        }
+                    },
+                    error:(xhr,e)=>{
+                        alert('删除失败...');
+                    }
+                });
 
-
-                alert('删除' + name + '成功');
             }
 
         });
     };
 
-    employee.bindClick();
+    window.queryEmployees = function () {
+        $.ajax({
+            url: '/schedule/station_employee',
+            success: result => {
+                if (result.code == 0) {
+                    curEmployeeArray=result.data.employees;
+                    employee.buildEmployees(curEmployeeArray);
+                }else{
+                    console.log(result);
+                }
+            }
+        });
+    };
 
+    employee.buildEmployees = function (employeeArray) {
+        const employeeItems = employeeArray.map(
+            employee => {
+                return $('<li>')
+                    .text(employee.name+'('+employee.alias+')');
+            }
+        );
+
+        $('.employee-container ul')
+            .html('')
+            .append(employeeItems);
+
+    };
+
+
+    employee.bindClick();
+    window.queryEmployees();
 };

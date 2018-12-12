@@ -38,6 +38,6 @@ button{
     cursor: pointer;
 }
 
-.btns-container{
+.btns-container,.message-container{
     margin-left: 110px;
 }

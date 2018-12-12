@@ -7,28 +7,46 @@
     <title>Edit Program</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="edit.css" />
+    <script src="../../../jquery/jquery-3.3.1.js"></script>
     <script src="edit.js"></script>
 </head>
 
 <body>
     <div class="main-container">
         <div class="edit-item">
-            <label for="name" class="name-label">节目名字</label>
-            <input id='name' type="text" class="form-input name" placeholder="不能为空" name="name">
+            <div class="program-name-wrapper">
+                <label for="name" class="name-label">节目名字</label>
+                <input id='name' type="text" class="form-input name" placeholder="不能为空" name="name">
+            </div>
+            <div class="add-role-wrapper">
+                <span>角色</span><img  class='add' src="../../../img/add.png" alt="">
+            </div>
         </div>
-        <div class="edit-item">
-                <label for="name" class="name-label">休息时间</label>
-                <div class="day-container">
-                    <ul>
-                        <li><input type='checkbox'>Mon</li>
-                        <li><input type="checkbox">Tue</li>
-                        <li><input type="checkbox">Wed</li>
-                        <li><input type="checkbox">Thu</li>
-                        <li><input type="checkbox">Fri</li>
-                        <li><input type="checkbox">Sat</li>
-                        <li><input type="checkbox">Sun</li>
-                    </ul>
-                </div>
+        <div class="edit-item role-container">
+                <!-- <div class="role-wrapper">
+                    <div class="role-name-wrapper">
+                            <label for="name" class="name-label">节目角色</label>
+                            <input id='name' type="text" class="form-input name" placeholder="角色名" name="name">
+                    </div>
+                    <div class="day-wrapper">
+                        <label for="name" class="name-label">休息时间</label>
+                        <div class="day-container">
+                            <ul>
+                                <li><input type='checkbox'>Mon</li>
+                                <li><input type="checkbox">Tue</li>
+                                <li><input type="checkbox">Wed</li>
+                                <li><input type="checkbox">Thu</li>
+                                <li><input type="checkbox">Fri</li>
+                                <li><input type="checkbox">Sat</li>
+                                <li><input type="checkbox">Sun</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="discard-wrapper">
+                        <img src="../../../img/discard.png" alt="discard">
+                    </div>
+                </div> -->
+
             </div>
         <div class="edit-item btns-container">
             <button type="button" class="save-btn">保存</button>
