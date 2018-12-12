@@ -168,9 +168,4 @@ public class ProgramRoleServiceImpl implements ProgramRoleService {
             throw new ProgramException(ResultEnum.PROGRAM_ROLE_FIND_FAILED);
         }
     }
-
-    @Override
-    public List<ProgramRole> findAll() {
-        return programRoleRepository.findAll();
-    }
 }

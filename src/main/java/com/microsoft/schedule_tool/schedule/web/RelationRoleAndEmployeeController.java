@@ -33,7 +33,7 @@ public class RelationRoleAndEmployeeController {
     @PostMapping("/add")
     public Result addWorkers2Role(@RequestParam("employeeId") long employeeId,
                                   @RequestParam("roleId") long roleId,
-                                  @RequestParam("ratio") double ratio) {
+                                  @RequestParam("ratio") int ratio) {
         relationRoleAndEmployeeService.addWorkers2Role(employeeId, roleId, ratio);
         return ResultUtil.success();
     }
@@ -50,7 +50,7 @@ public class RelationRoleAndEmployeeController {
     @PostMapping("/update")
     public Result changeRatio(@RequestParam("employeeId") long employeeId,
                               @RequestParam("roleId") long roleId,
-                              @RequestParam("ratio") double ratio) {
+                              @RequestParam("ratio") int ratio) {
         relationRoleAndEmployeeService.changeRatio(employeeId, roleId, ratio);
         return ResultUtil.success();
     }

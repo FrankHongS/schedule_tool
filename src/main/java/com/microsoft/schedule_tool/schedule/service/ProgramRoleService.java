@@ -25,6 +25,4 @@ public interface ProgramRoleService {
     //get all ProgramRole
     List<ProgramRole> findAllByProgram(long programId);
 
-    //get all programRole
-    List<ProgramRole> findAll();
 }

@@ -19,4 +19,6 @@ public interface RelationRoleAndEmployeeRepository extends JpaRepository<Relatio
     //removeWorkersByRole
     //changeRatio
     List<RelationRoleAndEmployee> getAllByRoleId(long roleId);
+
+    List<RelationRoleAndEmployee> getAllByRoleIdAndRatio(long roleId,int ratio);
 }
