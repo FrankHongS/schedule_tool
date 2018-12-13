@@ -47,4 +47,38 @@ public interface Constants {
     };
 
     Color MONTH_DETAIL_COLOR=new Color(238,31,26);
+
+    Color SCHEDULE_ODD_WEEK_COLOR=new Color(64,184,200);
+
+    String[] DAY_OF_WEEK={
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+    };
+
+    String[] PROGRAMS={
+            "看东方",
+            "你早京津冀",
+            "今日十万加",
+            "脑壳秀",
+            "天气播报",
+            "监测",
+            "Demo"
+    };
+
+    String[] PROGRAM_ROLES={
+            "值日",
+            "审核"
+    };
+
+    String[] SUBSTITUTE_HEADER={
+            "替班员工姓名",
+            "替班节目名称",
+            "替班时间",
+            "节假日"
+    };
 }

@@ -23,6 +23,8 @@ public interface LeaveService {
 
     List<Leave> getAllLeavesByDateRangeAndEmployeeId(String from, String to, Integer employeeId);
 
+    List<Leave> getAllLeavesOrderByCreatedTime(Integer page,Integer size);
+
     Leave saveLeave(Leave leave);
 
     Leave saveLeave(String name, String alias, Integer leaveType, String leaveDateRange,Integer halfType, Float dayCount, Integer employeeId, Boolean isNormal, String comment);

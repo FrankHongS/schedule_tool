@@ -4,7 +4,7 @@ body {
 
 #main-form-container{
     width: 80%;
-    margin: 50px auto 0;
+    margin: 0 auto;
 }
 
 #main-form{
@@ -32,20 +32,33 @@ body {
     cursor: pointer;
 }
 
+.year-link,.month-link{
+    display: inline-block;
+    text-decoration: none;
+    outline: none;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #009688;
+    color: aliceblue;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.year-link:hover,.month-link:hover{
+    color: aliceblue;
+}
+
 .main-form-item .year,.main-form-item .month{
     margin-left: 130px;
 }
 
-.main-form-item .export-year-btn,.main-form-item .export-month-btn{
+.main-form-item .year-link,.main-form-item .month-link{
     margin-left: 25px;
-}
-
-.year-link,.month-link{
-    color: #fff;
-}
-
-.year-link:hover,.month-link:hover{
-    color: #fff;
 }
 
 .main-form-item .search-btn{
@@ -55,9 +68,16 @@ body {
 .main-form-item .message{
     margin-left: 100px;
 }
-
-#main-form-container .add-btn{
+#main-form-container .func-btn-container{
     float: right;
+}
+#main-form-container .add-btn{
+    display: block;
+    margin-bottom: 18px;
+}
+
+#main-form-container .recent-insert-btn{
+    display: block;
 }
 
 .main-form-item .form-input{

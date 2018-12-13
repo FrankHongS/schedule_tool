@@ -1,0 +1,55 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+
+.img-navigation{
+    width: 24px;
+    height: 24px;
+    padding: 10px;
+}
+
+.img-navigation:hover{
+    cursor: pointer;
+}
+
+.home-navigation{
+    position: absolute;
+    display: inline-block;
+    top:40px;
+    left: -100px;
+}
+
+.home-navigation ul{
+    border: 1px solid gray;
+    list-style: none;
+    padding-left:0;
+    display: inline-block;
+    border-radius: 5px;
+    margin: 0;
+}
+
+.home-navigation ul li{
+    padding:10px;
+    cursor: pointer;
+}
+
+.home-navigation ul .selected:hover{
+    cursor:pointer;
+    border-radius: 5px;
+    background-color: #00b2a5;
+}
+
+.home-navigation ul .active{
+    border-radius: 5px;
+    background-color: #009688;
+    color: aliceblue;
+}
+
+.show{
+    display: block;
+}
+
+.hide{
+    display:none;
+}
