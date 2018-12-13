@@ -6,7 +6,7 @@ window.program = function () {
     let programArray;
 
     program.bindClick = function () {
-        $('.program-container ul').click('li',function (e) {
+        $('.program-container ul').on('click','li',function (e) {
             $(e.target).addClass('active').removeClass('unactive')
                 .siblings().removeClass('active').addClass('unactive');
 
@@ -40,9 +40,11 @@ window.program = function () {
                 return;
             }
 
+            const curProgram=programArray[$current.index()];
+
             originData = {
                 type: 1,
-                name: $current.text()
+                name: curProgram.name
             };
 
             layer.open({
@@ -65,9 +67,25 @@ window.program = function () {
                 return;
             }
 
+            const curProgram=programArray[$current.index()];
+
             if (confirm('确认删除')) {
 
-                alert('删除' + $current.text() + '成功');
+                $.ajax({
+                    url:'/schedule/sprogram/delete?programId='+curProgram.id,
+                    success:result=>{
+                        if(result.code===0){
+                            alert('删除' + curProgram.name + '成功');
+                            window.queryPrograms();
+                        }else{
+                            alert('删除' + curProgram.name + '失败...'+result.message);
+                        }
+                    },
+                    error:(xhr,e)=>{
+                        alert('删除失败...');
+                    }
+                });
+                
             }
         });
 

@@ -4,7 +4,7 @@ $(
 
         const editEmployee = {};
 
-        let ifRequestSuccess=false;
+        let isRequestSuccess=false;
 
         editEmployee.bindOrigiData = function () {
             switch (originData.type) {
@@ -68,7 +68,7 @@ $(
             $('.cancel-btn').click(function () {
                 const index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
-                if(ifRequestSuccess){
+                if(isRequestSuccess){
                     window.parent.queryEmployees();
                 }
             });
@@ -81,10 +81,10 @@ $(
                 data: data,
                 success: result => {
                     if (result.code === 0) {
-                        ifRequestSuccess=true;
+                        isRequestSuccess=true;
                         $('.message-container .message').text(msg.success);
                     } else {
-                        ifRequestSuccess=false;
+                        isRequestSuccess=false;
                         $('.message-container .message').text(msg.failure + result.message);
                     }
                 },

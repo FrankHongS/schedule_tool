@@ -7,7 +7,7 @@ window.employee = function () {
     let curEmployeeArray;
 
     employee.bindClick = function () {
-        $('.employee-container ul').click('li',function (e) {
+        $('.employee-container ul').on('click','li',function (e) {
             $(e.target).addClass('active').removeClass('unactive')
                 .siblings().removeClass('active').addClass('unactive');
 
