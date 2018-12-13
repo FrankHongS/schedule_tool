@@ -4,22 +4,24 @@ import com.microsoft.schedule_tool.exception.schedule.ProgramException;
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
 import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
 import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
+import com.microsoft.schedule_tool.schedule.domain.entity.RadioSchedule;
 import com.microsoft.schedule_tool.schedule.domain.entity.RelationRoleAndEmployee;
 import com.microsoft.schedule_tool.schedule.domain.entity.StationEmployee;
 import com.microsoft.schedule_tool.schedule.domain.vo.schedule.ScheduleRoleWaitingList;
 import com.microsoft.schedule_tool.schedule.repository.ProgramRoleRepository;
+import com.microsoft.schedule_tool.schedule.repository.RadioScheduleRepository;
 import com.microsoft.schedule_tool.schedule.repository.RelationRoleAndEmployeeRepository;
+import com.microsoft.schedule_tool.schedule.repository.StationEmployeeRepository;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
+import org.omg.CORBA.DATA_CONVERSION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @author kb_jay
@@ -36,6 +38,12 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     @Autowired
     private ProgramRoleRepository programRoleRepository;
 
+    @Autowired
+    private StationEmployeeRepository stationEmployeeRepository;
+
+    @Autowired
+    private RadioScheduleRepository radioScheduleRepository;
+
     private ArrayList<ScheduleRoleWaitingList> scheduleRoles;
 
     //一周中不可选的员工
@@ -46,6 +54,10 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
     private Long[][] result;
     private List<ProgramRole> hasEmployeeProgramRoles;
+    private Date startDate;
+    private Date endaDate;
+    private int startWeek;
+    private int endWeek;
 
 
     @Override
@@ -140,13 +152,60 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     }
 
     private void saveData2Db() {
-        for (int i = 0; i < result[0].length; i++) {
-            for (int j = 0; j < result.length; j++) {
-                //将排好的信息存入db
-                System.out.print(result[j][i] + " ");
+        Date start = DateUtil.getFirstDayOfWeek(DateUtil.getYear(startDate), startWeek-1);
+
+        for (int i = 0; i < result.length; i++) {
+            Long roleId = scheduleRoles.get(i).id;
+            String cycle = "1111100";
+            Optional<ProgramRole> byId = programRoleRepository.findById(roleId);
+            if (byId.isPresent()) {
+                cycle = byId.get().getCycle();
             }
-            System.out.println();
+            for (int j = 0; j < result[0].length; j++) {
+                //i:role    j:time
+                Long employeeId = result[i][j];
+                Optional<StationEmployee> byId1 = stationEmployeeRepository.findById(employeeId);
+                if (!byId1.isPresent()) {
+                    continue;
+                }
+                for (int k = 0; k < 7; k++) {
+                    Date date = DateUtil.getNextDate(start, j * 7 + k);
+                    if (canAdd(date, cycle)) {
+                        RadioSchedule radioSchedule = new RadioSchedule();
+                        radioSchedule.setDate(date);
+                        radioSchedule.setEmployee(byId1.get());
+                        radioSchedule.setRole(byId.get());
+
+                        radioScheduleRepository.save(radioSchedule);
+                    }
+                }
+            }
         }
+    }
+
+    private boolean canAdd(Date date, String cycle) {
+        if (date.before(startDate) || date.after(endaDate)) {
+            return false;
+        }
+        if (isHoliday(date)) {
+            return false;
+        }
+        try {
+            int dayOfWeek = DateUtil.getDayOfWeek(DateUtil.parseDateToString(date));
+            char[] chars = cycle.toCharArray();
+            if (chars[dayOfWeek - 1] == '1') {
+                return true;
+            }
+            return false;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // TODO: 2018/12/13 判断是否是节假日
+    private boolean isHoliday(Date date) {
+        return false;
     }
 
     // TODO: 2018/12/12 获取互斥的员工
@@ -174,8 +233,10 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     }
 
     private void initParams(String from, String to) throws ParseException {
-        int startWeek = DateUtil.getWeekOfYear(from);
-        int endWeek = DateUtil.getWeekOfYear(to);
+        startDate = DateUtil.parseDateString(from);
+        endaDate = DateUtil.parseDateString(to);
+        startWeek = DateUtil.getWeekOfYear(from);
+        endWeek = DateUtil.getWeekOfYear(to);
         weekNums = endWeek - startWeek + 1;
 
         List<ProgramRole> programRoles = programRoleRepository.findAll();
