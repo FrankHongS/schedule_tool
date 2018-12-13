@@ -6,17 +6,16 @@ import com.microsoft.schedule_tool.vo.result.ResultEnum;
  * @author kb_jay
  * @time 2018/12/13
  **/
-public class ScheduleException extends RuntimeException {
+/**
+ * Created by Frank Hon on 12/12/2018
+ * E-mail: v-shhong@microsoft.com
+ */
+public abstract class ScheduleException extends RuntimeException{
 
-    private int code;
-
-    public ScheduleException(ResultEnum resultEnum) {
-        super(resultEnum.getMessage());
-        this.code = resultEnum.getCode();
+    public ScheduleException(String message){
+        super(message);
     }
 
-    public int getCode() {
-        return code;
-    }
+    public abstract int getCode();
 
 }

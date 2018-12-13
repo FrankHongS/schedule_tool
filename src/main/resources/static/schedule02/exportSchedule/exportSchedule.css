@@ -1,0 +1,48 @@
+.export-main-container{
+    width: 60%;
+    margin: 25px auto 0;
+}
+
+.export-container a{
+    display: inline-block;
+    text-decoration: none;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #009688;
+    color: aliceblue;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.export-btns{
+    margin: 15px 0 15px 120px;
+}
+
+.export-container label {
+    min-width: 60px;
+    font-weight: 400;
+    text-align: center;
+    margin-right: 20px;
+    font-size: 1.0em;
+}
+
+.export-container .info-input{
+    height: 30px;
+    line-height: 30px;
+    width: 200px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+.export-container .dash{
+    display: inline-block;
+    padding: 0 5px;
+}

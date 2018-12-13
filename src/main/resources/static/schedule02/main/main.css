@@ -1,0 +1,35 @@
+.main-container{
+}
+
+.nav-container{
+    text-align: center
+}
+
+.nav-container ul{
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.nav-container ul li{
+    display: inline-block;
+    padding: 16px 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.nav-container .active{
+    color: black;
+    border-bottom: 2px #009688 solid;
+    /* box-shadow: #009688 0 2px; */
+}
+
+.nav-container .unactive{
+    color: #888;
+}
+
+.nav-container .unactive:hover{
+    color: #666;
+}
+

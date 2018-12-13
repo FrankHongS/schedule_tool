@@ -6,7 +6,7 @@ import com.microsoft.schedule_tool.vo.result.ResultEnum;
  * Created by Frank Hon on 11/20/2018
  * E-mail: v-shhong@microsoft.com
  */
-public class ProgramException extends RuntimeException{
+public class ProgramException extends ScheduleException{
 
     private int code;
 
@@ -15,6 +15,7 @@ public class ProgramException extends RuntimeException{
         this.code=resultEnum.getCode();
     }
 
+    @Override
     public int getCode() {
         return code;
     }

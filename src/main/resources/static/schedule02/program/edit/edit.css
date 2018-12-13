@@ -1,0 +1,111 @@
+.edit-item{
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.form-input{
+    height: 30px;
+    line-height: 30px;
+    width: 200px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+label {
+    float: left;
+    display: block;
+    padding: 7px 15px;
+    min-width: 80px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+
+button{
+    display: inline-block;
+    width: 85px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.day-container{
+    padding-top: 10px;
+}
+
+.day-container ul{
+    list-style: none;
+    padding-left: 0;
+    margin: 0 auto;
+}
+
+.day-container ul li{
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.btns-container{
+    margin-left: 110px;
+}
+
+.message-container .message{
+    margin-left: 110px;
+}
+
+.program-name-wrapper{
+    float: left;
+}
+
+.add-role-wrapper{
+    overflow: hidden;
+    padding-left: 25px;
+    padding-top: 4px;
+    display: flex;
+    align-content: center;
+}
+
+.add-role-wrapper span{
+    line-height: 20px;
+}
+
+.add-role-wrapper img{
+    height: 18px;
+    width: 18px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.role-wrapper{
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    padding: 10px 0;
+    display: flex;
+}
+
+.role-wrapper .day-wrapper{
+    display: flex;
+    align-content: center;
+}
+
+.discard-wrapper{
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.discard-wrapper img{
+    height: 15px;
+    width: 15px;
+    padding-right: 5px;
+    cursor: pointer;
+}

@@ -16,7 +16,7 @@ public enum ResultEnum {
     EMPLOYEE_NOT_EXIST(25, "employee not existing,can't be updated"),
     EMPLOYEE_ID_NOT_EXIST(26, "employee id not existing"),
     EMPLOYEE_DELETE_FAIL(27, "fail to delete employee"),
-    EMPLOYEE_ALIAS_REPEAT(135, "employee_alias_repeat"),
+    EMPLOYEE_ALIAS_REPEAT(135, "employee alias repeat"),
 
     // schedule program
     PROGRAM_NAME_NULL(110, "program name can't be empty"),
