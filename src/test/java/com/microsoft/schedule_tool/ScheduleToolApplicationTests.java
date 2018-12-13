@@ -3,6 +3,7 @@ package com.microsoft.schedule_tool;
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioProgram;
 import com.microsoft.schedule_tool.schedule.repository.RadioProgramRepository;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
+import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.schedule.service.impl.RadioProgramSeviceImpl;
 import com.microsoft.schedule_tool.service.impl.schedule.ProgramServiceImpl;
 import org.junit.Test;
@@ -55,6 +56,12 @@ public class ScheduleToolApplicationTests {
     @Test
     public void save(){
         relationRoleAndEmployeeService.addWorkers2Role(21l,15l,1);
+    }
+    @Autowired
+    private ScheduleSercive scheduleSercive;
+    @Test
+    public void testSchedule(){
+        scheduleSercive.schedule("2018-5-01","2018-12-01");
     }
 
 }

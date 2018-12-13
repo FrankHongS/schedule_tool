@@ -7,10 +7,7 @@ import com.microsoft.schedule_tool.schedule.repository.RelationRoleAndEmployeeRe
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @author kb_jay
@@ -19,10 +16,6 @@ import java.util.Queue;
 //角色对应的人员候选名单
 public class ScheduleRoleWaitingList {
 
-    @Autowired
-    private RelationRoleAndEmployeeService relationRoleAndEmployeeService;
-    @Autowired
-    private RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository;
 
     public Long id;
     //最大权重
@@ -41,7 +34,6 @@ public class ScheduleRoleWaitingList {
             return;
         }
         if (currentRatio < maxRatio) {
-            currentRatio++;
         } else {
             currentRatio = 1;
         }
@@ -54,7 +46,7 @@ public class ScheduleRoleWaitingList {
     }
 
     //初始化
-    public void init(ProgramRole role) {
+    public void init(ProgramRole role, RelationRoleAndEmployeeService relationRoleAndEmployeeService, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
         Long id = role.getId();
         List<StationEmployee> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
         int maxRatio = 1;
@@ -66,6 +58,7 @@ public class ScheduleRoleWaitingList {
         this.currentRatio = 1;
         this.maxRatio = maxRatio;
         allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
+        randomSort(allEmployee);
         for (int j = 0; j < allEmployee.size(); j++) {
             int ratio = allEmployee.get(j).getRatio();
             if (currentRatio == ratio) {
@@ -73,5 +66,18 @@ public class ScheduleRoleWaitingList {
             }
         }
         currentRatio++;
+    }
+
+    private void randomSort(List<RelationRoleAndEmployee> allEmployee) {
+        int len = allEmployee.size();
+        Random random = new Random();
+        for (int i = 0; i < allEmployee.size(); i++) {
+            int index = random.nextInt(len);
+            RelationRoleAndEmployee temp = allEmployee.get(index);
+            allEmployee.remove(index);
+            allEmployee.add(temp);
+            len--;
+        }
+
     }
 }
