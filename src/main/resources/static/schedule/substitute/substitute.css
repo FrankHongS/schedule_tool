@@ -1,0 +1,125 @@
+.main-container{
+    width: 80%;
+    margin: 30px auto;
+}
+
+.item-container{
+    margin: 15px 0;
+}
+
+.item-container label {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    min-width: 100px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+
+.item-container .info-input{
+    height: 30px;
+    line-height: 30px;
+    width: 200px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+.date-range .dash{
+    display: inline-block;
+    padding: 0 5px;
+}
+
+.item-container #hol{
+    margin-left:10px;
+    margin-top: 10px; 
+}
+
+.btns-container{
+    margin-left: 130px;
+}
+
+.item-container button{
+    display: inline-block;
+    width: 85px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.btns-container .export-link{
+    display: inline-block;
+    text-decoration: none;
+    width: 85px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #009688;
+    color: aliceblue;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.tb-container{
+    width: 95%;
+    margin: 0 auto;
+}
+
+.tb-container caption{
+    padding-bottom: 5px;
+}
+
+.tb-container table{
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.tb-container table,
+.tb-container table tr td {
+    border: 1px solid #0094ff;
+}
+
+.tb-container table thead tr td {
+    padding: 8px;
+    font-size: 1.2em;
+}
+
+.tb-container table tbody tr td {
+    padding: 10px;
+    font-size: 1.0em;
+}
+
+/* index */
+.tb-container table tr :first-child{
+    width: 8%;
+}
+
+.tb-container table tr :nth-child(2){
+    width: 28%;
+}
+
+.tb-container table tr :nth-child(3){
+    width: 28%;
+}
+
+.tb-container table tr :nth-child(4){
+    width: 28%;
+}
+
+.tb-container table tr :nth-child(5){
+    width: 8%;
+}

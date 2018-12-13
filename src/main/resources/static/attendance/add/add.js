@@ -11,7 +11,11 @@ $(document).ready(
                     annual:$('.annual').val()==''?'0':$('.annual').val()
                 },
                 success: result => {
-                    $('.message').text('保存成功');
+                    if(result.code==0){
+                        $('.message').text('保存成功');
+                    }else{
+                        $('.message').text('保存失败...'+result.message);
+                    }
                     console.log(result);
                 },
                 error:(xhr,e)=>{

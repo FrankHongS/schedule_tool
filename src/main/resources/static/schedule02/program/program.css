@@ -1,0 +1,64 @@
+.program-main-container{
+    width: 90%;
+    margin: 25px auto 0;
+}
+
+.program-container{
+    width: 25%;
+    margin: 0 200px;
+}
+
+.program-container ul{
+    width: 100%;
+    height: 200px;
+    overflow-x: hidden;
+	overflow-y: scroll;
+    list-style: none;
+    border: 1px solid #2c2c2c;
+    display: inline-block;
+    padding-left:0;
+    margin: 0; 
+}
+
+.program-container ul li{
+    padding:5px;
+    padding-left: 20px;
+    line-height: 1.0em;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+}
+
+.program-main-container .btns-container{
+    margin-left: 200px;
+    margin-top: 30px;
+}
+
+.program-main-container .btns-container button{
+    display: inline-block;
+    text-decoration: none;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #009688;
+    color: aliceblue;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.program-main-container .btns-container :last-child{
+    display: block;
+}
+
+.program-container .active{
+    background: #707070;
+    color: aliceblue;
+}
+
+.program-container .unactive:hover{
+    background: #bfbfbf;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Substitute</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="substitute.css" />
+    <script src="../../jquery/jquery-3.3.1.js"></script>
+    <script src="../../plugin/laydate/laydate.js"></script>
+    <script src="../../plugin/layui/layui.all.js"></script>
+    <script src="../util/util.js"></script>
+    <script src="substitute.js"></script>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="item-container date-range">
+            <label for="from">替班日期范围</label>
+            <input id='from' type="text" class="info-input from" placeholder="from"><span class="dash">--</span><input
+                type="text" class="info-input to" placeholder="to">
+        </div>
+        <div class="item-container holiday">
+            <label for="hol">节假日</label>
+            <input id='hol' type="checkbox">
+        </div>
+        <div class="item-container btns-container">
+            <button type="button" class="search-btn">检索</button>
+            <a class="export-link">导出</a>
+            <button type="button" class="add-btn">添加</button>
+        </div>
+
+        <div class="tb-container">
+            <div class="sub-items-container">
+                <table class="tb-sub">
+                    <caption>替班记录</caption>
+                    <thead>
+                        <tr>
+                            <td>序号</td>
+                            <td>替班员工姓名</td>
+                            <td>替班节目名称</td>
+                            <td>替班时间</td>
+                            <td>节假日</td>
+                        </tr>
+                    </thead>
+                    <tbody class="sub-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

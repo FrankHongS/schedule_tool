@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Add Substitute</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="addSubstitute.css" />
+    <script src="/schedule/jquery/jquery-3.3.1.js"></script>
+    <script src="/schedule/plugin/laydate/laydate.js"></script>
+    <script src="addSubstitute.js"></script>
+</head>
+
+<body>
+    <div class="sub-container">
+        <div class="item-container program-select">
+            <label for="sub-program">节目名</label>
+            <select name="sub-program" id="sub-program">
+            </select>
+        </div>
+        <div class="item-container">
+            <label for="sub-name">替班人员</label>
+            <input id='sub-name' type="text" class="info-input sub-name" placeholder="请输入替班人员名字">
+        </div>
+        <div class="item-container date-picker">
+            <label for="sub-date">替班日期</label>
+            <input id='sub-date' type="text" class="info-input sub-date" placeholder="请输入替班日期">
+        </div>
+        <div class="item-container holiday">
+            <label for="sub-hol">节假日</label>
+            <input id='sub-hol' type="checkbox">
+        </div>
+        <div class="item-container btns-container">
+            <button type="button" class="save-btn">保存</button>
+            <button type="button" class="cancel-btn">取消</button>
+        </div>
+        <div class="message-container">
+            <span class="message"></span>
+        </div>
+    </div>
+</body>
+
+</html>

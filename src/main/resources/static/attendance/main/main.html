@@ -6,28 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Attendance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="../../favicon.ico"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <link rel="stylesheet" href="../../plugin/layui/css/layui.css">
-    <script src="../../jquery/jquery-3.3.1.js" type="text/javascript"></script>
-    <script src="../../jquery/getParameter.js" type="text/javascript"></script>
-    <!-- <script src="../../plugin/layer/layer.min.js"></script> -->
-    <script src="../../plugin/laydate/laydate.js"></script>
-    <script src="../../plugin/layui/layui.all.js"></script>
-    <script src="main.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
     <div id="main-form-container">
         <form id="main-form">
-            <button type="button" class="main-btn add-btn">添加新成员</button>
+            <div class="func-btn-container">
+                <button type="button" class="main-btn add-btn">添加新成员</button>
+                <button type="button" class="main-btn recent-insert-btn">查看最近添加</button>
+            </div>
             <div class="main-form-item">
                 <input type="text" class="form-input year" placeholder="请输入年">
-                <button type="button" class="main-btn export-year-btn"><a class="year-link">按年导出Excel</a></button>
+                <a class="year-link">按年导出excel</a>
             </div>
             <div class="main-form-item">
                 <input type="text" class="form-input month" placeholder="请输入年月">
-                <button type="button" class="main-btn export-month-btn"><a class="month-link">按月导出Excel</a></button>
+                <a class="month-link">按月导出excel</a>
             </div>
             <div class="main-form-item">
                 <label class='label' for="from">查找时间范围</label>

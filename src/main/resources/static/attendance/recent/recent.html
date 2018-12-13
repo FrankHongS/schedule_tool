@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Recent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="recent.css" />
+    <script src="../../jquery/jquery-3.3.1.js"></script>
+    <script src="../util/constants.js"></script>
+    <script src="../util/util.js"></script>
+    <script src="recent.js"></script>
+</head>
+
+<body>
+    <div class="btn-container">
+        <button type="button" class="recent-btn search-btn">search</button>
+    </div>
+
+    <div class="tb-container">
+        <div class="leave-container">
+            <table class="leave">
+                <caption>最近请假输入</caption>
+                <thead>
+                    <tr>
+                        <td>序号</td>
+                        <td>姓名</td>
+                        <td>alias</td>
+                        <td>类型</td>
+                        <td>创建时间</td>
+                        <td>请假时间</td>
+                        <td>请假时长(/天)</td>
+                        <td>备注</td>
+                    </tr>
+                </thead>
+                <tbody class="leave-body">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="late-container">
+            <table class="late">
+                <caption>最近考勤异常输入</caption>
+                <thead>
+                    <tr>
+                        <td>序号</td>
+                        <td>姓名</td>
+                        <td>alias</td>
+                        <td>类型</td>
+                        <td>创建时间</td>
+                        <td>考勤异常日期</td>
+                        <td>备注</td>
+                    </tr>
+                </thead>
+                <tbody class="late-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

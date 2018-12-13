@@ -107,7 +107,6 @@ $(
                             isNormal: $('.choose input[name="isNormal"]:checked').val()==='1' ? true : false,
                             comment: $('.comment-text').val()
                         };
-                        console.log(data);
                         
                         url = '/schedule/leave';
                         break;
@@ -121,7 +120,6 @@ $(
                             isNormal: $('.choose input[name="isNormal"]:checked').val()==='1' ? true : false,
                             comment: $('.comment-text').val()
                         };
-                        console.log(data);
                         
                         url = '/schedule/late';
                         break;
@@ -135,11 +133,9 @@ $(
                     data: data,
                     success: result => {
                         $('.message').text('保存成功');
-                        console.log(result);
                     },
                     error:(xhr,e)=>{
                         $('.message').text('保存失败...'+e);
-                        console.log(e);
                     }
                 });
             });

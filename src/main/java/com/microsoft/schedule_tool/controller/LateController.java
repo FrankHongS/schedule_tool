@@ -27,8 +27,8 @@ public class LateController {
     public Map<String, List<Late>> getLatesByEmployeeId(
             @RequestParam(name = "employeeId") Integer employeeId){
         Map<String,List<Late>> resultMap=new HashMap<>();
-        List<Late> leaveList=mLateService.getAllLatesByEmployeeId(employeeId);
-        resultMap.put(KEY,leaveList);
+        List<Late> lateList=mLateService.getAllLatesByEmployeeId(employeeId);
+        resultMap.put(KEY,lateList);
         return resultMap;
     }
 
@@ -37,8 +37,8 @@ public class LateController {
             @RequestParam(name = "employeeId") Integer employeeId,
             @RequestParam(name = "lateType") Integer lateType){
         Map<String,List<Late>> resultMap=new HashMap<>();
-        List<Late> leaveList=mLateService.getAllLatesByEmployeeIdAndLateType(employeeId, lateType);
-        resultMap.put(KEY,leaveList);
+        List<Late> lateList=mLateService.getAllLatesByEmployeeIdAndLateType(employeeId, lateType);
+        resultMap.put(KEY,lateList);
         return resultMap;
     }
 
@@ -50,8 +50,8 @@ public class LateController {
             @RequestParam(name = "employeeId") Integer employeeId,
             @RequestParam(name = "leaveType") Integer lateType){
         Map<String,List<Late>> resultMap=new HashMap<>();
-        List<Late> leaveList=mLateService.getAllLatesByDateRangeAndEmployeeIdAndLeaveType(from, to, employeeId, lateType);
-        resultMap.put(KEY,leaveList);
+        List<Late> lateList=mLateService.getAllLatesByDateRangeAndEmployeeIdAndLeaveType(from, to, employeeId, lateType);
+        resultMap.put(KEY,lateList);
         return resultMap;
     }
 
@@ -61,8 +61,17 @@ public class LateController {
             @RequestParam("to") String to,
             @RequestParam(name = "employeeId") Integer employeeId){
         Map<String,List<Late>> resultMap=new HashMap<>();
-        List<Late> leaveList=mLateService.getAllLatesByDateRangeAndEmployeeId(from, to, employeeId);
-        resultMap.put(KEY,leaveList);
+        List<Late> lateList=mLateService.getAllLatesByDateRangeAndEmployeeId(from, to, employeeId);
+        resultMap.put(KEY,lateList);
+        return resultMap;
+    }
+
+    @GetMapping("/recent")
+    public Map<String, List<Late>> getRecentLates(@RequestParam("page") Integer page,
+                                                  @RequestParam("size") Integer size){
+        Map<String,List<Late>> resultMap=new HashMap<>();
+        List<Late> lateList=mLateService.getAllLatesOrderByCreatedTime(page, size);
+        resultMap.put(KEY,lateList);
         return resultMap;
     }
 
