@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.schedule.service.impl;
 
 import com.microsoft.schedule_tool.exception.schedule.ProgramException;
+import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
 import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
 import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
 import com.microsoft.schedule_tool.schedule.domain.entity.RelationRoleAndEmployee;
@@ -113,7 +114,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                             move++;
                         }
                         if (move == alternativeEmployee.size()) {
-                            throw new ScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
+                            throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
                         }
 
                     } else {
