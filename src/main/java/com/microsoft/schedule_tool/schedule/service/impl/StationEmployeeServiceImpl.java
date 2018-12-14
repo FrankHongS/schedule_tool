@@ -85,11 +85,11 @@ public class StationEmployeeServiceImpl implements StationEmployeeService {
             throw new ProgramEmployeeException(ResultEnum.EMPLOYEE_ID_NOT_EXIST);
         }
 
-//        StationEmployee originalEmployee=byId.get();
-//
-//        if (!alias.equals(originalEmployee.getAlias())&&stationEmployeeRepository.findByAlias(alias).isPresent()) {
-//            throw new ProgramEmployeeException(ResultEnum.EMPLOYEE_ALIAS_REPEAT);
-//        }
+        StationEmployee originalEmployee=byId.get();
+
+        if (!alias.equals(originalEmployee.getAlias())&&stationEmployeeRepository.findByAlias(alias).isPresent()) {
+            throw new ProgramEmployeeException(ResultEnum.EMPLOYEE_ALIAS_REPEAT);
+        }
 
         //get
         //change
