@@ -48,19 +48,8 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
         }
 
         Optional<RadioProgram> programOptional = radioProgramRepository.findByNameAndRadioStation(name, radioStation);
-        if (programOptional.isPresent()) {
-            if (!programOptional.get().isDeleted()) {
-                throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
-            } else {
-                try {
-                    RadioProgram radioProgram = programOptional.get();
-                    radioProgram.setDeleted(false);
-                    radioProgramRepository.saveAndFlush(radioProgram);
-                    return radioProgram.getId();
-                } catch (Exception e) {
-                    throw new ProgramException(ResultEnum.PROGRAM_SAVE_FAIL);
-                }
-            }
+        if (programOptional.isPresent() && !programOptional.get().isDeleted()) {
+            throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
         }
 
         try {
@@ -106,7 +95,7 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
         if (byId.isPresent()) {
             RadioStation radioStation = byId.get().getRadioStation();
             Optional<RadioProgram> optional = radioProgramRepository.findByNameAndRadioStation(newName, radioStation);
-            if (optional.isPresent()) {
+            if (optional.isPresent() && !optional.get().isDeleted()) {
                 throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
             }
         } else {
