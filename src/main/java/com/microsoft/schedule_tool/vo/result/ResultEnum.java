@@ -58,7 +58,12 @@ public enum ResultEnum {
     PROGRAM_ROLE_AND_EMPLOYEE_CHANGE_RATIO_ERROR(143,"program_role_and_employee_change_ratio_error"),
     HOLIDAY_PARAMS_ERROR(144,"holiday_params_error"),
     SCHEDULE_ERROT_PLEASE_RETRY(145,"schedule_errot_please_retry"),
-    HOLIDAY_ADD_ERROR(146,"holiday_add_error");
+    HOLIDAY_ADD_ERROR(146,"holiday_add_error"),
+    MUTEX_ID_NOT_EXIST(146,"mutex_id_not_exist"),
+    MUTEX_IDS_NULL(147,"mutex_ids_null"),
+    MUTEX_UPDATE_FAILED(148,"mutex_update_failed"),
+    MUTEX_SAV_FAILED(149,"mutex_sav_failed"),
+    MUTEX_FIND_FAILED(150,"mutex_find_failed");
 
     private int code;
 
