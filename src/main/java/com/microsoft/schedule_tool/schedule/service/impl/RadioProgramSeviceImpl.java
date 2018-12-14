@@ -148,8 +148,11 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
                 radioProgramsResp.name = program.getName();
                 List<ProgramRole> programRoles = program.getProgramRoles();
                 for (int i = 0; i < programRoles.size(); i++) {
-                    RoleResp roleResp = new RoleResp();
                     ProgramRole programRole = programRoles.get(i);
+                    if (programRole.isDeleted()) {
+                        continue;
+                    }
+                    RoleResp roleResp = new RoleResp();
                     roleResp.cycle = programRole.getCycle();
                     roleResp.id = programRole.getId();
                     roleResp.name = programRole.getName();
