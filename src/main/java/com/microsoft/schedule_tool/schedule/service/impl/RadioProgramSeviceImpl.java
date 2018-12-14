@@ -47,8 +47,17 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
             throw new ProgramException(ResultEnum.PROGRAM_NAME_NULL);
         }
 
-        Optional<RadioProgram> programOptional = radioProgramRepository.findByNameAndRadioStation(name, radioStation);
-        if (programOptional.isPresent() && !programOptional.get().isDeleted()) {
+        List<RadioProgram> programList = radioProgramRepository.findByNameAndRadioStation(name, radioStation);
+
+        List<RadioProgram> temp=new ArrayList<>();
+
+        for(RadioProgram radioProgram:programList){
+            if(!radioProgram.isDeleted()){
+                temp.add(radioProgram);
+            }
+        }
+
+        if (temp.size()>0) {
             throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
         }
 
@@ -94,8 +103,15 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
         Optional<RadioProgram> byId = radioProgramRepository.findById(id);
         if (byId.isPresent()) {
             RadioStation radioStation = byId.get().getRadioStation();
-            Optional<RadioProgram> optional = radioProgramRepository.findByNameAndRadioStation(newName, radioStation);
-            if (optional.isPresent() && !optional.get().isDeleted()) {
+            List<RadioProgram> radioProgramList = radioProgramRepository.findByNameAndRadioStation(newName, radioStation);
+            List<RadioProgram> temp=new ArrayList<>();
+
+            for(RadioProgram radioProgram:radioProgramList){
+                if(!radioProgram.isDeleted()){
+                    temp.add(radioProgram);
+                }
+            }
+            if (temp.size()>0&&!newName.equals(byId.get().getName())) {
                 throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
             }
         } else {

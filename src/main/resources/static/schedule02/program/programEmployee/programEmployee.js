@@ -45,6 +45,12 @@ $(
             ]
         ];
 
+        let programName;
+
+        programEmployee.getParameter=function(){
+            programName=decodeURIComponent($.Request('program'));
+        };
+
         programEmployee.bindClick=function(){
             $('.add').click(function(){
                 layer.open({
@@ -104,6 +110,7 @@ $(
             $(container).append(rowsArray);
         };
 
+        programEmployee.getParameter();
         programEmployee.buildEmployeeTable('.employee-body',dataList);
         programEmployee.bindClick();
     }

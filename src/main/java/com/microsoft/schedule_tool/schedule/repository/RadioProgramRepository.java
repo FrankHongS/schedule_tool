@@ -13,5 +13,5 @@ import java.util.Optional;
  **/
 public interface RadioProgramRepository extends JpaRepository<RadioProgram, Long> {
     List<RadioProgram> findAllByRadioStationAndIsDeleted(RadioStation station, boolean isDeleted);
-    Optional<RadioProgram> findByNameAndRadioStation(String name,RadioStation radioStation);
+    List<RadioProgram> findByNameAndRadioStation(String name,RadioStation radioStation);
 }

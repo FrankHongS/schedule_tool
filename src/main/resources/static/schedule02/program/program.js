@@ -44,7 +44,9 @@ window.program = function () {
 
             originData = {
                 type: 1,
-                name: curProgram.name
+                id:curProgram.id,
+                name: curProgram.name,
+                roleArray: curProgram.programRoles
             };
 
             layer.open({

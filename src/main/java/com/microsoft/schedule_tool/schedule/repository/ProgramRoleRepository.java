@@ -12,7 +12,7 @@ import java.util.Optional;
  * @time 2018/12/10
  **/
 public interface ProgramRoleRepository extends JpaRepository<ProgramRole, Long> {
-    Optional<ProgramRole> findByNameAndRadioProgram(String name, RadioProgram radioProgram);
+    List<ProgramRole> findByNameAndRadioProgram(String name, RadioProgram radioProgram);
     List<ProgramRole> findAllByRadioProgramAndIsDeleted(RadioProgram radioProgram,boolean isDeleted);
 
 }

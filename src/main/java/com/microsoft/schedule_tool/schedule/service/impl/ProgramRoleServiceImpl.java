@@ -45,8 +45,8 @@ public class ProgramRoleServiceImpl implements ProgramRoleService {
             throw new ProgramException(ResultEnum.PROGRAM_ROLE_NAME_IS_NULL);
         }
         //check repeat name;
-        Optional<ProgramRole> byNameAndRadioProgram = programRoleRepository.findByNameAndRadioProgram(name, radioProgramOptional.get());
-        if (byNameAndRadioProgram.isPresent()) {
+        List<ProgramRole> byNameAndRadioProgram = programRoleRepository.findByNameAndRadioProgram(name, radioProgramOptional.get());
+        if (byNameAndRadioProgram.size()>1) {
             throw new ProgramException(ResultEnum.PROGRAM_ROLE_NAME_REPEAT);
         }
         if (StringUtils.isEmpty(scheduleCycle) || scheduleCycle.length() != 7) {
@@ -103,8 +103,17 @@ public class ProgramRoleServiceImpl implements ProgramRoleService {
         }
         //check repeat name;
         RadioProgram radioProgram = byId.get().getRadioProgram();
-        Optional<ProgramRole> byNameAndRadioProgram = programRoleRepository.findByNameAndRadioProgram(name, radioProgram);
-        if (byNameAndRadioProgram.isPresent()) {
+        List<ProgramRole> byNameAndRadioProgram = programRoleRepository.findByNameAndRadioProgram(name, radioProgram);
+
+        List<ProgramRole> temp=new ArrayList<>();
+
+        for(ProgramRole role:byNameAndRadioProgram){
+            if(!role.isDeleted()){
+                temp.add(role);
+            }
+        }
+
+        if (temp.size()>1) {
             throw new ProgramException(ResultEnum.PROGRAM_ROLE_NAME_REPEAT);
         }
         if (StringUtils.isEmpty(scheduleCycle) || scheduleCycle.length() != 7) {
