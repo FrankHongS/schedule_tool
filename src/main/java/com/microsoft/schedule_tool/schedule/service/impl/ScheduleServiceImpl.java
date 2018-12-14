@@ -3,20 +3,13 @@ package com.microsoft.schedule_tool.schedule.service.impl;
 import com.microsoft.schedule_tool.exception.schedule.ProgramException;
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
 import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
-import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
-import com.microsoft.schedule_tool.schedule.domain.entity.RadioSchedule;
-import com.microsoft.schedule_tool.schedule.domain.entity.RelationRoleAndEmployee;
-import com.microsoft.schedule_tool.schedule.domain.entity.StationEmployee;
+import com.microsoft.schedule_tool.schedule.domain.entity.*;
 import com.microsoft.schedule_tool.schedule.domain.vo.schedule.ScheduleRoleWaitingList;
-import com.microsoft.schedule_tool.schedule.repository.ProgramRoleRepository;
-import com.microsoft.schedule_tool.schedule.repository.RadioScheduleRepository;
-import com.microsoft.schedule_tool.schedule.repository.RelationRoleAndEmployeeRepository;
-import com.microsoft.schedule_tool.schedule.repository.StationEmployeeRepository;
+import com.microsoft.schedule_tool.schedule.repository.*;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
-import org.omg.CORBA.DATA_CONVERSION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +37,12 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     @Autowired
     private RadioScheduleRepository radioScheduleRepository;
 
+    @Autowired
+    private HolidayRepository holidayRepository;
+
+    @Autowired
+    private MutexEmployeeRepository mutexEmployeeRepository;
+
     private ArrayList<ScheduleRoleWaitingList> scheduleRoles;
 
     //一周中不可选的员工
@@ -59,6 +58,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private int startWeek;
     private int endWeek;
 
+    //排班失败retry次数
+    private static int RETRY_TIME = 15;
+    private int currentTime = 0;
 
     @Override
     public void schedule(String from, String to) {
@@ -114,9 +116,13 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                                 if (!canChange) {
                                     continue;
                                 }
+
+                                //找到了可以替换的员工
                                 isChanged = true;
-                                result[j][k] = alternativeEmployee.poll();
+                                Long poll = alternativeEmployee.poll();
+                                result[j][k] = poll;
                                 result[j][i] = temp;
+                                addToNotOptionalInOneWeek(poll);
                                 break;
                             }
                             if (!isChanged) {
@@ -143,16 +149,29 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 //reset
                 notOptionalInOneWeek.clear();
             }
+            /*******************测试**/
+            Long[][] test = new Long[result[0].length][result.length];
+            for (int i = 0; i < result[0].length; i++) {
+                for (int j = 0; j < result.length; j++) {
+                    test[i][j] = result[j][i];
+                }
+            }
+            /*******************测试**/
             //将排好的信息存入db
             saveData2Db();
-
+            currentTime = 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            if (e instanceof ProgramScheduleException && currentTime < RETRY_TIME) {
+                currentTime++;
+                schedule(from, to);
+            } else {
+                throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
+            }
         }
     }
 
     private void saveData2Db() {
-        Date start = DateUtil.getFirstDayOfWeek(DateUtil.getYear(startDate), startWeek-1);
+        Date start = DateUtil.getFirstDayOfWeek(DateUtil.getYear(startDate), startWeek - 1);
 
         for (int i = 0; i < result.length; i++) {
             Long roleId = scheduleRoles.get(i).id;
@@ -203,8 +222,16 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         }
     }
 
-    // TODO: 2018/12/13 判断是否是节假日
     private boolean isHoliday(Date date) {
+        List<Holiday> all = holidayRepository.findAll();
+        if (all != null && all.size() > 0) {
+            for (int i = 0; i < all.size(); i++) {
+                Date date1 = all.get(i).getDate();
+                if (DateUtil.isSameDay(date, date1)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -213,6 +240,26 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private ArrayList<Long> getMutexEmployee(long id) {
         ArrayList<Long> ids = new ArrayList<>();
         ids.add(id);
+        List<MutexEmployee> all = mutexEmployeeRepository.findAll();
+        for (int i = 0; i < all.size(); i++) {
+            String ids1 = all.get(i).getIds();
+            boolean isInGroup = false;
+            String[] split = ids1.split(",");
+            for (int j = 0; j < split.length; j++) {
+                if (id == Long.valueOf(split[j])) {
+                    isInGroup = true;
+                    break;
+                }
+            }
+            if (isInGroup) {
+                for (int j = 0; j < split.length; j++) {
+                    if (Long.valueOf(split[j]) == id) {
+                        continue;
+                    }
+                    ids.add(Long.valueOf(split[j]));
+                }
+            }
+        }
         return ids;
     }
 
@@ -229,7 +276,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     //添加自己以及跟自己互斥的员工进入周不可选名单
     // TODO: 2018/12/12
     private void addToNotOptionalInOneWeek(long employeeId) {
-        notOptionalInOneWeek.add(employeeId);
+        ArrayList<Long> mutexEmployee = getMutexEmployee(employeeId);
+        notOptionalInOneWeek.addAll(mutexEmployee);
     }
 
     private void initParams(String from, String to) throws ParseException {
@@ -238,7 +286,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         startWeek = DateUtil.getWeekOfYear(from);
         endWeek = DateUtil.getWeekOfYear(to);
 
-        weekNums= (int) DateUtil.weeks(startDate,endaDate);
+        weekNums = (int) DateUtil.weeks(startDate, endaDate);
 
         List<ProgramRole> programRoles = programRoleRepository.findAll();
 

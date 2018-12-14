@@ -5,6 +5,7 @@ import com.microsoft.schedule_tool.schedule.repository.RadioProgramRepository;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.schedule.service.impl.RadioProgramSeviceImpl;
+import com.microsoft.schedule_tool.schedule.service.impl.ScheduleServiceImpl;
 import com.microsoft.schedule_tool.service.impl.schedule.ProgramServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +62,11 @@ public class ScheduleToolApplicationTests {
     private ScheduleSercive scheduleSercive;
     @Test
     public void testSchedule(){
-        scheduleSercive.schedule("2018-10-02","2019-2-01");
+        scheduleSercive.schedule("2018-9-02","2018-12-01");
+    }
+    @Test
+    public void testMutex(){
+
     }
 
 }

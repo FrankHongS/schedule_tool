@@ -110,17 +110,14 @@ public class DateUtil {
 
     public static int getYear(Date date) {
         Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
         return cal.get(Calendar.YEAR);//获取年份
     }
 
     public static int getMonth(Date date) {
         Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
         return cal.get(Calendar.MONTH);
-    }
-
-    public static int getDay(Date date) {
-        Calendar cal = Calendar.getInstance();
-        return cal.get(Calendar.DAY_OF_MONTH);
     }
 
 
@@ -161,5 +158,17 @@ public class DateUtil {
         // atZone()方法返回在指定时区从此Instant生成的ZonedDateTime。
         LocalDate start = instant.atZone(zoneId).toLocalDate();
         return start;
+    }
+
+    public static boolean isSameDay(Date date, Date date1) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(date1);
+
+        return (c.get(Calendar.YEAR) == c1.get(Calendar.YEAR) &&
+                c.get(Calendar.MONTH) == c1.get(Calendar.MONTH) &&
+                c.get(Calendar.DAY_OF_MONTH) == c1.get(Calendar.DAY_OF_MONTH));
     }
 }
