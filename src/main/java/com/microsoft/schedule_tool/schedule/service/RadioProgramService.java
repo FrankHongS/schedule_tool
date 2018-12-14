@@ -2,6 +2,7 @@ package com.microsoft.schedule_tool.schedule.service;
 
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioProgram;
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioStation;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RadioProgramsResp;
 
 import java.util.List;
 
@@ -34,5 +35,5 @@ public interface RadioProgramService {
     long[] saveSome(String jsonData);
 
     //get all programs
-    List<RadioProgram> findAllByStation(long stationId);
+    List<RadioProgramsResp> findAllByStation(long stationId);
 }

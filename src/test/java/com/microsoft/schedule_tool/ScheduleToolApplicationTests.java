@@ -61,7 +61,7 @@ public class ScheduleToolApplicationTests {
     private ScheduleSercive scheduleSercive;
     @Test
     public void testSchedule(){
-        scheduleSercive.schedule("2018-1-01","2018-2-01");
+        scheduleSercive.schedule("2018-10-02","2019-2-01");
     }
 
 }

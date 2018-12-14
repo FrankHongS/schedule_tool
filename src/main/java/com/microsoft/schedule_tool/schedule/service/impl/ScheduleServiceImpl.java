@@ -237,7 +237,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         endaDate = DateUtil.parseDateString(to);
         startWeek = DateUtil.getWeekOfYear(from);
         endWeek = DateUtil.getWeekOfYear(to);
-        weekNums = endWeek - startWeek + 1;
+
+        weekNums= (int) DateUtil.weeks(startDate,endaDate);
 
         List<ProgramRole> programRoles = programRoleRepository.findAll();
 

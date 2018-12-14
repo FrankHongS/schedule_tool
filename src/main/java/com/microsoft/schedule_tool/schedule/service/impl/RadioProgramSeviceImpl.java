@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.schedule_tool.exception.schedule.ProgramException;
+import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioProgram;
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioStation;
 import com.microsoft.schedule_tool.schedule.domain.vo.request.ReqProgram;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RadioProgramsResp;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RoleResp;
 import com.microsoft.schedule_tool.schedule.repository.RadioProgramRepository;
 import com.microsoft.schedule_tool.schedule.repository.RadioStationRepository;
 import com.microsoft.schedule_tool.schedule.service.RadioProgramService;
@@ -129,19 +132,34 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
     }
 
     @Override
-    public List<RadioProgram> findAllByStation(long stationId) {
+    public List<RadioProgramsResp> findAllByStation(long stationId) {
         Optional<RadioStation> optional = radioStationRepository.findById(stationId);
         if (!optional.isPresent()) {
             throw new ProgramException(ResultEnum.STATION_NOT_EXTST);
         }
         try {
+            List<RadioProgramsResp> resps = new ArrayList<>();
             List<RadioProgram> programs = radioProgramRepository.findAllByRadioStationAndIsDeleted(optional.get(), false);
             //处理stackoverflow
             for (RadioProgram program : programs) {
-                program.setRadioStation(null);
-                program.setProgramRoles(null);
+                RadioProgramsResp radioProgramsResp = new RadioProgramsResp();
+                List<RoleResp> roleResps = new ArrayList<>();
+                radioProgramsResp.id = program.getId();
+                radioProgramsResp.name = program.getName();
+                List<ProgramRole> programRoles = program.getProgramRoles();
+                for (int i = 0; i < programRoles.size(); i++) {
+                    RoleResp roleResp = new RoleResp();
+                    ProgramRole programRole = programRoles.get(i);
+                    roleResp.cycle = programRole.getCycle();
+                    roleResp.id = programRole.getId();
+                    roleResp.name = programRole.getName();
+                    roleResp.workDays = programRole.getWorkDays();
+                    roleResps.add(roleResp);
+                }
+                radioProgramsResp.programRoles = roleResps;
+                resps.add(radioProgramsResp);
             }
-            return programs;
+            return resps;
         } catch (Exception e) {
             throw new ProgramException(ResultEnum.PROGRAM_FIND_FAILED);
         }

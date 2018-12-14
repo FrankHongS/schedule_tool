@@ -2,6 +2,10 @@ package com.microsoft.schedule_tool.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -84,39 +88,18 @@ public class DateUtil {
         return getFirstDayOfWeek(cal.getTime());
     }
 
-    // 获取某年的第几周的结束日期
-    public static Date getLastDayOfWeek(int year, int week) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, Calendar.JANUARY);
-        c.set(Calendar.DATE, 1);
-
-        Calendar cal = (GregorianCalendar) c.clone();
-        cal.add(Calendar.DATE, week * 7);
-
-        return getLastDayOfWeek(cal.getTime());
-    }
-
     // 获取当前时间所在周的开始日期
     private static Date getFirstDayOfWeek(Date date) {
         Calendar c = Calendar.getInstance();
         c.setFirstDayOfWeek(Calendar.MONDAY);
         c.setTime(date);
         c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek()); // Monday
-        c.set(Calendar.HOUR_OF_DAY,0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         return c.getTime();
     }
 
-    // 获取当前时间所在周的结束日期
-    private static Date getLastDayOfWeek(Date date) {
-        Calendar c = Calendar.getInstance();
-        c.setFirstDayOfWeek(Calendar.MONDAY);
-        c.setTime(date);
-        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek() + 6); // Sunday
-        return c.getTime();
-    }
 
     public static Date getNextDate(Date date, int interval) {
         Calendar calendar = Calendar.getInstance();
@@ -130,37 +113,53 @@ public class DateUtil {
         return cal.get(Calendar.YEAR);//获取年份
     }
 
-
-    /**
-     * 获取指定年份的第几周的第几天对应的日期yyyy-MM-dd(从周一开始)
-     *
-     * @param year
-     * @param weekOfYear
-     * @param dayOfWeek
-     * @return yyyy-MM-dd 格式的日期 @
-     */
-    public static Date getDateForDayOfWeek(int year, int weekOfYear,
-                                           int dayOfWeek) {
-        return getDateForDayOfWeek(year, weekOfYear, dayOfWeek, Calendar.MONDAY);
+    public static int getMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        return cal.get(Calendar.MONTH);
     }
 
-    /**
-     * 获取指定年份的第几周的第几天对应的日期yyyy-MM-dd，指定周几算一周的第一天（firstDayOfWeek）
-     *
-     * @param year
-     * @param weekOfYear
-     * @param dayOfWeek
-     * @param firstDayOfWeek 指定周几算一周的第一天
-     * @return yyyy-MM-dd 格式的日期
-     */
-    private static Date getDateForDayOfWeek(int year, int weekOfYear,
-                                            int dayOfWeek, int firstDayOfWeek) {
+    public static int getDay(Date date) {
         Calendar cal = Calendar.getInstance();
-        cal.setFirstDayOfWeek(firstDayOfWeek);
-        cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-        cal.setMinimalDaysInFirstWeek(7);
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.WEEK_OF_YEAR, weekOfYear);
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+
+    static long until(LocalDate startDate, LocalDate endDate) {
+        return startDate.until(endDate, ChronoUnit.DAYS);
+    }
+
+    public static Date getThisWeekMonday(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        // 获得当前日期是一个星期的第几天
+        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
+        if (1 == dayWeek) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        // 获得当前日期是一个星期的第几天
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
         return cal.getTime();
+    }
+
+    public static long weeks(Date date, Date date1) {
+        Date thisWeekMonday = getThisWeekMonday(date);
+        Date thisWeekMonday1 = getThisWeekMonday(date1);
+        LocalDate start = date2localDate(thisWeekMonday);
+        LocalDate end = date2localDate(thisWeekMonday1);
+
+        long until = until(start, end);
+        return until / 7 + 1;
+    }
+
+    private static LocalDate date2localDate(Date date) {
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        // atZone()方法返回在指定时区从此Instant生成的ZonedDateTime。
+        LocalDate start = instant.atZone(zoneId).toLocalDate();
+        return start;
     }
 }

@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.schedule.web;
 
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioProgram;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RadioProgramsResp;
 import com.microsoft.schedule_tool.schedule.service.RadioProgramService;
 import com.microsoft.schedule_tool.util.ResultUtil;
 import com.microsoft.schedule_tool.vo.result.Result;
@@ -40,8 +41,8 @@ public class RadioProgramController {
     @GetMapping("/programs")
     public Result getPrograms(
             @RequestParam("stationId") long stationId) {
-        List<RadioProgram> programs = radioProgramService.findAllByStation(stationId);
-        Map<String, List<RadioProgram>> programs1 = ResultUtil.getResultData("programs", programs);
+        List<RadioProgramsResp> programs = radioProgramService.findAllByStation(stationId);
+        Map<String, List<RadioProgramsResp>> programs1 = ResultUtil.getResultData("programs", programs);
         return ResultUtil.success(programs1);
     }
 
