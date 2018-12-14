@@ -49,7 +49,18 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
 
         Optional<RadioProgram> programOptional = radioProgramRepository.findByNameAndRadioStation(name, radioStation);
         if (programOptional.isPresent()) {
-            throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
+            if (!programOptional.get().isDeleted()) {
+                throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
+            } else {
+                try {
+                    RadioProgram radioProgram = programOptional.get();
+                    radioProgram.setDeleted(false);
+                    radioProgramRepository.saveAndFlush(radioProgram);
+                    return radioProgram.getId();
+                } catch (Exception e) {
+                    throw new ProgramException(ResultEnum.PROGRAM_SAVE_FAIL);
+                }
+            }
         }
 
         try {
