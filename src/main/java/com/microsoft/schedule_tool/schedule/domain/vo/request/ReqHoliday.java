@@ -7,5 +7,6 @@ import java.util.Date;
  * @time 2018/12/11
  **/
 public class ReqHoliday {
-    public Date date;
+    //"yyyy-MM-dd"
+    public String date;
 }

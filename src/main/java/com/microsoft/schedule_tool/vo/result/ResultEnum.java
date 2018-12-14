@@ -57,7 +57,9 @@ public enum ResultEnum {
     PROGRAM_ROLE_AND_EMPLOYEE_WRONG_RATIO(142,"program_role_and_employee_wrong_ratio"),
     PROGRAM_ROLE_AND_EMPLOYEE_CHANGE_RATIO_ERROR(143,"program_role_and_employee_change_ratio_error"),
     HOLIDAY_PARAMS_ERROR(144,"holiday_params_error"),
-    SCHEDULE_ERROT_PLEASE_RETRY(145,"schedule_errot_please_retry");
+    SCHEDULE_ERROT_PLEASE_RETRY(145,"schedule_errot_please_retry"),
+    HOLIDAY_ADD_ERROR(146,"holiday_add_error");
+
     private int code;
 
     private String message;

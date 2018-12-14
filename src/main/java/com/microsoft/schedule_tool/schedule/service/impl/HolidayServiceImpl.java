@@ -8,6 +8,7 @@ import com.microsoft.schedule_tool.schedule.domain.vo.request.ReqHoliday;
 import com.microsoft.schedule_tool.schedule.domain.vo.request.ReqRole;
 import com.microsoft.schedule_tool.schedule.repository.HolidayRepository;
 import com.microsoft.schedule_tool.schedule.service.HolidayService;
+import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,11 +38,15 @@ public class HolidayServiceImpl implements HolidayService {
         } catch (Exception e) {
             throw new ProgramException(ResultEnum.HOLIDAY_PARAMS_ERROR);
         }
-        for (int i = 0; i < holidays.size(); i++) {
-            ReqHoliday reqHoliday = holidays.get(i);
-            Holiday holiday = new Holiday();
-            holiday.setDate(reqHoliday.date);
-            holidayRepository.save(holiday);
+        try {
+            for (int i = 0; i < holidays.size(); i++) {
+                ReqHoliday reqHoliday = holidays.get(i);
+                Holiday holiday = new Holiday();
+                holiday.setDate(DateUtil.parseDateString(reqHoliday.date));
+                holidayRepository.save(holiday);
+            }
+        }catch (Exception e){
+            throw new ProgramException(ResultEnum.HOLIDAY_ADD_ERROR);
         }
 
     }
