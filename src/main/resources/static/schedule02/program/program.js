@@ -98,8 +98,17 @@ window.program = function () {
                 alert('请先选中节目');
                 return;
             }
+
+            const curProgram=programArray[$current.index()];
+            let roleIds='';
+            curProgram.programRoles.map(
+                role=>{
+                    roleIds+=role.id+',';
+                }
+            );
+
             // $(location).attr('href', '/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + $current.text());
-            window.open('/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + $current.text());
+            window.open('/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + curProgram.name+'&roleIds='+roleIds);
         });
     };
 

@@ -1,0 +1,49 @@
+label {
+    width: 100px;
+    font-weight: 400;
+    text-align: center;
+    margin-right: 20px;
+    font-size: 1.0em;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.info-input{
+    height: 30px;
+    line-height: 30px;
+    width: 200px;
+    border: 1px solid #000;
+    background-color: #fff;
+    border-radius: 2px;
+    padding-left: 10px;
+}
+
+.dash{
+    display: inline-block;
+    padding: 0 5px;
+}
+
+button{
+    display: inline-block;
+    text-decoration: none;
+    width: 85px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #009688;
+    color: aliceblue;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.edit-item{
+    margin: 15px 0;
+}
+
+.btns-container,.message-container{
+    margin-left: 120px;
+}

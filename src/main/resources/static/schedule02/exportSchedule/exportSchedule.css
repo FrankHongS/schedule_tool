@@ -46,3 +46,51 @@
     display: inline-block;
     padding: 0 5px;
 }
+
+.exclude-date{
+    margin: 20px 0 15px;
+}
+
+.holiday-container{
+    margin-left: 120px;
+}
+
+.holiday-container ul{
+    width: 20%;
+    height: 100px;
+    overflow-x: hidden;
+	overflow-y: scroll;
+    list-style: none;
+    border: 1px solid #2c2c2c;
+    display: inline-block;
+    padding-left:0;
+    margin: 0; 
+}
+
+.holiday-container ul li{
+    padding:5px;
+    padding-left: 20px;
+    line-height: 1.0em;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+}
+
+.exclude-date label{
+    float: left;
+    margin-right: 0;
+}
+
+.exclude-date .icon-container img{
+    height: 1.2em;
+    width: 1.2em;
+    cursor: pointer;
+}
+
+.holiday-container .active{
+    background: #707070;
+    color: aliceblue;
+}
+
+.holiday-container .unactive:hover{
+    background: #bfbfbf;
+}

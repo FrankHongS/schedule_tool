@@ -7,6 +7,8 @@
     <title>Edit Employee</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="edit.css" />
+
+    <script src="../../../../jquery/jquery-3.3.1.js"></script>
     <script src="edit.js"></script>
 </head>
 
@@ -14,26 +16,21 @@
     <div class="main-container">
         <div class="edit-item">
             <label for="program-name">节目名称</label>
-            <input type="text" class="form-input name" id="program-name" value="今日十万加" readonly>
+            <input type="text" class="form-input program-name" id="program-name" value="加载中" readonly>
         </div>
         <div class="edit-item">
             <label for='employee-name'>人员名字</label>
             <select id="employee-name">
-                <option value="0">王洛一</option>
+                <!-- <option value="0">王洛一</option>
                 <option value="1">王洛一</option>
                 <option value="2">王洛一</option>
                 <option value="3">王洛一</option>
-                <option value="4">王洛一</option>
+                <option value="4">王洛一</option> -->
             </select>
         </div>
         <div class="edit-item">
             <label for='employee-weight'>人员权重</label>
-            <select id="employee-weight">
-                <option value="0">1</option>
-                <option value="1">2</option>
-                <option value="2">3</option>
-                <option value="3">4</option>
-            </select>
+            <input id='employee-weight' type="number" min='1' value='1' step='1' class="form-input employee-weight">
         </div>
         <div class="edit-item btns-container">
             <button type="button" class="save-btn">保存</button>
