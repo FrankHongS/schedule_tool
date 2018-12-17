@@ -49,6 +49,8 @@ public class HolidayServiceImpl implements HolidayService {
                 //查重
                 if (canAdd(date)) {
                     holidayRepository.save(holiday);
+                }else{
+                    throw new ProgramException(ResultEnum.HOLIDAY_EXISTING);
                 }
             }
         } catch (Exception e) {
@@ -82,7 +84,7 @@ public class HolidayServiceImpl implements HolidayService {
     private boolean canAdd(Date date) {
         List<Holiday> all = holidayRepository.findAll();
         for (int i = 0; i < all.size(); i++) {
-            if (all.get(i).getDate().equals(date)) {
+            if (all.get(i).getDate().getTime()==date.getTime()) {
                 return false;
             }
         }

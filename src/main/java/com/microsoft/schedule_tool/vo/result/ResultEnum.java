@@ -59,6 +59,7 @@ public enum ResultEnum {
     HOLIDAY_PARAMS_ERROR(144,"holiday_params_error"),
     SCHEDULE_ERROT_PLEASE_RETRY(145,"schedule_errot_please_retry"),
     HOLIDAY_ADD_ERROR(146,"holiday_add_error"),
+    HOLIDAY_EXISTING(146,"holiday existing"),
     MUTEX_ID_NOT_EXIST(146,"mutex_id_not_exist"),
     MUTEX_IDS_NULL(147,"mutex_ids_null"),
     MUTEX_UPDATE_FAILED(148,"mutex_update_failed"),

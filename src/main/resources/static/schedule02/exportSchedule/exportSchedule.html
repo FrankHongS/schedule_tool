@@ -9,6 +9,7 @@
     <!-- <link rel="stylesheet" type="text/css" media="screen" href="exportSchedule.css" />
     <script src="../../jquery/jquery-3.3.1.js"></script>
     <script src="../../plugin/laydate/laydate.js"></script>
+    <script src="../../plugin/layui/layui.all.js"></script>
     <script src="exportSchedule.js"></script> -->
 </head>
 
@@ -19,6 +20,23 @@
                 <label for="export-date">排班日期范围</label>
                 <input id='export-date' type="text" class="info-input date-input export-from" placeholder="from"><span
                     class="dash">--</span><input type="text" class="info-input date-input export-to" placeholder="to">
+            </div>
+            <div class="exclude-date">
+                <label for="">排除节假日</label>
+                <div class="holiday-container">
+                    <div class="icon-container">
+                        <img src="/schedule/img/add.png" alt="add" class="add-holiday">
+                        <img src="/schedule/img/delete.png" alt="delete" class="delete-holiday">
+                        <!-- <img src="../../img/delete.png" alt="delete" class="delete-holiday"> -->
+                    </div>
+                    <ul>
+                        <!-- <li>2018-10-01</li>
+                        <li>2018-10-01</li>
+                        <li>2018-10-01</li>
+                        <li>2018-10-01</li>
+                        <li>2018-10-01</li> -->
+                    </ul>
+                </div>
             </div>
             <div class="export-btns">
                 <a class="export-link">导出</a>
