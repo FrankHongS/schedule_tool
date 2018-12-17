@@ -3,6 +3,7 @@ package com.microsoft.schedule_tool.schedule.domain.vo.schedule;
 import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
 import com.microsoft.schedule_tool.schedule.domain.entity.RelationRoleAndEmployee;
 import com.microsoft.schedule_tool.schedule.domain.entity.StationEmployee;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RespEmployeeByRoleId;
 import com.microsoft.schedule_tool.schedule.repository.RelationRoleAndEmployeeRepository;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class ScheduleRoleWaitingList {
     //初始化
     public void init(ProgramRole role, RelationRoleAndEmployeeService relationRoleAndEmployeeService, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
         Long id = role.getId();
-        List<StationEmployee> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
+        List<RespEmployeeByRoleId> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
         int maxRatio = 1;
         for (int j = 0; j < employees.size(); j++) {
             int ratio = relationRoleAndEmployeeService.getRatio(employees.get(j).getId(), id);

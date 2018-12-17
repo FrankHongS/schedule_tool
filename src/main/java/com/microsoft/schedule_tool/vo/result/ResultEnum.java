@@ -63,7 +63,14 @@ public enum ResultEnum {
     MUTEX_IDS_NULL(147,"mutex_ids_null"),
     MUTEX_UPDATE_FAILED(148,"mutex_update_failed"),
     MUTEX_SAV_FAILED(149,"mutex_sav_failed"),
-    MUTEX_FIND_FAILED(150,"mutex_find_failed");
+    MUTEX_FIND_FAILED(150,"mutex_find_failed"),
+    EQUEL_ROLE_GET_ERROR(151,"get_equel_role_error"),
+    EQUEL_ROLE_IDS_NULL(152,"equel_role_add_ids_null"),
+    EQUEL_ROLE_IDS_NUMBER_MUST_BIG_THAN2(153,"equel_role_ids_number_must_big_than2"),
+    EQUEL_ROLE_MUST_HAVE_SAME_EMPLOYEES(154,"equel_role_must_have_same_employees"),
+    EQUEL_ROLE_SAVE_FAILED(155,"equel_role_save_failed"),
+    EQUEL_ROLE_ID_NOT_EXIST(156,"equel_role_id_not_exist"),
+    EQUEL_ROLE_UPDATE_FAILED(157,"equel_role_update_failed");
 
     private int code;
 

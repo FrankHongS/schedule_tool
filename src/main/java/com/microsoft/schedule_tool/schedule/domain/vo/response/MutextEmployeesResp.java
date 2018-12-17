@@ -15,5 +15,4 @@ public class MutextEmployeesResp {
         public String name;
         public String alias;
     }
-
 }

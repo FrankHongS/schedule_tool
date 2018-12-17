@@ -6,6 +6,7 @@ import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
 import com.microsoft.schedule_tool.schedule.domain.entity.RelationRoleAndEmployee;
 import com.microsoft.schedule_tool.schedule.domain.entity.RoleEmployeeMultiKeysClass;
 import com.microsoft.schedule_tool.schedule.domain.entity.StationEmployee;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RespEmployeeByRoleId;
 import com.microsoft.schedule_tool.schedule.repository.ProgramRoleRepository;
 import com.microsoft.schedule_tool.schedule.repository.RelationRoleAndEmployeeRepository;
 import com.microsoft.schedule_tool.schedule.repository.StationEmployeeRepository;
@@ -34,14 +35,14 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
     public StationEmployeeRepository stationEmployeeRepository;
 
     @Override
-    public List<StationEmployee> getAllWorkersByRoleId(long id) {
+    public List<RespEmployeeByRoleId> getAllWorkersByRoleId(long id) {
         //check params
         Optional<ProgramRole> byId = programRoleRepository.findById(id);
         if (!byId.isPresent()) {
             throw new ProgramEmployeeException(ResultEnum.PROGRAM_ROLE_ID_NOT_EXIST);
         }
         try {
-            List<StationEmployee> employees = new ArrayList<>();
+            List<RespEmployeeByRoleId> employees = new ArrayList<>();
 
             List<RelationRoleAndEmployee> allByRole = repository.getAllByRoleId(id);
 
@@ -51,7 +52,12 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
                 if (byId1.isPresent()) {
                     StationEmployee stationEmployee = byId1.get();
                     if (!stationEmployee.isDeleted()) {
-                        employees.add(stationEmployee);
+                        RespEmployeeByRoleId respEmployeeByRoleId = new RespEmployeeByRoleId();
+                        respEmployeeByRoleId.id = stationEmployee.getId();
+                        respEmployeeByRoleId.alias = stationEmployee.getAlias();
+                        respEmployeeByRoleId.name = stationEmployee.getName();
+                        respEmployeeByRoleId.ratio = allByRole.get(i).getRatio();
+                        employees.add(respEmployeeByRoleId);
                     }
                 }
             }

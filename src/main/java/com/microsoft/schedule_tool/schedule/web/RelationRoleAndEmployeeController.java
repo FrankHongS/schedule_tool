@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.schedule.web;
 
 import com.microsoft.schedule_tool.schedule.domain.entity.StationEmployee;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RespEmployeeByRoleId;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import com.microsoft.schedule_tool.util.ResultUtil;
 import com.microsoft.schedule_tool.vo.result.Result;
@@ -24,8 +25,8 @@ public class RelationRoleAndEmployeeController {
     //     List<StationEmployee> getAllWorkersByRoleId(long id);
     @GetMapping()
     public Result getAllWorkersByRoleId(@RequestParam("id") long id) {
-        List<StationEmployee> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
-        Map<String, List<StationEmployee>> data = ResultUtil.getResultData("employees", employees);
+        List<RespEmployeeByRoleId> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
+        Map<String, List<RespEmployeeByRoleId>> data = ResultUtil.getResultData("employees", employees);
         return ResultUtil.success(data);
     }
 
