@@ -26,6 +26,8 @@ public class RadioSchedule implements Serializable {
     }
     private Date date;
 
+    private Boolean isHoliday;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private ProgramRole role;
@@ -64,6 +66,14 @@ public class RadioSchedule implements Serializable {
 
     public void setEmployee(StationEmployee employee) {
         this.employee = employee;
+    }
+
+    public Boolean getHoliday() {
+        return isHoliday;
+    }
+
+    public void setHoliday(Boolean holiday) {
+        isHoliday = holiday;
     }
 
     @Override

@@ -72,7 +72,13 @@ public enum ResultEnum {
     EQUEL_ROLE_ID_NOT_EXIST(156,"equel_role_id_not_exist"),
     EQUEL_ROLE_UPDATE_FAILED(157,"equel_role_update_failed"),
     HOLIDAY_FIND_FAILED(158,"holiday_find_failed"),
-    HOLIDAY_DELETE_FAILED(159,"holiday_delete_failed");
+    HOLIDAY_DELETE_FAILED(159,"holiday_delete_failed"),
+    SCHEDULE_HOLIDAY_DATE_NOT_HOLIDAY(170,"schedule_holiday_date_not_holiday"),
+    SCHEDULE_HOLIDAY_DATE_PARSE_ERROR(171,"schedule_holiday_date_parse_error"),
+    SCHEDULE_HOLIDAY_REPEAT(172,"schedule_holiday_repeat"),
+    SCHEDULE_HOLIDAY_SAVE_FAILED(173,"schedule_holiday_save_failed"),
+    SCHEDULE_HOLIDAY_ID_NOT_EXTST(174,"schedule_holiday_id_not_extst"),
+    SCHEDULE_HOLIDAY_DELETE_FAILED(175,"schedule_holiday_delete_failed");
 
     private int code;
 

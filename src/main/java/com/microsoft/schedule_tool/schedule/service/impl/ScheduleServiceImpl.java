@@ -401,4 +401,65 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             }
         }
     }
+
+
+
+
+    @Override
+    public void exportDate(String from, String to, boolean isHoliday) {
+        // TODO: 2018/12/17
+    }
+
+    @Override
+    public void addHolidayEmployee(String date, long roleId, long empoyeeId) {
+        //check params
+        Date date1;
+        try {
+            date1 = DateUtil.parseDateString(date);
+            if (!isHoliday(date1)) {
+                throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_DATE_NOT_HOLIDAY);
+            }
+        } catch (ParseException e) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_DATE_PARSE_ERROR);
+        }
+        Optional<ProgramRole> roleOptional = programRoleRepository.findById(roleId);
+        if (!roleOptional.isPresent()) {
+            throw new ProgramScheduleException(ResultEnum.PROGRAM_ROLE_ID_NOT_EXIST);
+        }
+        Optional<StationEmployee> employeeOptional = stationEmployeeRepository.findById(empoyeeId);
+        if (!employeeOptional.isPresent()) {
+            throw new ProgramScheduleException(ResultEnum.EMPLOYEE_ID_NOT_EXIST);
+        }
+        Optional<RadioSchedule> byDateAndAndRole = radioScheduleRepository.findByDateAndRole(date1, roleOptional.get());
+        if (!byDateAndAndRole.isPresent()) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_REPEAT);
+        }
+        try {
+            RadioSchedule radioSchedule = new RadioSchedule();
+            radioSchedule.setRole(roleOptional.get());
+            radioSchedule.setEmployee(employeeOptional.get());
+            radioSchedule.setDate(date1);
+            radioSchedule.setHoliday(true);
+            radioScheduleRepository.save(radioSchedule);
+        } catch (Exception e) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_SAVE_FAILED);
+        }
+    }
+
+    @Override
+    public void deleteHolidaySchedule(long id) {
+        Optional<RadioSchedule> radioScheduleOptional = radioScheduleRepository.findById(id);
+        if(!radioScheduleOptional.isPresent()){
+            throw new  ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_ID_NOT_EXTST);
+        }
+        Date date = radioScheduleOptional.get().getDate();
+        if(!isHoliday(date)){
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_DATE_NOT_HOLIDAY);
+        }
+        try{
+            radioScheduleRepository.deleteById(id);
+        }catch (Exception e){
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_DELETE_FAILED);
+        }
+    }
 }

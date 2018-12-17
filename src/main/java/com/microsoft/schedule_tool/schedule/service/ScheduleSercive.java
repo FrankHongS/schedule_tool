@@ -9,4 +9,10 @@ import java.util.List;
  **/
 public interface ScheduleSercive {
     void schedule(String from, String to);
+
+    void exportDate(String from, String to, boolean isHoliday);
+
+    void addHolidayEmployee(String date, long roleId, long empoyeeId);
+
+    void deleteHolidaySchedule(long id);
 }
