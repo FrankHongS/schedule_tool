@@ -70,7 +70,9 @@ public enum ResultEnum {
     EQUEL_ROLE_MUST_HAVE_SAME_EMPLOYEES(154,"equel_role_must_have_same_employees"),
     EQUEL_ROLE_SAVE_FAILED(155,"equel_role_save_failed"),
     EQUEL_ROLE_ID_NOT_EXIST(156,"equel_role_id_not_exist"),
-    EQUEL_ROLE_UPDATE_FAILED(157,"equel_role_update_failed");
+    EQUEL_ROLE_UPDATE_FAILED(157,"equel_role_update_failed"),
+    HOLIDAY_FIND_FAILED(158,"holiday_find_failed"),
+    HOLIDAY_DELETE_FAILED(159,"holiday_delete_failed");
 
     private int code;
 
