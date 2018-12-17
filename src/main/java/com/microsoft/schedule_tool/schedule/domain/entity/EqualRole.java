@@ -8,7 +8,7 @@ import javax.persistence.Id;
  * @author kb_jay
  * @time 2018/12/17
  **/
-@Entity(name = "tb_equel_role")
+@Entity(name = "tb1_equel_role")
 public class EqualRole {
     private static final long serialVersionUID = 20L;
 

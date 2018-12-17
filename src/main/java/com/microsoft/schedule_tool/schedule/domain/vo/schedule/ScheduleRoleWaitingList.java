@@ -47,8 +47,7 @@ public class ScheduleRoleWaitingList {
     }
 
     //初始化
-    public void init(ProgramRole role, RelationRoleAndEmployeeService relationRoleAndEmployeeService, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
-        Long id = role.getId();
+    public void init(Long id, RelationRoleAndEmployeeService relationRoleAndEmployeeService, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
         List<RespEmployeeByRoleId> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
         int maxRatio = 1;
         for (int j = 0; j < employees.size(); j++) {

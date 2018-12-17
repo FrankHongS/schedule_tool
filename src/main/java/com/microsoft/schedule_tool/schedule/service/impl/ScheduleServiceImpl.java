@@ -13,6 +13,7 @@ import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.AlgorithmConstraints;
 import java.text.ParseException;
 import java.util.*;
 
@@ -43,16 +44,20 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     @Autowired
     private MutexEmployeeRepository mutexEmployeeRepository;
 
+    @Autowired
+    private EqualRolesResposity equalRolesResposity;
+
     private ArrayList<ScheduleRoleWaitingList> scheduleRoles;
 
     //一周中不可选的员工
     private ArrayList<Long> notOptionalInOneWeek;
 
+    //跳过的角色（相同角色表）
+    private HashMap<Long, Long> skipRoles;
 
     private int weekNums;
 
     private Long[][] result;
-    private List<ProgramRole> hasEmployeeProgramRoles;
     private Date startDate;
     private Date endaDate;
     private int startWeek;
@@ -61,6 +66,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     //排班失败retry次数
     private static int RETRY_TIME = 15;
     private int currentTime = 0;
+    private HashSet<Long> needScheduleRole;
 
     @Override
     public void schedule(String from, String to) {
@@ -200,6 +206,45 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 }
             }
         }
+        //处理skipRoles
+        for (Long key : skipRoles.keySet()) {
+            Long roleId = skipRoles.get(key);
+            int index = -1;
+            for (Long item : needScheduleRole) {
+                index++;
+                if (roleId.equals(item)) {
+                    break;
+                }
+            }
+            Long[] s = result[index];
+
+            String cycle = "1111100";
+            Optional<ProgramRole> byId = programRoleRepository.findById(key);
+            if (byId.isPresent()) {
+                cycle = byId.get().getCycle();
+            }
+            for (int j = 0; j < s.length; j++) {
+                //i:role    j:time
+                Long employeeId = s[j];
+                Optional<StationEmployee> byId1 = stationEmployeeRepository.findById(employeeId);
+                if (!byId1.isPresent()) {
+                    continue;
+                }
+                for (int k = 0; k < 7; k++) {
+                    Date date = DateUtil.getNextDate(start, j * 7 + k);
+                    if (canAdd(date, cycle)) {
+                        RadioSchedule radioSchedule = new RadioSchedule();
+                        radioSchedule.setDate(date);
+                        radioSchedule.setEmployee(byId1.get());
+                        radioSchedule.setRole(byId.get());
+
+                        radioScheduleRepository.save(radioSchedule);
+                    }
+                }
+            }
+
+
+        }
     }
 
     private boolean canAdd(Date date, String cycle) {
@@ -290,25 +335,70 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
         List<ProgramRole> programRoles = programRoleRepository.findAll();
 
-        hasEmployeeProgramRoles = new ArrayList<>();
+        ArrayList<Long> hasEmployeeProgramRoles = new ArrayList<>();
         for (int i = 0; i < programRoles.size(); i++) {
             //如果role没有员工 continue
             if (relationRoleAndEmployeeRepository.getAllByRoleId(programRoles.get(i).getId()).size() == 0) {
                 continue;
             }
-            hasEmployeeProgramRoles.add(programRoles.get(i));
+            hasEmployeeProgramRoles.add(programRoles.get(i).getId());
+        }
+        skipRoles = new HashMap<>();
+        needScheduleRole = new HashSet<>();
+        //不需要排序的角色
+        HashMap<Long, Long> noNeedAdd = new HashMap<>();
+        for (int i = 0; i < hasEmployeeProgramRoles.size(); i++) {
+            Long id = hasEmployeeProgramRoles.get(i);
+            if (noNeedAdd.keySet().contains(id)) {
+                skipRoles.put(id, noNeedAdd.get(id));
+            } else {
+                needScheduleRole.add(id);
+                checkSameRoles(id, noNeedAdd);
+            }
         }
 
+
         //init result
-        result = new Long[hasEmployeeProgramRoles.size()][weekNums];
+        result = new Long[needScheduleRole.size()][weekNums];
         //init notOptionalInOneWeek
         notOptionalInOneWeek = new ArrayList<>();
         //init scheduleRoles
         scheduleRoles = new ArrayList<>();
-        for (int i = 0; i < hasEmployeeProgramRoles.size(); i++) {
+        for (Long id : needScheduleRole) {
             ScheduleRoleWaitingList scheduleRole = new ScheduleRoleWaitingList();
-            scheduleRole.init(programRoles.get(i), relationRoleAndEmployeeService, relationRoleAndEmployeeRepository);
+            scheduleRole.init(id, relationRoleAndEmployeeService, relationRoleAndEmployeeRepository);
             scheduleRoles.add(scheduleRole);
+        }
+    }
+
+    /**
+     * 检查id，如果有相同的roleID，那么把跟他相同的roleId加入noNeedAdd(roleId->id)
+     *
+     * @param id
+     * @param noNeedAdd
+     */
+    private void checkSameRoles(Long id, HashMap<Long, Long> noNeedAdd) {
+        List<EqualRole> all = equalRolesResposity.findAll();
+        for (int i = 0; i < all.size(); i++) {
+            String ids = all.get(i).getIds();
+            String[] split = ids.split(",");
+
+            boolean isIn = false;
+
+            for (int j = 0; j < split.length; j++) {
+                if (id == Long.valueOf(split[j])) {
+                    isIn = true;
+                    break;
+                }
+            }
+            if (isIn) {
+                for (int j = 0; j < split.length; j++) {
+                    if (Long.valueOf(split[j]) == id) {
+                        continue;
+                    }
+                    noNeedAdd.put(Long.valueOf(split[j]), id);
+                }
+            }
         }
     }
 }
