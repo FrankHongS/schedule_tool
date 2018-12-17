@@ -72,6 +72,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     public void schedule(String from, String to) {
         // TODO: 2018/12/12  check params
         try {
+            clearOldData(from, to);
             initParams(from, to);
             for (int i = 0; i < result[0].length; i++) {
                 for (int j = 0; j < result.length; j++) {
@@ -174,6 +175,18 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
             }
         }
+    }
+
+    /**
+     * 清掉数据库中的旧数据
+     *
+     * @param from
+     * @param to
+     */
+    private void clearOldData(String from, String to) throws ParseException {
+        Date dateFrom = DateUtil.parseDateString(from);
+        Date dateTo = DateUtil.parseDateString(to);
+        radioScheduleRepository.deleteByDateLessThanEqualAndDateGreaterThanEqual(dateTo, dateFrom);
     }
 
     private void saveData2Db() {

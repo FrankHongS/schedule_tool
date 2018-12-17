@@ -2,6 +2,8 @@ package com.microsoft.schedule_tool.schedule.repository;
 
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -13,5 +15,9 @@ import java.util.List;
 public interface RadioScheduleRepository extends JpaRepository<RadioSchedule, Long> {
     //存放数据
     //导出数据
-    List<RadioSchedule> findAllByDateLessThanEqualAndDateGreaterThanEqual(Date to,Date from);
+    List<RadioSchedule> findAllByDateLessThanEqualAndDateGreaterThanEqual(Date to, Date from);
+
+    @Modifying
+    @Transactional
+    void deleteByDateLessThanEqualAndDateGreaterThanEqual(Date big, Date small);
 }
