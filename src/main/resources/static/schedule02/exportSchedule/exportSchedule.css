@@ -3,6 +3,90 @@
     margin: 25px auto 0;
 }
 
+ul li{
+    padding:5px;
+    padding-left: 20px;
+    line-height: 1.0em;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+}
+
+button{
+    display: inline-block;
+    text-decoration: none;
+    width: 85px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #009688;
+    color: aliceblue;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.current{
+    background: #cfc9c9;
+}
+
+.special-employee-wrapper{
+    border: 1px solid #000000;
+    padding: 20px 0 20px 15px;
+    box-sizing: border-box;
+    margin: 25px 0;
+}
+
+.group-wrapper ul{
+    list-style: none;
+    padding-left:0;
+    margin: 0; 
+}
+
+.group-wrapper>ul{
+    width: 30%;
+    height: 150px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border: 1px solid #2c2c2c;
+}
+
+.group-wrapper>ul>li{
+    padding-left: 0;
+    padding-top: 0;
+}
+
+.group-wrapper .level1>a{
+    padding-top: 5px;
+    padding-left: 15px;
+    text-decoration: none;
+    color: #000000;
+    display: inline-block;
+    width: 100%;
+}
+
+.level1>ul{
+    margin-left: 15px;
+    background: #eeeeee;
+}
+
+.level2{
+    display: none;
+}
+
+.group-btns-container{
+    margin-top: 15px;
+}
+
+.export-container{
+    border: 1px solid #000000;
+    padding: 20px 0 10px 15px;
+    box-sizing: border-box;
+    margin: 25px 0;
+}
+
 .export-container a{
     display: inline-block;
     text-decoration: none;
@@ -65,14 +149,6 @@
     display: inline-block;
     padding-left:0;
     margin: 0; 
-}
-
-.holiday-container ul li{
-    padding:5px;
-    padding-left: 20px;
-    line-height: 1.0em;
-    font-family: 'Courier New', Courier, monospace;
-    cursor: pointer;
 }
 
 .exclude-date label{

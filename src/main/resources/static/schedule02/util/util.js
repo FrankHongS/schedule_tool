@@ -10,11 +10,11 @@ window.parseUTCTimeToYMD = function (timeString) {
         month='0'+month;
     }
 
-    let date=date.getDate();
-    if(date<10){
-        date='0'+date;
+    let d=date.getDate();
+    if(d<10){
+        d='0'+d;
     }
-    return date.getFullYear() + '-' + month + '-' + date;
+    return date.getFullYear() + '-' + month + '-' + d;
 };
 
 window.calculateDayCount=function(smallStr,bigStr){

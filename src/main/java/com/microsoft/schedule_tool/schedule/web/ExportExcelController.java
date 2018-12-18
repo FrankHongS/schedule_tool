@@ -35,10 +35,11 @@ public class ExportExcelController {
 
     @GetMapping("/export_schedule")
     public void exportSchedule(HttpServletResponse response, @RequestParam("from") String from,
-                               @RequestParam("to") String to, @RequestParam("fileName") String fileName,
+                               @RequestParam("to") String to,
                                @RequestParam("isHoliday") boolean isHoliday) {
         List<RespSchedule> allSchedule = scheduleSercive.getAllSchedule(from, to, isHoliday);
         try {
+            String fileName=System.currentTimeMillis()+".xlsx";
             ExportExcelUtil.exportScheduleTable(response, from, to, fileName, allSchedule);
         } catch (Exception e) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_EXPORT_FAILED);

@@ -1,5 +1,8 @@
 $(
     function () {
+
+        let isRequestSuccess=false;
+
         $('.save-btn').click(
             function () {
                 const from = $('.holiday-from').val();
@@ -42,6 +45,10 @@ $(
         $('.cancel-btn').click(function () {
             const index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
+
+            if(isRequestSuccess){
+                parent.queryHoliday(parent.originData.from, parent.originData.to);
+            }
         });
 
         function saveHoliday(dateList, msg) {
@@ -55,6 +62,7 @@ $(
                     if (result.code === 0) {
                         if (msg) {
                             $('.message-container .message').text(msg.success);
+                            isRequestSuccess=true;
                         }
                     } else {
                         if (msg) {

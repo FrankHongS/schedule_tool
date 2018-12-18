@@ -13,6 +13,7 @@ import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,6 +72,7 @@ public class HolidayServiceImpl implements HolidayService {
         }
     }
 
+    @Transactional
     @Override
     public void deleteHoliday(String date) {
         try {
