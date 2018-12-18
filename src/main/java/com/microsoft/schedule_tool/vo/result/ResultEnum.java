@@ -79,7 +79,16 @@ public enum ResultEnum {
     SCHEDULE_HOLIDAY_REPEAT(172,"schedule_holiday_repeat"),
     SCHEDULE_HOLIDAY_SAVE_FAILED(173,"schedule_holiday_save_failed"),
     SCHEDULE_HOLIDAY_ID_NOT_EXTST(174,"schedule_holiday_id_not_extst"),
-    SCHEDULE_HOLIDAY_DELETE_FAILED(175,"schedule_holiday_delete_failed");
+    SCHEDULE_HOLIDAY_DELETE_FAILED(175,"schedule_holiday_delete_failed"),
+    SCHEDULE_REPLACE_DATE_PARSE_ERROR(176,"schedule_replace_date_parse_error"),
+    SCHEDULE_DATE_AND_ROLE_NOT_EXTST(177,"schedule_date_and_role_not_extst"),
+    SCHEDULE_REPLACE_REPEAT(178,"schedule_replace_repeat"),
+    SCHEDULE_REPLACE_FAILED(179,"schedule_replace_failed"),
+    SCHEDULE_REPLACE_ID_NOT_EXIST(180,"schedule_replace_id_not_exist"),
+    SCHEDULE_REPLACE_DELETE_FAILED(181,"schedule_replace_delete_failed"),
+    SCHEDULE_REPLACE_FIND_FAILED(182,"schedule_replace_find_failed"),
+    SCHEDULE_DATE_PARSE_ERROR(183,"schedule_date_parse_error"),
+    SCHEDULE_FIND_FAILED(184,"schedule_find_failed");
 
     private int code;
 

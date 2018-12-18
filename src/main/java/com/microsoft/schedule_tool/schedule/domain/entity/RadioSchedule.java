@@ -24,9 +24,10 @@ public class RadioSchedule implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     private Date date;
 
-    private Boolean isHoliday;
+    private Boolean isHoliday = false;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

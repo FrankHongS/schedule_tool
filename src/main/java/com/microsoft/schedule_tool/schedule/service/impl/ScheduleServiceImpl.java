@@ -4,6 +4,7 @@ import com.microsoft.schedule_tool.exception.schedule.ProgramException;
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
 import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
 import com.microsoft.schedule_tool.schedule.domain.entity.*;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RespSchedule;
 import com.microsoft.schedule_tool.schedule.domain.vo.schedule.ScheduleRoleWaitingList;
 import com.microsoft.schedule_tool.schedule.repository.*;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
@@ -402,14 +403,6 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         }
     }
 
-
-
-
-    @Override
-    public void exportDate(String from, String to, boolean isHoliday) {
-        // TODO: 2018/12/17
-    }
-
     @Override
     public void addHolidayEmployee(String date, long roleId, long empoyeeId) {
         //check params
@@ -449,17 +442,47 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     @Override
     public void deleteHolidaySchedule(long id) {
         Optional<RadioSchedule> radioScheduleOptional = radioScheduleRepository.findById(id);
-        if(!radioScheduleOptional.isPresent()){
-            throw new  ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_ID_NOT_EXTST);
+        if (!radioScheduleOptional.isPresent()) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_ID_NOT_EXTST);
         }
         Date date = radioScheduleOptional.get().getDate();
-        if(!isHoliday(date)){
+        if (!isHoliday(date)) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_DATE_NOT_HOLIDAY);
         }
-        try{
+        try {
             radioScheduleRepository.deleteById(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_DELETE_FAILED);
+        }
+    }
+
+    @Override
+    public List<RespSchedule> getAllSchedule(String from, String to, boolean isHoliday) {
+        Date fromDate = null;
+        Date toDate = null;
+        try {
+            fromDate = DateUtil.parseDateString(from);
+            toDate = DateUtil.parseDateString(to);
+        } catch (ParseException e) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_DATE_PARSE_ERROR);
+        }
+        try {
+            List<RadioSchedule> radioSchedules = radioScheduleRepository.findAllByDateLessThanEqualAndDateGreaterThanEqualAndIsHoliday(toDate, fromDate, isHoliday);
+            List<RespSchedule> re = new ArrayList<>();
+            for (int i = 0; i < radioSchedules.size(); i++) {
+                RadioSchedule radioSchedule = radioSchedules.get(i);
+                RespSchedule respSchedule = new RespSchedule();
+                respSchedule.id = radioSchedule.getId();
+                respSchedule.alias = radioSchedule.getEmployee().getAlias();
+                respSchedule.name = radioSchedule.getEmployee().getName();
+                respSchedule.date = DateUtil.parseDateToString(radioSchedule.getDate());
+                respSchedule.programName = radioSchedule.getRole().getRadioProgram().getName();
+                respSchedule.roleName = radioSchedule.getRole().getName();
+                re.add(respSchedule);
+            }
+            return re;
+        } catch (Exception e) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_FIND_FAILED);
         }
     }
 }
