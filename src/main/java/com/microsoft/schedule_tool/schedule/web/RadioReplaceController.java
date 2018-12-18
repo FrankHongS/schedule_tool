@@ -43,16 +43,4 @@ public class RadioReplaceController {
         radioReplaceScheduleService.deleteReplace(id);
         return ResultUtil.success();
     }
-
-    //获取替班表
-    @GetMapping("/table")
-    public void exportTable(HttpServletResponse response,String from,String to){
-        List<RespReplaceSchedule> allReplace = radioReplaceScheduleService.getAllReplace(from, to);
-
-
-
-
-
-    }
-
 }
