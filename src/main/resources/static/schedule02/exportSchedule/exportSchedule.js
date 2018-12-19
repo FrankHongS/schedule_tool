@@ -246,9 +246,11 @@ window.exportSchedule = function () {
                 return;
             }
 
+            $('.export-btns .message').text('正在生成排班记录,请稍等...');
             $.ajax({
                 url:'/schedule/schedule/schedue?from=' + from + '&to=' + to,
                 success:result=>{
+                    $('.export-btns .message').text('');
                     if(result.code===0){
                         alert('生成排班记录成功!');
                     }else{
