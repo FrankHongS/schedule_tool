@@ -48,11 +48,12 @@ public class ExportExcelController {
 
     @GetMapping("/export_replace")
     public void exportReplaceSchedule(HttpServletResponse response, @RequestParam("from") String from,
-                                      @RequestParam("to") String to, @RequestParam("fileName") String fileName,
-                                      @RequestParam("isHoliday") boolean isHoliday) {
+                                      @RequestParam("to") String to
+                                      ) {
         List<RespReplaceSchedule> allReplace = radioReplaceScheduleService.getAllReplace(from, to);
 
         try {
+            String fileName=System.currentTimeMillis()+".xlsx";
             ExportExcelUtil.exportReplaceScheduleTable(response, fileName, from, to, allReplace);
         } catch (Exception e) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_EXPORT_FAILED);

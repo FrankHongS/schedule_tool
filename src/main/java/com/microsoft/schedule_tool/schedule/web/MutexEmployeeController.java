@@ -40,7 +40,7 @@ public class MutexEmployeeController {
         return ResultUtil.success();
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public Result delete(long id) {
         mutexEmployeeService.delete(id);
         return ResultUtil.success();

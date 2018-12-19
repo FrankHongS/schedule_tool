@@ -489,7 +489,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     @Override
     public List<RespSchedule> getHolidaySchedule() {
         try {
-            List<RadioSchedule> radioSchedules = radioScheduleRepository.findAllByHoliday(true);
+            List<RadioSchedule> radioSchedules = radioScheduleRepository.findAllByIsHoliday(true);
             List<RespSchedule> re = new ArrayList<>();
             for (int i = 0; i < radioSchedules.size(); i++) {
                 RadioSchedule radioSchedule = radioSchedules.get(i);

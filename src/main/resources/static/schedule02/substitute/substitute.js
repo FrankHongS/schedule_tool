@@ -1,6 +1,8 @@
 window.substitute = function () {
     const substitute = {};
 
+    let curSubstituteArray;
+
     substitute.bindLayer = function () {
         laydate.render({
             elem: '.from',
@@ -36,15 +38,20 @@ window.substitute = function () {
             const to = $('.to').val();
             const isHoliday = $('#hol:checked').length == 1 ? true : false;
 
-            if ((from && !to) || (!from && to)) {
-                alert('时间范围需同为空或同不为空... :)');
-                return;
-            }
+            // if ((from && !to) || (!from && to)) {
+            //     alert('时间范围需不为空... :)');
+            //     return;
+            // }
 
             if (from && to) {
-                $(this).attr('href', '/schedule/schedule_excel/substitute?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to);
+                if(isHoliday){
+                    $(this).attr('href', '/schedule/excel/export_schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to);
+                }else{
+                    $(this).attr('href', '/schedule/excel/export_replace?from=' + from + '&to=' + to);
+                }
             } else {
-                $(this).attr('href', '/schedule/schedule_excel/substitute?isHoliday=' + isHoliday);
+                alert('时间范围需不为空... :)');
+                return;
             }
         });
 
@@ -59,34 +66,62 @@ window.substitute = function () {
             }
 
             if (from && to) {
-                $.ajax({
-                    url: '/schedule/substitute/range?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to,
-                    success: result => {
-                        if (result.code == 0) {
-                            this.createTable('.tb-container .sub-body', this.parseData(result.data.substitute));
-                        } else {
-                            alert('检索失败 ' + result.message);
+                if (isHoliday) {
+                    $.ajax({
+                        url: '/schedule/schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to,
+                        success: result => {
+                            if (result.code == 0) {
+                                this.createTable('.tb-container .sub-body', this.parseData(result.data.data, true), true);
+                            } else {
+                                alert('检索失败 ' + result.message);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    $.ajax({
+                        url: '/schedule/replace?from=' + from + '&to=' + to,
+                        success: result => {
+                            if (result.code == 0) {
+                                this.createTable('.tb-container .sub-body', this.parseData(result.data.data, false), false);
+                            } else {
+                                alert('检索失败 ' + result.message);
+                            }
+                        }
+                    });
+                }
             } else {
-                $.ajax({
-                    url: '/schedule/substitute?isHoliday=' + isHoliday,
-                    success: result => {
-                        if (result.code == 0) {
-                            console.log(result);
-                            this.createTable('.tb-container .sub-body', this.parseData(result.data.substitute));
-                        } else {
-                            alert('检索失败 ' + result.message);
+                if (isHoliday) {
+                    $.ajax({
+                        url: '/schedule/schedule/holiday',
+                        success: result => {
+                            if (result.code == 0) {
+                                this.createTable('.tb-container .sub-body', this.parseData(result.data.data, true), true);
+                            } else {
+                                alert('检索失败 ' + result.message);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    $.ajax({
+                        url: '/schedule/replace/findAll',
+                        success: result => {
+                            if (result.code == 0) {
+                                this.createTable('.tb-container .sub-body', this.parseData(result.data.data, false), false);
+                            } else {
+                                alert('检索失败 ' + result.message);
+                            }
+                        }
+                    });
+                }
             }
 
         });
     };
 
-    substitute.parseData = function (dataArray) {
+    substitute.parseData = function (dataArray, isHoliday) {
+
+        curSubstituteArray=dataArray;
+
         const list = [];
 
         for (let i = 0; i < dataArray.length; i++) {
@@ -94,10 +129,11 @@ window.substitute = function () {
             let itemList = [];
 
             itemList[0] = i + 1;
-            itemList[1] = item.employeeName;
-            itemList[2] = item.programName;
-            itemList[3] = parseUTCTimeToYMD(item.substituteDate);
-            itemList[4] = item.holiday == true ? '是' : '否';
+            itemList[1] = item.name + '(' + item.alias + ')';
+            itemList[2] = item.programName + '(' + item.roleName + ')';
+            itemList[3] = parseUTCTimeToYMD(item.date);
+            itemList[4] = isHoliday == true ? '是' : '否';
+            itemList[5] = 'delete';
 
             list[i] = itemList;
         }
@@ -105,14 +141,20 @@ window.substitute = function () {
         return list;
     };
 
-    substitute.createTable = function (container, dataList) {
-        $(container).html('');
+    substitute.createTable = function (container, dataList, isHoliday) {
+
         const cellsArray = dataList.map(
             rowValues => {
                 return rowValues.map(
                     (cells, index) => {
-                        return $('<td>')
-                            .text(cells);
+                        if (index === rowValues.length - 1) {
+                            return $('<td>')
+                                .addClass('delete')
+                                .text(cells);
+                        } else {
+                            return $('<td>')
+                                .text(cells);
+                        }
                     }
                 );
             }
@@ -125,7 +167,42 @@ window.substitute = function () {
             }
         );
 
-        $(container).append(rowsArray);
+        $(container)
+            .html('')
+            .append(rowsArray);
+
+        $('.delete').click(function () {
+
+            const index=$(this).parent().index();
+
+            const curSubstitute=curSubstituteArray[index];
+
+            if(confirm('确认删除?')){
+                if(isHoliday){
+                    $.ajax({
+                        url:'/schedule/schedule/delete_holiday?id='+curSubstitute.id,
+                        success:result=>{
+                            if(result.code===0){
+                                alert('删除成功');
+                            }else{
+                                alert('删除失败...'+result.message)
+                            }
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        url:'/schedule/replace/delete?id='+curSubstitute.id,
+                        success:result=>{
+                            if(result.code===0){
+                                alert('删除成功');
+                            }else{
+                                alert('删除失败...'+result.message)
+                            }
+                        }
+                    });
+                }
+            }
+        });
     };
 
     substitute.bindLayer();

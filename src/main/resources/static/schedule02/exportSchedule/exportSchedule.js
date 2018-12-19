@@ -2,6 +2,7 @@ window.exportSchedule = function () {
     const exportSchedule = {};
 
     let curSpecialArray;
+    let curSpecialProgramArray;
 
     exportSchedule.bindLayer = function () {
         laydate.render({
@@ -59,7 +60,7 @@ window.exportSchedule = function () {
 
         $('.edit-group-btn').click(function(){
 
-            const $current=$('.current');
+            const $current=$('.special-employee-wrapper .current');
 
             if(!$current.get(0)){
                 alert('请选中组再编辑');
@@ -80,6 +81,96 @@ window.exportSchedule = function () {
                 scrollbar: false,
                 content: '/schedule/schedule02/exportSchedule/editSpecial/editSpecial.html'
             });
+        });
+
+        $('.delete-group-btn').click(function () {
+            const $current=$('.special-employee-wrapper .current');
+
+            if(!$current.get(0)){
+                alert('请选中组再删除');
+                return;
+            }
+
+            const curSpecial=curSpecialArray[$current.parent().index()];
+
+            if(confirm('确定删除?')){
+                $.ajax({
+                    url:'/schedule/mutex_employee/delete?id='+curSpecial.id,
+                    success:result=>{
+                        if(result.code===0){
+                            alert('删除成功');
+                            window.querySpecialGroup();
+                        }else{
+                            alert('删除失败...'+result.message);
+                        }
+                    }
+                });
+            }
+        });
+
+        $('.add-program-group-btn').click(function(){
+            window.originData.type = 0;
+
+            layer.open({
+                type: 2,
+                title: '添加相同节目组',
+                area: ['380px', '340px'],
+                fix: false,
+                maxmin: false,
+                scrollbar: false,
+                content: '/schedule/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
+            });
+        });
+
+        $('.edit-program-group-btn').click(function(){
+
+            const $current=$('.special-program-wrapper .current');
+
+            if(!$current.get(0)){
+                alert('请选中节目组再编辑');
+                return;
+            }
+
+            const curSpecialProgram=curSpecialProgramArray[$current.parent().index()];
+
+            window.originData.type = 1;
+            window.originData.curSpecialProgram=curSpecialProgram;
+
+            layer.open({
+                type: 2,
+                title: '修改相同节目组',
+                area: ['380px', '340px'],
+                fix: false,
+                maxmin: false,
+                scrollbar: false,
+                content: '/schedule/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
+            });
+        });
+
+        $('.delete-program-group-btn').click(function(){
+
+            const $current=$('.special-program-wrapper .current');
+
+            if(!$current.get(0)){
+                alert('请选中节目组再删除');
+                return;
+            }
+
+            const curSpecialProgram=curSpecialProgramArray[$current.parent().index()];
+
+            if(confirm('确定删除?')){
+                $.ajax({
+                    url:'/schedule/equal_role/delete?id='+curSpecialProgram.id,
+                    success:result=>{
+                        if(result.code===0){
+                            alert('删除成功');
+                            window.querySpecialProgramGroup();
+                        }else{
+                            alert('删除失败...'+result.message);
+                        }
+                    }
+                });
+            }
         });
 
         /** */
@@ -145,6 +236,28 @@ window.exportSchedule = function () {
             }
         });
 
+        $('.export-main-container .gen-info').click(function(){
+
+            const from = $('.export-from').val();
+            const to = $('.export-to').val();
+
+            if (!from || !to) {
+                alert('时间范围不能为空！');
+                return;
+            }
+
+            $.ajax({
+                url:'/schedule/schedule/schedue?from=' + from + '&to=' + to,
+                success:result=>{
+                    if(result.code===0){
+                        alert('生成排班记录成功!');
+                    }else{
+                        alert('生成排班记录失败...'+result.message);
+                    }
+                }
+            });
+        });
+
         $('.export-main-container .export-link').on('click', function () {
 
             const from = $('.export-from').val();
@@ -155,7 +268,7 @@ window.exportSchedule = function () {
                 return;
             }
 
-            $(this).attr('href', '/schedule/schedule_excel/table?from=' + from + '&to=' + to);
+            $(this).attr('href', '/schedule/excel/export_schedule?from=' + from + '&to=' + to+'&isHoliday=false');
         });
     };
 
@@ -191,7 +304,7 @@ window.exportSchedule = function () {
             success: result => {
                 if (result.code === 0) {
                     curSpecialArray=result.data.data;
-                    exportSchedule.buildSpecialGroup(curSpecialArray);
+                    exportSchedule.buildSpecialGroup('.special-employee-wrapper ul','人员',curSpecialArray);
                 } else {
                     console.log(result);
                 }
@@ -199,35 +312,61 @@ window.exportSchedule = function () {
         });
     };
 
-    exportSchedule.buildSpecialGroup = function (dataArray) {
+    window.querySpecialProgramGroup=function(){
+        $.ajax({
+            url: '/schedule/equal_role',
+            success: result => {
+                if (result.code === 0) {
+                    curSpecialProgramArray=result.data.data;
+                    exportSchedule.buildSpecialGroup('.special-program-wrapper ul','节目',curSpecialProgramArray);
+                } else {
+                    console.log(result);
+                }
+            }
+        });
+    };
+
+    exportSchedule.buildSpecialGroup = function (container,desc,dataArray) {
 
         const groupItems = dataArray.map(
             (item, index) => {
-                const groupEmployeeItems = item.employees.map(
-                    employee => {
-                        return $('<li>')
-                            .text(employee.name + '(' + employee.alias + ')');
-                    }
-                );
+                let groupItems;
+                if(item.employees){
+                    groupItems = item.employees.map(
+                        employee => {
+                            return $('<li>')
+                                .text(employee.name + '(' + employee.alias + ')');
+                        }
+                    );
+                }else if(item.rolesList){
+                    groupItems = item.rolesList.map(
+                        role => {
+                            return $('<li>')
+                                .text(role.programName + '(' + role.roleName + ')');
+                        }
+                    );
+                }
 
-                const groupEmployeeItemsHtml = $('<ul>')
+                const groupItemsHtml = $('<ul>')
                     .addClass('level2')
-                    .append(groupEmployeeItems);
+                    .append(groupItems);
 
                 return $('<li>')
                     .addClass('level1')
-                    .append('<a href="#">组' + (index + 1) + '</a>')
-                    .append(groupEmployeeItemsHtml);
+                    .append('<a href="#">'+desc+'组' + (index + 1) + '</a>')
+                    .append(groupItemsHtml);
             }
         );
 
-        $('.group-wrapper ul')
+        $(container)
             .html('')
             .append(groupItems);
 
     };
 
+
     window.querySpecialGroup();
+    window.querySpecialProgramGroup();
     exportSchedule.bindLayer();
     exportSchedule.bindClick();
 };

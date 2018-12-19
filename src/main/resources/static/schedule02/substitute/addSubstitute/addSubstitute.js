@@ -1,58 +1,124 @@
 $(
-    function(){
+    function () {
 
-        const addSubstitute={};
+        const addSubstitute = {};
 
-        addSubstitute.buildProgramList=function(){
+        const curProgramArray=[];
+        let curEmployeeArray;
+
+        addSubstitute.buildProgramList = function () {
             $.ajax({
-                url:'/schedule/program',
-                success:result=>{
-                    if(result.code==0){
-                        const rowsArray=result.data.program.map(
-                            (item,index)=>{
-                               return $('<option>')
+                url: '/schedule/sprogram/programs?stationId=' + 1,
+                success: result => {
+                    if (result.code == 0) {
+
+                        const roleArray = [];
+
+                        result.data.programs.map(
+                            program => {
+                                program.programRoles.map(
+                                    role => {
+                                        curProgramArray.push(role);
+                                        roleArray.push({
+                                            programName: program.name,
+                                            roleName: role.name
+                                        });
+                                    }
+                                );
+                            }
+                        );
+
+                        const rowsArray = roleArray.map(
+                            (role, index) => {
+                                return $('<option>')
                                     .val(index)
-                                    .append(item.name);
+                                    .append(role.programName + '(' + role.roleName + ')');
                             }
                         )
-            
+
                         $('select#sub-program').append(rowsArray);
-                    }else{
+                    } else {
                         console.log(result);
                     }
                 }
             });
         };
 
-        addSubstitute.bindClick=function(){
-            $('.save-btn').on('click',function(){
-                $.ajax({
-                    url:'/schedule/substitute',
-                    type:'POST',
-                    data:{
-                        subDate:$('.sub-date').val(),
-                        subProgram:$('#sub-program').children('option:selected').text(),
-                        subName:$('.sub-name').val(),
-                        isHoliday:$('#sub-hol:checked').length==1?true:false
-                    },
-                    success:result=>{
-                        if(result.code==0){
-                            $('.message').text('保存成功');
-                            console.log(result)
-                        }else{
-                            $('.message').text('保存失败'+result.message);
-                        }
+        addSubstitute.bindEmployeeList = function () {
+            $.ajax({
+                url: '/schedule/station_employee',
+                success: result => {
+                    if (result.code == 0) {
+                        curEmployeeArray=result.data.employees;
+                        const rowsArray = curEmployeeArray.map(
+                            (employee, index) => {
+                                return $('<option>')
+                                    .val(index)
+                                    .append(employee.name + '(' + employee.alias + ')');
+                            }
+                        )
+
+                        $('select#sub-name').append(rowsArray);
+                    } else {
+                        console.log(result);
                     }
-                });
+                }
+            });
+        };
+
+        addSubstitute.bindClick = function () {
+            $('.save-btn').on('click', function () {
+
+                const selected=$('#sub-program').children('option:selected').val();
+                const curProgram=curProgramArray[selected];
+                const curEmployee=curEmployeeArray[selected];
+
+                if($('#sub-hol:checked').length == 1){
+                    $.ajax({
+                        url: '/schedule/schedule/add_holiday',
+                        type: 'POST',
+                        data: {
+                            roleId:curProgram.id,
+                            date: $('.sub-date').val(),
+                            employeeId:curEmployee.id
+                        },
+                        success: result => {
+                            if (result.code == 0) {
+                                $('.message').text('保存成功');
+                            } else {
+                                $('.message').text('保存失败...' + result.message);
+                                console.log(result)
+                            }
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        url: '/schedule/replace/add',
+                        type: 'POST',
+                        data: {
+                            roleId:curProgram.id,
+                            date: $('.sub-date').val(),
+                            employeeId:curEmployee.id
+                        },
+                        success: result => {
+                            if (result.code == 0) {
+                                $('.message').text('保存成功');
+                            } else {
+                                $('.message').text('保存失败...' + result.message);
+                                console.log(result)
+                            }
+                        }
+                    });
+                }
             });
 
-            $('.cancel-btn').bind('click',function(){
-                const index=parent.layer.getFrameIndex(window.name);
+            $('.cancel-btn').bind('click', function () {
+                const index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
             });
         };
 
-        addSubstitute.bindLayer=function(){
+        addSubstitute.bindLayer = function () {
             laydate.render({
                 elem: '.sub-date',
                 theme: '#393D49',
@@ -62,6 +128,7 @@ $(
         };
 
         addSubstitute.buildProgramList();
+        addSubstitute.bindEmployeeList();
         addSubstitute.bindClick();
         addSubstitute.bindLayer();
 

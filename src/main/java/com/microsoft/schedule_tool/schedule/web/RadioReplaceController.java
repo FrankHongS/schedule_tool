@@ -38,7 +38,7 @@ public class RadioReplaceController {
         return ResultUtil.success(data);
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public Result deleteReplace(long id) {
         radioReplaceScheduleService.deleteReplace(id);
         return ResultUtil.success();
