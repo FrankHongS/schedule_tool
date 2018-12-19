@@ -46,7 +46,7 @@ public class EqualRolesServiceImpl implements EqualRolesService {
                 String[] split = ids.split(",");
                 for (int j = 0; j < split.length; j++) {
                     EquelRoleResp.Roles item = new EquelRoleResp.Roles();
-                    Long id = Long.valueOf(split[i]);
+                    Long id = Long.valueOf(split[j]);
                     item.id = id;
                     Optional<ProgramRole> byId = programRoleRepository.findById(id);
                     if (byId.isPresent()) {
@@ -109,7 +109,7 @@ public class EqualRolesServiceImpl implements EqualRolesService {
             boolean has = false;
             for (int j = 0; j < listB.size(); j++) {
                 if (ratio == listB.get(j).getRatio() &&
-                        employeeId == listB.get(j).getEmployeeId()) {
+                        employeeId.equals(listB.get(j).getEmployeeId())) {
                     has = true;
                     break;
                 }
