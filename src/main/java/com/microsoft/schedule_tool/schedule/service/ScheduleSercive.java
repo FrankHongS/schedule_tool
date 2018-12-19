@@ -17,4 +17,6 @@ public interface ScheduleSercive {
     void deleteHolidaySchedule(long id);
 
     List<RespSchedule> getAllSchedule(String from, String to, boolean isHoliday);
+
+    List<RespSchedule> getHolidaySchedule();
 }

@@ -18,4 +18,6 @@ public interface RadioScheduleRepository extends JpaRepository<RadioSchedule, Lo
     //添加更改节假日数据
 
     Optional<RadioSchedule> findByDateAndRole(Date date, ProgramRole role);
+
+    List<RadioSchedule> findAllByHoliday(boolean isHoliday);
 }

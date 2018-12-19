@@ -47,6 +47,12 @@ public class RadioScheduleController {
         return ResultUtil.success();
     }
 
+    @GetMapping("/holiday")
+    public Result getHolidaySchedules(){
+        List<RespSchedule> holidaySchedule = scheduleSercive.getHolidaySchedule();
+        Map<String, List<RespSchedule>> data = ResultUtil.getResultData("data", holidaySchedule);
+        return ResultUtil.success(data);
+    }
 
     @GetMapping()
     public Result getSchdules(String from, String to, boolean isHoliday) {

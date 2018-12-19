@@ -485,4 +485,26 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_FIND_FAILED);
         }
     }
+
+    @Override
+    public List<RespSchedule> getHolidaySchedule() {
+        try {
+            List<RadioSchedule> radioSchedules = radioScheduleRepository.findAllByHoliday(true);
+            List<RespSchedule> re = new ArrayList<>();
+            for (int i = 0; i < radioSchedules.size(); i++) {
+                RadioSchedule radioSchedule = radioSchedules.get(i);
+                RespSchedule respSchedule = new RespSchedule();
+                respSchedule.id = radioSchedule.getId();
+                respSchedule.alias = radioSchedule.getEmployee().getAlias();
+                respSchedule.name = radioSchedule.getEmployee().getName();
+                respSchedule.date = DateUtil.parseDateToString(radioSchedule.getDate());
+                respSchedule.programName = radioSchedule.getRole().getRadioProgram().getName();
+                respSchedule.roleName = radioSchedule.getRole().getName();
+                re.add(respSchedule);
+            }
+            return re;
+        } catch (Exception e) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_FIND_FAILED);
+        }
+    }
 }
