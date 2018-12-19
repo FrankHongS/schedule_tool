@@ -43,4 +43,10 @@ public class RadioReplaceController {
         radioReplaceScheduleService.deleteReplace(id);
         return ResultUtil.success();
     }
+
+    @GetMapping("/findAll")
+    public Result findAll(){
+        radioReplaceScheduleService.findAll();
+
+    }
 }

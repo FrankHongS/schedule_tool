@@ -147,4 +147,34 @@ public class RadioReplaceScheduleServiceImpl implements RadioReplaceScheduleServ
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_REPLACE_FIND_FAILED);
         }
     }
+
+    @Override
+    public List<RespReplaceSchedule> getAllReplace() {
+        try {
+            //getAll  check Date
+            List<RadioReplaceSchedule> all = radioReplaceScheduleReposity.findAll();
+
+            List<RespReplaceSchedule> re = new ArrayList<>();
+            for (int i = 0; i < all.size(); i++) {
+                RadioReplaceSchedule radioReplaceSchedule = all.get(i);
+                long id = radioReplaceSchedule.getId();
+                StationEmployee employee = radioReplaceSchedule.getEmployee();
+                RadioSchedule radioSchedule = radioReplaceSchedule.getRadioSchedule();
+                RespReplaceSchedule respReplaceSchedule = new RespReplaceSchedule();
+                respReplaceSchedule.id = id;
+                respReplaceSchedule.alias = employee.getAlias();
+                respReplaceSchedule.name = employee.getName();
+                respReplaceSchedule.date = DateUtil.parseDateToString(radioSchedule.getDate());
+                respReplaceSchedule.roleName = radioSchedule.getRole().getName();
+                respReplaceSchedule.programName = radioSchedule.getRole().getRadioProgram().getName();
+                respReplaceSchedule.replacedEmployeeAlias = radioSchedule.getEmployee().getAlias();
+                respReplaceSchedule.replacedEmployeeName = radioSchedule.getEmployee().getName();
+                re.add(respReplaceSchedule);
+            }
+            return re;
+        } catch (Exception e) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_REPLACE_FIND_FAILED);
+        }
+
+    }
 }

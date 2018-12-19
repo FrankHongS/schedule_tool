@@ -10,9 +10,14 @@ import java.util.List;
  **/
 public interface RadioReplaceScheduleService {
     //add
-    long addReplace(long roleId,String date,long employeeId);
+    long addReplace(long roleId, String date, long employeeId);
+
     //delete
     void deleteReplace(long replaceId);
+
     //getAll
     List<RespReplaceSchedule> getAllReplace(String from, String to);
+
+    List<RespReplaceSchedule> getAllReplace();
+
 }
