@@ -31,7 +31,7 @@ $(
                                 $(cur).find('.role-name').get(0).value = role.name;
                                 $(cur).attr('item-id', role.id);
 
-                                splitStrUtil(role.cycle).map(
+                                role.cycle.split('').map(
                                     (value, index) => {
                                         if (value == '0') {
                                             $(cur).find('ul li input').get(index).checked = true;
@@ -291,11 +291,13 @@ $(
 
             for (let i = 0; i < $roles.length; i++) {
                 const item = {};
-
+                const cur = $roles.get(i);
+                
                 item.programId = id;
                 item.name = $('.role-wrapper .role-name').get(i).value;
-                item.cycle = '1111100';
+                item.cycle = genStrUtil(cur);
                 item.workDays = 5;
+                
 
                 target.push(item);
             }
@@ -316,7 +318,7 @@ $(
                     const item = {};
                     item.id = $(cur).attr('item-id');
                     item.roleName = $('.role-wrapper .role-name').get(i).value;
-                    item.cycle = '1111100';
+                    item.cycle = genStrUtil(cur);
                     item.workDays = 5;
 
                     updateRoleArray.push(item);
@@ -324,7 +326,7 @@ $(
                     const item = {};
                     item.programId = id;
                     item.name = $('.role-wrapper .role-name').get(i).value;
-                    item.cycle = '1111100';
+                    item.cycle = genStrUtil(cur);
                     item.workDays = 5;
 
                     saveRoleArray.push(item);
@@ -337,8 +339,17 @@ $(
             };
         }
 
-        function splitStrUtil(str) {
-            return str.split('');
+        function genStrUtil(cur) {
+                let str='';
+                for(let i=0;i<7;i++){
+                    if($(cur).find('ul li input').get(i).checked==true){
+                        str+='0';
+                    }else{
+                        str+='1';
+                    }
+                }
+
+            return str;
         }
 
         editProgram.bindOriginData();
