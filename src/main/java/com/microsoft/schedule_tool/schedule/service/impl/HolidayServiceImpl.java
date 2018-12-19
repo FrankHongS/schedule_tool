@@ -46,7 +46,7 @@ public class HolidayServiceImpl implements HolidayService {
                 ReqHoliday reqHoliday = holidays.get(i);
                 Holiday holiday = new Holiday();
                 Date date = DateUtil.parseDateString(reqHoliday.date);
-                holiday.setDate(date);
+                holiday.setDate(new java.sql.Date(date.getTime()));
                 //查重
                 if (canAdd(date)) {
                     holidayRepository.save(holiday);

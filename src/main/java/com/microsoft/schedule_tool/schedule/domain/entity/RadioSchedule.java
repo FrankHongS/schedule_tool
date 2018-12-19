@@ -2,7 +2,7 @@ package com.microsoft.schedule_tool.schedule.domain.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * @author kb_jay

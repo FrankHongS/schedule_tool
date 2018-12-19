@@ -198,7 +198,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     Date date = DateUtil.getNextDate(start, j * 7 + k);
                     if (canAdd(date, cycle)) {
                         RadioSchedule radioSchedule = new RadioSchedule();
-                        radioSchedule.setDate(date);
+                        radioSchedule.setDate(new java.sql.Date(date.getTime()));
                         radioSchedule.setEmployee(byId1.get());
                         radioSchedule.setRole(byId.get());
 
@@ -235,7 +235,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     Date date = DateUtil.getNextDate(start, j * 7 + k);
                     if (canAdd(date, cycle)) {
                         RadioSchedule radioSchedule = new RadioSchedule();
-                        radioSchedule.setDate(date);
+                        radioSchedule.setDate(new java.sql.Date(date.getTime()));
                         radioSchedule.setEmployee(byId1.get());
                         radioSchedule.setRole(byId.get());
 
@@ -431,7 +431,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             RadioSchedule radioSchedule = new RadioSchedule();
             radioSchedule.setRole(roleOptional.get());
             radioSchedule.setEmployee(employeeOptional.get());
-            radioSchedule.setDate(date1);
+            radioSchedule.setDate(new java.sql.Date(date1.getTime()));
             radioSchedule.setHoliday(true);
             radioScheduleRepository.save(radioSchedule);
         } catch (Exception e) {
