@@ -46,7 +46,9 @@ public class RadioReplaceController {
 
     @GetMapping("/findAll")
     public Result findAll(){
-        radioReplaceScheduleService.findAll();
+        List<RespReplaceSchedule> allReplace = radioReplaceScheduleService.getAllReplace();
+        Map<String, List<RespReplaceSchedule>> data = ResultUtil.getResultData("data", allReplace);
+        return ResultUtil.success(data);
 
     }
 }
