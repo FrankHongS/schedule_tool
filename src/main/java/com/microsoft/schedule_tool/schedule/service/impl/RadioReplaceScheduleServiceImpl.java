@@ -65,7 +65,7 @@ public class RadioReplaceScheduleServiceImpl implements RadioReplaceScheduleServ
         }
 
         Optional<RadioSchedule> radioScheduleOptional = radioScheduleRepository.findByDateAndRole(d, programRoleOptional.get());
-        if (!radioScheduleOptional.isPresent()) {
+        if (radioScheduleOptional.isPresent()) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_DATE_AND_ROLE_NOT_EXTST);
         }
 
