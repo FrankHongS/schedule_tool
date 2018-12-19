@@ -14,4 +14,6 @@ public interface EqualRolesService {
     void addEqualRoles(String ids);
 
     void updateEqualRoles(long id, String ids);
+
+    void delete(long id);
 }

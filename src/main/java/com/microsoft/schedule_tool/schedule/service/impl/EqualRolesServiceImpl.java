@@ -162,4 +162,17 @@ public class EqualRolesServiceImpl implements EqualRolesService {
         }
 
     }
+
+    @Override
+    public void delete(long id) {
+        Optional<EqualRole> byId = equalRolesResposity.findById(id);
+        if(!byId.isPresent()){
+            throw new ProgramScheduleException(ResultEnum.EQUEL_ROLE_ID_NOT_EXIST);
+        }
+        try {
+            equalRolesResposity.deleteById(id);
+        }catch (Exception e){
+            throw new ProgramScheduleException(ResultEnum.EQUEL_ROLE_DELETE_FAILED);
+        }
+    }
 }

@@ -41,4 +41,10 @@ public class EqualRoleController {
         equalRolesService.updateEqualRoles(id, ids);
         return ResultUtil.success();
     }
+
+    @GetMapping("/delete")
+    public Result delete(long id){
+        equalRolesService.delete(id);
+        return ResultUtil.success();
+    }
 }
