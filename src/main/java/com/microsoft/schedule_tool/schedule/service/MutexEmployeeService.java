@@ -14,4 +14,6 @@ public interface MutexEmployeeService {
     void addMutexEmployee(String ids);
 
     void updateMutexEmployee(long id, String ids);
+
+    void delete(long id);
 }

@@ -98,4 +98,18 @@ public class MutexEmployeeServiceImpl implements MutexEmployeeService {
             throw new ProgramScheduleException(ResultEnum.MUTEX_UPDATE_FAILED);
         }
     }
+
+    @Override
+    public void delete(long id) {
+        Optional<MutexEmployee> byId = mutexEmployeeRepository.findById(id);
+        if (!byId.isPresent()) {
+            throw new ProgramScheduleException(ResultEnum.MUTEX_ID_NOT_EXIST);
+        }
+        try {
+            mutexEmployeeRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new ProgramScheduleException(ResultEnum.MUTEX_DELETE_FAILED);
+
+        }
+    }
 }

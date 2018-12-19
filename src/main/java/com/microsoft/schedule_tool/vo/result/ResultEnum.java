@@ -89,7 +89,8 @@ public enum ResultEnum {
     SCHEDULE_REPLACE_FIND_FAILED(182,"schedule_replace_find_failed"),
     SCHEDULE_DATE_PARSE_ERROR(183,"schedule_date_parse_error"),
     SCHEDULE_FIND_FAILED(184,"schedule_find_failed"),
-    SCHEDULE_EXPORT_FAILED(185,"schedule_export_failed");
+    SCHEDULE_EXPORT_FAILED(185,"schedule_export_failed"),
+    MUTEX_DELETE_FAILED(186,"mutex_delete_failed");
 
     private int code;
 
