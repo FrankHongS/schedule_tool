@@ -424,7 +424,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             throw new ProgramScheduleException(ResultEnum.EMPLOYEE_ID_NOT_EXIST);
         }
         Optional<RadioSchedule> byDateAndAndRole = radioScheduleRepository.findByDateAndRole(date1, roleOptional.get());
-        if (!byDateAndAndRole.isPresent()) {
+        if (byDateAndAndRole.isPresent()) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_REPEAT);
         }
         try {
