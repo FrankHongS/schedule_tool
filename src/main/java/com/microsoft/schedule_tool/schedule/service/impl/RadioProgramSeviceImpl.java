@@ -89,7 +89,7 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
             radioProgram.setDeleted(true);
             radioProgramRepository.saveAndFlush(radioProgram);
 
-            List<ProgramRole> programRoles = radioProgram.getProgramRoles();
+            List<ProgramRole> programRoles = programOptional.get().getProgramRoles();
             for (int i = 0; i < programRoles.size(); i++) {
                 programRoleService.remove(programRoles.get(i).getId());
             }
