@@ -3,6 +3,7 @@ package com.microsoft.schedule_tool;
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioProgram;
 import com.microsoft.schedule_tool.schedule.repository.RadioProgramRepository;
 import com.microsoft.schedule_tool.schedule.service.EqualRolesService;
+import com.microsoft.schedule_tool.schedule.service.RadioReplaceScheduleService;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.schedule.service.impl.RadioProgramSeviceImpl;
@@ -68,10 +69,14 @@ public class ScheduleToolApplicationTests {
 
     @Autowired
     private EqualRolesService equalRolesService;
+
+    @Autowired
+    private RadioReplaceScheduleService radioReplaceScheduleService;
     @Test
     public void testMutex(){
         //equalRolesService.addEqualRoles("7326,7327");
-        equalRolesService.getAllEqualRolesGroup();
+        //equalRolesService.getAllEqualRolesGroup();
+        radioReplaceScheduleService.addReplace(7324,"2018-10-08",7338);
     }
 
 }

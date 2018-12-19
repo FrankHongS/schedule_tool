@@ -93,7 +93,6 @@ public class ProgramRole implements Serializable {
                 ", cycle='" + cycle + '\'' +
                 ", workDays=" + workDays +
                 ", isDeleted=" + isDeleted +
-                ", radioProgram=" + radioProgram.toString() +
                 '}';
     }
 
