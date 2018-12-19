@@ -3,6 +3,8 @@ package com.microsoft.schedule_tool.schedule.repository;
 import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -20,4 +22,8 @@ public interface RadioScheduleRepository extends JpaRepository<RadioSchedule, Lo
     Optional<RadioSchedule> findByDateAndRole(Date date, ProgramRole role);
 
     List<RadioSchedule> findAllByIsHoliday(boolean isHoliday);
+
+    @Modifying
+    @Transactional
+    void deleteByDateLessThanEqualAndDateGreaterThanEqual(Date big, Date small);
 }
