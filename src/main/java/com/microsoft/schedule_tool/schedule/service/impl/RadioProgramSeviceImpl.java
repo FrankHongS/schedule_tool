@@ -12,6 +12,7 @@ import com.microsoft.schedule_tool.schedule.domain.vo.response.RadioProgramsResp
 import com.microsoft.schedule_tool.schedule.domain.vo.response.RoleResp;
 import com.microsoft.schedule_tool.schedule.repository.RadioProgramRepository;
 import com.microsoft.schedule_tool.schedule.repository.RadioStationRepository;
+import com.microsoft.schedule_tool.schedule.service.ProgramRoleService;
 import com.microsoft.schedule_tool.schedule.service.RadioProgramService;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
     @Autowired
     private RadioStationRepository radioStationRepository;
 
+    @Autowired
+    private ProgramRoleService programRoleService;
+
 
     @Override
     public long save(long stationId, String name) {
@@ -49,15 +53,15 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
 
         List<RadioProgram> programList = radioProgramRepository.findByNameAndRadioStation(name, radioStation);
 
-        List<RadioProgram> temp=new ArrayList<>();
+        List<RadioProgram> temp = new ArrayList<>();
 
-        for(RadioProgram radioProgram:programList){
-            if(!radioProgram.isDeleted()){
+        for (RadioProgram radioProgram : programList) {
+            if (!radioProgram.isDeleted()) {
                 temp.add(radioProgram);
             }
         }
 
-        if (temp.size()>0) {
+        if (temp.size() > 0) {
             throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
         }
 
@@ -84,6 +88,11 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
             RadioProgram radioProgram = programOptional.get();
             radioProgram.setDeleted(true);
             radioProgramRepository.saveAndFlush(radioProgram);
+
+            List<ProgramRole> programRoles = radioProgram.getProgramRoles();
+            for (int i = 0; i < programRoles.size(); i++) {
+                programRoleService.remove(programRoles.get(i).getId());
+            }
         } catch (Exception e) {
             throw new ProgramException(ResultEnum.PROGRAM_SAVE_FAIL);
         }
@@ -104,14 +113,14 @@ public class RadioProgramSeviceImpl implements RadioProgramService {
         if (byId.isPresent()) {
             RadioStation radioStation = byId.get().getRadioStation();
             List<RadioProgram> radioProgramList = radioProgramRepository.findByNameAndRadioStation(newName, radioStation);
-            List<RadioProgram> temp=new ArrayList<>();
+            List<RadioProgram> temp = new ArrayList<>();
 
-            for(RadioProgram radioProgram:radioProgramList){
-                if(!radioProgram.isDeleted()){
+            for (RadioProgram radioProgram : radioProgramList) {
+                if (!radioProgram.isDeleted()) {
                     temp.add(radioProgram);
                 }
             }
-            if (temp.size()>0&&!newName.equals(byId.get().getName())) {
+            if (temp.size() > 0 && !newName.equals(byId.get().getName())) {
                 throw new ProgramException(ResultEnum.PROGRAM_NAME_EXIST);
             }
         } else {
