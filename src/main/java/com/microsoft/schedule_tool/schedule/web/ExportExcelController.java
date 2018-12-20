@@ -39,8 +39,12 @@ public class ExportExcelController {
                                @RequestParam("isHoliday") boolean isHoliday) {
         List<RespSchedule> allSchedule = scheduleSercive.getAllSchedule(from, to, isHoliday);
         try {
-            String fileName=System.currentTimeMillis()+".xlsx";
-            ExportExcelUtil.exportScheduleTable(response, from, to, fileName, allSchedule);
+            String fileName = System.currentTimeMillis() + ".xlsx";
+            if (isHoliday) {
+                ExportExcelUtil.exportHolidayScheduleTable(response, from, to, fileName, allSchedule);
+            } else {
+                ExportExcelUtil.exportScheduleTable(response, from, to, fileName, allSchedule);
+            }
         } catch (Exception e) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_EXPORT_FAILED);
         }
@@ -49,11 +53,11 @@ public class ExportExcelController {
     @GetMapping("/export_replace")
     public void exportReplaceSchedule(HttpServletResponse response, @RequestParam("from") String from,
                                       @RequestParam("to") String to
-                                      ) {
+    ) {
         List<RespReplaceSchedule> allReplace = radioReplaceScheduleService.getAllReplace(from, to);
 
         try {
-            String fileName=System.currentTimeMillis()+".xlsx";
+            String fileName = System.currentTimeMillis() + ".xlsx";
             ExportExcelUtil.exportReplaceScheduleTable(response, fileName, from, to, allReplace);
         } catch (Exception e) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_EXPORT_FAILED);

@@ -21,6 +21,76 @@ import java.util.List;
 public class ExportExcelUtil {
 
     //1:导出假期表
+    public static void exportHolidayScheduleTable(HttpServletResponse response,
+                                                  String from, String to,
+                                                  String fileName,
+                                                  List<RespSchedule> datas) throws IOException {
+        response.setHeader("content-Type", "application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+        exportHolidayScheduleTable(response.getOutputStream(), from, to, datas);
+    }
+
+    private static void exportHolidayScheduleTable(ServletOutputStream outputStream, String from, String to, List<RespSchedule> datas) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        String sheetName = "sheet1";
+        XSSFSheet sheet = workbook.createSheet(sheetName);
+
+        buildHolidayScheduleTable(sheet, datas, from, to);
+
+        workbook.write(outputStream);
+        outputStream.close();
+
+    }
+
+    private static void buildHolidayScheduleTable(XSSFSheet sheet, List<RespSchedule> datas, String from, String to) {
+        HashSet<String> roles = new HashSet<>();
+
+        HashSet<String> dates = new HashSet<>();
+
+        //日期排序
+        ArrayList<String> ds = new ArrayList<>();
+        for (String date : dates) {
+            ds.add(date);
+        }
+        ds.sort(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                try {
+                    return DateUtil.parseDateString(o1).getTime() > DateUtil.parseDateString(o2).getTime() ? 0 : 1;
+                } catch (ParseException e) {
+                    return 0;
+                }
+            }
+        });
+
+        HashMap<String, String> roleAndDate2employee = new HashMap<>();
+
+        for (int i = 0; i < datas.size(); i++) {
+            String role = datas.get(i).programName + "--" + datas.get(i).roleName;
+            roles.add(role);
+            String date = datas.get(i).date;
+            dates.add(date);
+            roleAndDate2employee.put(role + date,
+                    datas.get(i).name + "(" + datas.get(i).alias + ")");
+        }
+
+        XSSFRow row1 = sheet.createRow(0);
+        row1.createCell(0);
+        for (int i = 0; i < ds.size(); i++) {
+            row1.createCell(i + 1).setCellValue(ds.get(i));
+        }
+
+        int rowNum = 1;
+        for (String role : roles) {
+            XSSFRow row = sheet.createRow(rowNum);
+            row.createCell(0).setCellValue(role);
+            for (int i = 0; i < dates.size(); i++) {
+                row.createCell(i + 1).setCellValue(roleAndDate2employee.get(role + ds.get(i)));
+            }
+            rowNum++;
+        }
+    }
 
 
     //2：导出替班表
