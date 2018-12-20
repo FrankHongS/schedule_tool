@@ -32,6 +32,11 @@
     background: #cfc9c9;
 }
 
+.export-main-container .group-title{
+    display: inline-block;
+    padding-bottom: 9px;
+}
+
 .special-container{
     border: 1px solid #000000;
     padding: 20px 0 20px 15px;
