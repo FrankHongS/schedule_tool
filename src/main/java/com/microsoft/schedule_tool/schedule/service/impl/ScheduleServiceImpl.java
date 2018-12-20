@@ -1,8 +1,6 @@
 package com.microsoft.schedule_tool.schedule.service.impl;
 
-import com.microsoft.schedule_tool.exception.schedule.ProgramException;
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
-import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
 import com.microsoft.schedule_tool.schedule.domain.entity.*;
 import com.microsoft.schedule_tool.schedule.domain.vo.response.RespSchedule;
 import com.microsoft.schedule_tool.schedule.domain.vo.schedule.ScheduleRoleWaitingList;
@@ -13,8 +11,8 @@ import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataUnit;
 
-import java.security.AlgorithmConstraints;
 import java.text.ParseException;
 import java.util.*;
 
@@ -68,6 +66,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private static int RETRY_TIME = 15;
     private int currentTime = 0;
     private HashSet<Long> needScheduleRole;
+    private String special;
+    private String special2;
 
     @Override
     public void schedule(String from, String to) {
@@ -190,7 +190,22 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         radioScheduleRepository.deleteByDateLessThanEqualAndDateGreaterThanEqual(dateTo, dateFrom);
     }
 
-    private void saveData2Db() {
+    private void saveData2Db() throws ParseException {
+
+        //单独处理国庆
+        if (containNational()) {
+            //获取国庆那一周
+            int nationalWeeknumber = DateUtil.getWeekOfYear(special);
+            int nationalWeekNumber2 = DateUtil.getWeekOfYear(special2);
+            if (nationalWeeknumber != nationalWeekNumber2) {
+                int index1 = nationalWeeknumber - startWeek;
+                int index2 = nationalWeekNumber2 - startWeek;
+                for (int i = 0; i < result.length; i++) {
+                    result[i][index2] = result[i][index1];
+                }
+            }
+        }
+
         Date start = DateUtil.getFirstDayOfWeek(DateUtil.getYear(startDate), startWeek - 1);
 
         for (int i = 0; i < result.length; i++) {
@@ -259,6 +274,25 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
 
         }
+    }
+
+    private int getIndex() {
+
+        return 0;
+    }
+
+    private boolean containNational() throws ParseException {
+        long startTime = startDate.getTime();
+        int year = DateUtil.getYear(startDate);
+        special = year + "-" + "10" + "-01";
+        long time1 = DateUtil.parseDateString(special).getTime();
+        special2 = year + "-" + "10" + "-07";
+        long time2 = DateUtil.parseDateString(special2).getTime();
+        long endTiem = endaDate.getTime();
+
+
+        return time1 >= startTime
+                && time2 <= endTiem;
     }
 
     private boolean canAdd(Date date, String cycle) {
