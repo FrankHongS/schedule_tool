@@ -46,6 +46,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     @Autowired
     private EqualRolesResposity equalRolesResposity;
 
+    @Autowired
+    private ScheduleStatesResposity scheduleStatesResposity;
+
     private ArrayList<ScheduleRoleWaitingList> scheduleRoles;
 
     //一周中不可选的员工
@@ -71,20 +74,22 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
     @Override
     public void schedule(String from, String to) {
-        // TODO: 2018/12/12  check params
         try {
-            clearOldData(from, to);
+            //初始化排版参数：结果二维数组result；跳过排序的角色skipRole（hashmap）；周不可选；角色待选名单
             initParams(from, to);
             for (int i = 0; i < result[0].length; i++) {
                 for (int j = 0; j < result.length; j++) {
                     //i->time  j->role
+                    //获取待选名单
                     ScheduleRoleWaitingList scheduleRole = scheduleRoles.get(j);
                     Queue<Long> alternativeEmployee = scheduleRole.alternativeEmployee;
 
+                    //选人，要求： 不在周不可选名单中 且 不可连续两周同一个人。
                     int moveCount = 0;
                     while (!alternativeEmployee.isEmpty()
                             && moveCount < alternativeEmployee.size()
                             && (isInNotOptionalInOneWeek(alternativeEmployee.peek()) || (i - 1 > 0 && alternativeEmployee.peek().equals(result[j][i - 1])))) {
+                        //不符合要求的人跟待选队列的最后一个换位置，接着检查队首的员工是否符合要求
                         Long temp = alternativeEmployee.poll();
                         alternativeEmployee.offer(temp);
                         moveCount++;
@@ -92,6 +97,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
                     if (moveCount == alternativeEmployee.size()) {
                         //没有可选的人的时候从该角色前面已经排好的人中选一个跟他互换。
+                        //待选名单中的每一个人都试一遍
                         int move = 0;
                         boolean isChanged = false;
                         while (!alternativeEmployee.isEmpty()
@@ -125,12 +131,13 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                                     continue;
                                 }
 
-                                //找到了可以替换的员工
+                                //*****找到了可以替换的员工
                                 isChanged = true;
                                 Long poll = alternativeEmployee.poll();
                                 result[j][k] = poll;
                                 result[j][i] = temp;
                                 addToNotOptionalInOneWeek(poll);
+                                updateScheduleState(i, j);
                                 break;
                             }
                             if (!isChanged) {
@@ -140,14 +147,17 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                             move++;
                         }
                         if (move == alternativeEmployee.size()) {
+                            //选不到人！！！！
                             throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
                         }
 
                     } else {
+                        //*****选到人了那么设置result值；更新待选名单；更新周不可选名单
                         Long employeeId = alternativeEmployee.poll();
                         result[j][i] = employeeId;
                         scheduleRole.alternativeEmployee = alternativeEmployee;
                         addToNotOptionalInOneWeek(employeeId);
+                        updateScheduleState(i, j);
                     }
                     if (alternativeEmployee.isEmpty()) {
                         //同一个ratio排完了,更新候选名单
@@ -165,17 +175,42 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 }
             }
             /*******************测试**/
+            //清理掉旧数据
+            clearOldData(from, to);
             //将排好的信息存入db
             saveData2Db();
+            //清理掉可选员工表中to之后的信息
+            // TODO: 2018/12/24
+
             currentTime = 0;
         } catch (Exception e) {
-            if (e instanceof ProgramScheduleException && currentTime < RETRY_TIME) {
-                currentTime++;
-                schedule(from, to);
+            if (e instanceof ProgramScheduleException) {
+                clearScheduleState();
+                if (currentTime < RETRY_TIME) {
+                    currentTime++;
+                    schedule(from, to);
+                }
             } else {
                 throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
             }
         }
+    }
+
+    /**
+     * 清除掉排班状态
+     */
+    private void clearScheduleState() {
+
+    }
+
+    /**
+     * 更新数据库中排班状态
+     *
+     * @param i time
+     * @param j role
+     */
+    private void updateScheduleState(int i, int j) {
+// TODO: 2018/12/24 更新状态
     }
 
     /**
@@ -328,8 +363,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         return false;
     }
 
-    // TODO: 2018/12/12 获取互斥的员工
-
+    //  获取互斥的员工
     private ArrayList<Long> getMutexEmployee(long id) {
         ArrayList<Long> ids = new ArrayList<>();
         ids.add(id);
@@ -367,7 +401,6 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     }
 
     //添加自己以及跟自己互斥的员工进入周不可选名单
-    // TODO: 2018/12/12
     private void addToNotOptionalInOneWeek(long employeeId) {
         ArrayList<Long> mutexEmployee = getMutexEmployee(employeeId);
         notOptionalInOneWeek.addAll(mutexEmployee);
@@ -379,8 +412,10 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         startWeek = DateUtil.getWeekOfYear(from);
         endWeek = DateUtil.getWeekOfYear(to);
 
+        //获取间隔的周数（result的x维度）
         weekNums = (int) DateUtil.weeks(startDate, endaDate);
 
+        //获取所有的角色（1：排除掉没有员工的角色，）
         List<ProgramRole> programRoles = programRoleRepository.findAll();
 
         ArrayList<Long> hasEmployeeProgramRoles = new ArrayList<>();
@@ -391,6 +426,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             }
             hasEmployeeProgramRoles.add(programRoles.get(i).getId());
         }
+        //获取所有的角色（2：排除掉同一时间员工相同的角色）跳过的不需要排序的角色在skipRoles的keySet中。
         skipRoles = new HashMap<>();
         needScheduleRole = new HashSet<>();
         //不需要排序的角色
@@ -404,13 +440,11 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 checkSameRoles(id, noNeedAdd);
             }
         }
-
-
-        //init result
+        //初始化result（两个维度：角色+周数）
         result = new Long[needScheduleRole.size()][weekNums];
-        //init notOptionalInOneWeek
+        //同一周中不可选的员工
         notOptionalInOneWeek = new ArrayList<>();
-        //init scheduleRoles
+        //初始化待选角色待选名单
         scheduleRoles = new ArrayList<>();
         for (Long id : needScheduleRole) {
             ScheduleRoleWaitingList scheduleRole = new ScheduleRoleWaitingList();

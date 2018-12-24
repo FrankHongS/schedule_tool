@@ -48,23 +48,29 @@ public class ScheduleRoleWaitingList {
 
     //初始化
     public void init(Long id, RelationRoleAndEmployeeService relationRoleAndEmployeeService, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
+        //获取该角色下所有员工
         List<RespEmployeeByRoleId> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
+        //获取该角色下员工的权重最大值
         int maxRatio = 1;
         for (int j = 0; j < employees.size(); j++) {
             int ratio = relationRoleAndEmployeeService.getRatio(employees.get(j).getId(), id);
             maxRatio = maxRatio < ratio ? ratio : maxRatio;
         }
+
         this.id = id;
         this.currentRatio = 1;
         this.maxRatio = maxRatio;
+        //该角色下的（员工id+权重）数组
         allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
-        randomSort(allEmployee);
+//        randomSort(allEmployee);
+        //获取所有权重为1的员工初始化待选名单
         for (int j = 0; j < allEmployee.size(); j++) {
             int ratio = allEmployee.get(j).getRatio();
             if (currentRatio == ratio) {
                 alternativeEmployee.offer(allEmployee.get(j).getEmployeeId());
             }
         }
+        //更新当前权重
         currentRatio++;
     }
 
