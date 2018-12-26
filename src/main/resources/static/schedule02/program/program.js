@@ -6,7 +6,7 @@ window.program = function () {
     let programArray;
 
     program.bindClick = function () {
-        $('.program-container ul').on('click','li',function (e) {
+        $('.program-container ul').on('click', 'li', function (e) {
             $(e.target).addClass('active').removeClass('unactive')
                 .siblings().removeClass('active').addClass('unactive');
 
@@ -40,11 +40,11 @@ window.program = function () {
                 return;
             }
 
-            const curProgram=programArray[$current.index()];
+            const curProgram = programArray[$current.index()];
 
             originData = {
                 type: 1,
-                id:curProgram.id,
+                id: curProgram.id,
                 name: curProgram.name,
                 roleArray: curProgram.programRoles
             };
@@ -69,25 +69,25 @@ window.program = function () {
                 return;
             }
 
-            const curProgram=programArray[$current.index()];
+            const curProgram = programArray[$current.index()];
 
             if (confirm('确认删除')) {
 
                 $.ajax({
-                    url:'/schedule/sprogram/delete?programId='+curProgram.id,
-                    success:result=>{
-                        if(result.code===0){
+                    url: '/schedule/sprogram/delete?programId=' + curProgram.id,
+                    success: result => {
+                        if (result.code === 0) {
                             alert('删除' + curProgram.name + '成功');
                             window.queryPrograms();
-                        }else{
-                            alert('删除' + curProgram.name + '失败...'+result.message);
+                        } else {
+                            alert('删除' + curProgram.name + '失败...' + result.message);
                         }
                     },
-                    error:(xhr,e)=>{
+                    error: (xhr, e) => {
                         alert('删除失败...');
                     }
                 });
-                
+
             }
         });
 
@@ -99,27 +99,34 @@ window.program = function () {
                 return;
             }
 
-            const curProgram=programArray[$current.index()];
-            let roleIds='';
+            const curProgram = programArray[$current.index()];
+            let roleIds = '';
+            let roleNames = '';
             curProgram.programRoles.map(
-                role=>{
-                    roleIds+=role.id+',';
+                (role, index) => {
+                    if (index == curProgram.programRoles.length - 1) {
+                        roleIds += role.id;
+                        roleNames += role.name;
+                    } else {
+                        roleIds += role.id + ',';
+                        roleNames += role.name + ' , ';
+                    }
                 }
             );
 
             // $(location).attr('href', '/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + $current.text());
-            window.open('/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + curProgram.name+'&roleIds='+roleIds);
+            window.open('/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + curProgram.name + '&roleIds=' + roleIds + '&roleNames=' + roleNames);
         });
     };
 
     window.queryPrograms = function () {
         $.ajax({
-            url: '/schedule/sprogram/programs?stationId='+1,
+            url: '/schedule/sprogram/programs?stationId=' + 1,
             success: result => {
                 if (result.code == 0) {
                     programArray = result.data.programs;
                     program.buildPrograms(programArray);
-                }else{
+                } else {
                     console.log(result);
                 }
             }
