@@ -42,8 +42,9 @@ $(
                             alias: alias
                         };
                         msg = {
+                            initial:'正在添加...',
                             success: '添加成功',
-                            failure: '添加失败...'
+                            failure: '添加失败...',
                         };
                         break;
                     case 1://modify employee
@@ -54,8 +55,9 @@ $(
                         alias: alias
                     };
                     msg = {
+                        initial:'正在更新...',
                         success: '更新成功',
-                        failure: '更新失败...'
+                        failure: '更新失败...',
                     };
                         break;
                     default:
@@ -75,6 +77,7 @@ $(
         };
 
         editEmployee.request = function (url, data, msg) {
+            $('.message-container .message').text(msg.initial);
             $.ajax({
                 url: url,
                 type: 'POST',

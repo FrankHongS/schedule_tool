@@ -109,6 +109,7 @@ $(
                 switch (originData.type) {
                     case 0:
                         msg = {
+                            initial: '正在保存...',
                             success: '保存成功',
                             failure: '保存失败...'
                         };
@@ -122,6 +123,7 @@ $(
                         break;
                     case 1:
                         msg = {
+                            initial: '正在修改',
                             success: '修改成功',
                             failure: '修改失败...'
                         };
@@ -152,6 +154,8 @@ $(
 
         editProgram.saveProgram = function (msg, data) {
             
+            $('.message-container .message').text(msg.initial);
+
             new Promise(
                 resolve => {
                     $.ajax({
@@ -198,6 +202,9 @@ $(
         };
 
         editProgram.updateProgram = function (msg, data) {
+
+            $('.message-container .message').text(msg.initial);
+
             new Promise(
                 resolve => {
                     $.ajax({

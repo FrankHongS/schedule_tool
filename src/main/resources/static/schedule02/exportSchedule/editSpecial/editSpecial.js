@@ -76,6 +76,7 @@ $(
         };
 
         editSpecial.saveSpecial=function(idStr){
+            $('.message-container .message').text('正在添加组...');
             $.ajax({
                 url: '/schedule/mutex_employee/add',
                 type: 'POST',
@@ -94,6 +95,7 @@ $(
         };
 
         editSpecial.updateSpecial=function(id,idStr){
+            $('.message-container .message').text('正在修改组...');
             $.ajax({
                 url: '/schedule/mutex_employee/update',
                 type: 'POST',

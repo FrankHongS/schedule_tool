@@ -127,6 +127,7 @@ $(
         };
 
         editProgramEmployee.saveRequest = function (data) {
+            $('.message-container .message').text('正在保存...');
             $.ajax({
                 url: '/schedule/role_employee/add',
                 type: 'POST',
@@ -144,6 +145,7 @@ $(
         };
 
         editProgramEmployee.modifyRequest = function (data) {
+            $('.message-container .message').text('正在修改...');
             $.ajax({
                 url: '/schedule/role_employee/update',
                 type: 'POST',

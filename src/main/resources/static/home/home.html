@@ -6,16 +6,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="/schedule/favicon.ico"/>
+    <link rel="icon" href="/schedule/favicon.ico" />
     <link rel="stylesheet" href="/schedule/plugin/layui/css/layui.css">
+
     <link rel="stylesheet" type="text/css" media="screen" href="home.css" />
+
     <link rel="stylesheet" type="text/css" media="screen" href="../attendance/main/main.css" />
-    
+
+    <link rel="stylesheet" href="../schedule02/main/main.css">
+    <link rel="stylesheet" href="../schedule02/employee/employee.css">
+    <link rel="stylesheet" href="../schedule02/program/program.css">
+    <link rel="stylesheet" href="../schedule02/substitute/substitute.css">
+    <link rel="stylesheet" href="../schedule02/exportSchedule/exportSchedule.css">
+
     <script src="../jquery/jquery-3.3.1.js" type="text/javascript"></script>
     <script src="../jquery/getParameter.js" type="text/javascript"></script>
     <script src="../plugin/laydate/laydate.js"></script>
     <script src="../plugin/layui/layui.all.js"></script>
+
     <script src="../attendance/main/main.js" type="text/javascript"></script>
+
+    <script src="../schedule02/main/main.js"></script>
+    <script src="../schedule02/employee/employee.js"></script>
+    <script src="../schedule02/program/program.js"></script>
+    <script src="../schedule02/substitute/substitute.js"></script>
+    <script src="../schedule02/exportSchedule/exportSchedule.js"></script>
+    <script src="../schedule02/util/util.js"></script>
+
     <script src="home.js"></script>
 </head>
 
@@ -28,10 +45,12 @@
         </ul>
     </div>
 
-    <div id="schedule">
-    </div>
+    <div class="system-container">
+        <div id="schedule">
+        </div>
 
-    <div id="attendance">
+        <div id="attendance">
+        </div>
     </div>
 </body>
 

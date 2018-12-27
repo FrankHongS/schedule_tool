@@ -38,7 +38,7 @@ $(
                     }
                 }
 
-                saveHoliday(dateList,{ success: '添加成功', failure: '添加失败...' });
+                saveHoliday(dateList,{ initial:'正在添加...',success: '添加成功', failure: '添加失败...' });
             }
         );
 
@@ -52,6 +52,9 @@ $(
         });
 
         function saveHoliday(dateList, msg) {
+            if (msg) {
+                $('.message-container .message').text(msg.initial);
+            }
             $.ajax({
                 url: '/schedule/holiday/add',
                 type:'POST',

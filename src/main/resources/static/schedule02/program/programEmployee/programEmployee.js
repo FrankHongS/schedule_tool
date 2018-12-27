@@ -82,7 +82,7 @@ $(
 
                 // save type
                 window.originData.type = 0;
-                window.originData.curRoleId=$('#program-role').children('option:selected').val();
+                window.originData.curRoleId = $('#program-role').children('option:selected').val();
 
                 layer.open({
                     type: 2,
@@ -114,6 +114,8 @@ $(
                     if (result.code === 0) {
                         curProgramEmployeeArray = result.data.employees;
                         programEmployee.buildEmployeeTable('.employee-body', programEmployee.parseData(curProgramEmployeeArray));
+                    } else {
+                        alert('查找失败...' + result.message);
                     }
                 }
             });
@@ -155,7 +157,7 @@ $(
                 window.originData.name = curEmployee.name;
                 window.originData.ratio = curEmployee.ratio;
 
-                window.originData.curRoleId=$('#program-role').children('option:selected').val();
+                window.originData.curRoleId = $('#program-role').children('option:selected').val();
 
                 layer.open({
                     type: 2,

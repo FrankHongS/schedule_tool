@@ -42,7 +42,8 @@ window.attendance_main=function () {
                 }
             );
 
-            $('tbody').append(rowsArray);
+            $('#main-container .attendance-tbody').html('')
+                                                  .append(rowsArray);
 
             $('.name').bind('click', function (e) {
                 // $(location).attr('href','../detail/detail.html?a='+e.target.innerHTML);//重定向跳转，在当前窗口打开新页面
@@ -72,7 +73,7 @@ window.attendance_main=function () {
 
         main.bindClick = function () {
 
-            $('.add-btn').bind('click', function (e) {
+            $('.func-btn-container .add-btn').bind('click', function (e) {
                 layer.open({
                     type: 2,
                     title: '添加新成员',
@@ -118,7 +119,7 @@ window.attendance_main=function () {
                 $('.month-link').attr('href','/schedule/excel/export_month?month='+month);
             });
 
-            $('.search-btn').bind('click', () => {
+            $('#main-form .search-btn').bind('click', () => {
 
                 const alias = $('.alias').val();
                 const name=$('.search-name').val();
@@ -178,7 +179,6 @@ window.attendance_main=function () {
                 url: url,
                 success: result => {
                     $('.main-form-item .message').text('查找成功');
-                    $('tbody').html('');
 
                     if (result.sum.dataList) {
                         this.buildSumTable(this.parseData(result.sum.dataList),true);

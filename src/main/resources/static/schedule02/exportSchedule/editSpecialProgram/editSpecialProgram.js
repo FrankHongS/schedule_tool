@@ -76,6 +76,7 @@ $(
         };
 
         editSpecialProgram.saveSpecial = function (idStr) {
+            $('.message-container .message').text('正在添加组...');
             $.ajax({
                 url: '/schedule/equal_role/add',
                 type: 'POST',
@@ -94,6 +95,7 @@ $(
         };
 
         editSpecialProgram.updateSpecial = function (id, idStr) {
+            $('.message-container .message').text('正在修改组...');
             $.ajax({
                 url: '/schedule/equal_role/update',
                 type: 'POST',
