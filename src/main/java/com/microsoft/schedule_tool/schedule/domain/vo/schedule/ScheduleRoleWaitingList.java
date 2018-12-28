@@ -2,10 +2,14 @@ package com.microsoft.schedule_tool.schedule.domain.vo.schedule;
 
 import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
 import com.microsoft.schedule_tool.schedule.domain.entity.RelationRoleAndEmployee;
+import com.microsoft.schedule_tool.schedule.domain.entity.ScheduleStates;
 import com.microsoft.schedule_tool.schedule.domain.entity.StationEmployee;
 import com.microsoft.schedule_tool.schedule.domain.vo.response.RespEmployeeByRoleId;
+import com.microsoft.schedule_tool.schedule.repository.ProgramRoleRepository;
 import com.microsoft.schedule_tool.schedule.repository.RelationRoleAndEmployeeRepository;
+import com.microsoft.schedule_tool.schedule.repository.ScheduleStatesResposity;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
+import com.microsoft.schedule_tool.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -21,33 +25,31 @@ public class ScheduleRoleWaitingList {
     public Long id;
     //最大权重
     public int maxRatio;
-    //当前选到那个权重的员工了
-    public int currentRatio;
+
     //备选员工
     public Queue<Long> alternativeEmployee = new LinkedList<>();
+
+    //一轮所有的员工
+    public ArrayList<Long> allEmp = new ArrayList<>();
+
     //所有员工
     public List<RelationRoleAndEmployee> allEmployee = new ArrayList<>();
-
 
     //更新角色候选名单
     public void updateAlternativeEmloyee() {
         if (!alternativeEmployee.isEmpty()) {
             return;
         }
-        if (currentRatio < maxRatio) {
-        } else {
-            currentRatio = 1;
-        }
+        // TODO: 2018/12/27
         for (int i = 0; i < allEmployee.size(); i++) {
             int ratio = allEmployee.get(i).getRatio();
-            if (ratio <= currentRatio) {
-                alternativeEmployee.offer(allEmployee.get(i).getEmployeeId());
-            }
+
         }
     }
 
     //初始化
-    public void init(Long id, RelationRoleAndEmployeeService relationRoleAndEmployeeService, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
+    // TODO: 2018/12/25 查状态表初始化状态
+    public void init(Long id, Date startDate, RelationRoleAndEmployeeService relationRoleAndEmployeeService, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository, ScheduleStatesResposity scheduleStatesResposity, ProgramRoleRepository programRoleRepository) {
         //获取该角色下所有员工
         List<RespEmployeeByRoleId> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
         //获取该角色下员工的权重最大值
@@ -58,20 +60,30 @@ public class ScheduleRoleWaitingList {
         }
 
         this.id = id;
-        this.currentRatio = 1;
         this.maxRatio = maxRatio;
         //该角色下的（员工id+权重）数组
+        //初始化allEmp，之后去掉已经排过的员工
         allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
-//        randomSort(allEmployee);
-        //获取所有权重为1的员工初始化待选名单
+//        randomSort(allEmployee)
         for (int j = 0; j < allEmployee.size(); j++) {
-            int ratio = allEmployee.get(j).getRatio();
-            if (currentRatio == ratio) {
-                alternativeEmployee.offer(allEmployee.get(j).getEmployeeId());
+            RelationRoleAndEmployee item = allEmployee.get(j);
+            Long employeeId = item.getEmployeeId();
+            int ratio = item.getRatio();
+            for (int i = 0; i < ratio; i++) {
+                allEmp.add(employeeId);
             }
         }
-        //更新当前权重
-        currentRatio++;
+        //get first data from tb_shcdule_state by roleId and currentDate
+
+        //if(has) -> 1:get has sorted employees from tb_schdule by isholidy=false and roleid and currentDate and firstDate
+
+        //          2:init alternativeEmployee  ( allEmp except  has sorted)
+
+        //else ->1:alternativeEmployee = allEmp
+
+
+        
+
     }
 
     private void randomSort(List<RelationRoleAndEmployee> allEmployee) {

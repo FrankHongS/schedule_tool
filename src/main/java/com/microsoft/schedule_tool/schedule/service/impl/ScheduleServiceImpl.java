@@ -162,6 +162,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     if (alternativeEmployee.isEmpty()) {
                         //同一个ratio排完了,更新候选名单
                         scheduleRole.updateAlternativeEmloyee();
+                        updateScheduleState(i, j);
                     }
                 }
                 //reset
@@ -180,7 +181,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             //将排好的信息存入db
             saveData2Db();
             //清理掉可选员工表中to之后的信息
-            // TODO: 2018/12/24
+            clearScheduleStateTo();
 
             currentTime = 0;
         } catch (Exception e) {
@@ -196,11 +197,17 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         }
     }
 
+    private void clearScheduleStateTo() {
+        // TODO: 2018/12/24 清除掉to之后的数据
+//        scheduleStatesResposity.deleteByStartDateGreaterThan((java.sql.Date) endaDate);
+    }
+
     /**
      * 清除掉排班状态
+     * todo
      */
     private void clearScheduleState() {
-
+//        scheduleStatesResposity.deleteByStartDateLessThanAndStartDateGreaterThan((java.sql.Date) DateUtil.getNextDate(endaDate, 7), (java.sql.Date) startDate);
     }
 
     /**
@@ -210,7 +217,43 @@ public class ScheduleServiceImpl implements ScheduleSercive {
      * @param j role
      */
     private void updateScheduleState(int i, int j) {
-// TODO: 2018/12/24 更新状态
+        //
+//        Long roleid = scheduleRoles.get(j).id;
+//        //wait_employees
+//        Queue<Long> alternativeEmployeeIds = scheduleRoles.get(j).alternativeEmployee;
+//        StringBuilder sb = new StringBuilder();
+//        for (Long employeeId : alternativeEmployeeIds) {
+//            sb.append(employeeId + ",");
+//        }
+//        String ids = sb.toString();
+//        if (ids.length() > 0) {
+//            ids = ids.substring(0, ids.length() - 1);
+//        }
+//        //排到的权重
+//        int ratio = scheduleRoles.get(j).currentRatio;
+//
+//        //获取日期(下一周的日期)
+//        Date thisWeekMonday = DateUtil.getThisWeekMonday(DateUtil.getNextDate(startDate, 7 * (i + 1)));
+//
+//        Optional<ProgramRole> roleOptional = programRoleRepository.findById(roleid);
+//        if (roleOptional.isPresent()) {
+//            Optional<ScheduleStates> scheduleStatesOptional = scheduleStatesResposity.findByStartDateAndRole((java.sql.Date) thisWeekMonday, roleOptional.get());
+//            if (scheduleStatesOptional.isPresent()) {
+//                //存在，那么更新
+//                ScheduleStates scheduleStates = scheduleStatesOptional.get();
+//                scheduleStates.ratio = ratio;
+//                scheduleStates.wait_selected = ids;
+//                scheduleStatesResposity.saveAndFlush(scheduleStates);
+//            } else {
+//                //不存在，那么add
+//                ScheduleStates scheduleStates = new ScheduleStates();
+//                scheduleStates.setRatio(ratio);
+//                scheduleStates.setRole(roleOptional.get());
+//                scheduleStates.setStartDate((java.sql.Date) thisWeekMonday);
+//                scheduleStates.setWait_selected(ids);
+//                scheduleStatesResposity.save(scheduleStates);
+//            }
+//        }
     }
 
     /**
@@ -220,9 +263,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
      * @param to
      */
     private void clearOldData(String from, String to) throws ParseException {
-        Date dateFrom = DateUtil.parseDateString(from);
-        Date dateTo = DateUtil.parseDateString(to);
-        radioScheduleRepository.deleteByDateLessThanEqualAndDateGreaterThanEqual(dateTo, dateFrom);
+//        Date dateFrom = DateUtil.parseDateString(from);
+//        Date dateTo = DateUtil.parseDateString(to);
+//        radioScheduleRepository.deleteByDateLessThanEqualAndDateGreaterThanEqual(dateTo, dateFrom);
     }
 
     private void saveData2Db() throws ParseException {
@@ -448,7 +491,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         scheduleRoles = new ArrayList<>();
         for (Long id : needScheduleRole) {
             ScheduleRoleWaitingList scheduleRole = new ScheduleRoleWaitingList();
-            scheduleRole.init(id, relationRoleAndEmployeeService, relationRoleAndEmployeeRepository);
+            scheduleRole.init(id,startDate, relationRoleAndEmployeeService, relationRoleAndEmployeeRepository,scheduleStatesResposity,programRoleRepository);
             scheduleRoles.add(scheduleRole);
         }
     }
