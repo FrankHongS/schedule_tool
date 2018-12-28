@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Export</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="exportSchedule.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="exportSchedule.css" />
     <script src="../../jquery/jquery-3.3.1.js"></script>
     <script src="../../plugin/laydate/laydate.js"></script>
     <script src="../../plugin/layui/layui.all.js"></script>
-    <script src="exportSchedule.js"></script> -->
+    <script src="exportSchedule.js"></script>
 </head>
 
 <body>
@@ -20,56 +20,6 @@
                 <span class="group-title">人员互斥组</span>
                 <div class="group-wrapper">
                     <ul>
-                        <!-- <li class="level1">
-                            <a href="#">组1</a>
-                            <ul class="level2">
-                                <li>张三</li>
-                                <li>张三</li>
-                                <li>张三</li>
-                                <li>张三</li>
-                                <li>张三</li>
-                            </ul>
-                        </li>
-                        <li class="level1">
-                                <a href="#">组1</a>
-                                <ul class="level2">
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                </ul>
-                        </li>
-                        <li class="level1">
-                                <a href="#">组1</a>
-                                <ul class="level2">
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                </ul>
-                        </li>
-                        <li class="level1">
-                                <a href="#">组1</a>
-                                <ul class="level2">
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                </ul>
-                        </li>
-                        <li class="level1">
-                                <a href="#">组1</a>
-                                <ul class="level2">
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                </ul>
-                        </li> -->
                     </ul>
                 </div>
                 <div class="group-btns-container">
@@ -82,26 +32,6 @@
                     <span class="group-title">节目人员相同组</span>
                     <div class="group-wrapper">
                         <ul>
-                            <!-- <li class="level1">
-                                <a href="#">节目组1</a>
-                                <ul class="level2">
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                    <li>张三</li>
-                                </ul>
-                            </li>
-                            <li class="level1">
-                                    <a href="#">节目组2</a>
-                                    <ul class="level2">
-                                        <li>张三</li>
-                                        <li>张三</li>
-                                        <li>张三</li>
-                                        <li>张三</li>
-                                        <li>张三</li>
-                                    </ul>
-                            </li> -->
                         </ul>
                     </div>
                     <div class="group-btns-container">
@@ -114,8 +44,10 @@
         <div class="export-container">
             <div class="date-range-picker">
                 <label for="export-date">排班日期范围</label>
-                <input id='export-date' type="text" class="info-input date-input export-from" placeholder="from"><span
-                    class="dash">--</span><input type="text" class="info-input date-input export-to" placeholder="to">
+                <div class="export-date-wrapper">
+                    <input id='export-date' type="text" class="info-input date-input export-from" placeholder="from"><span
+                        class="dash">--</span><input type="text" class="info-input date-input export-to" placeholder="to">
+                </div>
             </div>
             <div class="exclude-date">
                 <label for="">排除节假日</label>
@@ -136,7 +68,7 @@
             </div>
             <div class="export-btns">
                 <button class="gen-info">生成记录</button>
-                <a class="export-link">导出</a>
+                <a class="export-link">&nbsp导出&nbsp</a>
                 <span class="message"></span>
             </div>
         </div>
