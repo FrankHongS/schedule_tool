@@ -1,8 +1,8 @@
 $(
-    function(){
-        const programEmployee={};
+    function () {
+        const programEmployee = {};
 
-        const dataList=[
+        const dataList = [
             [
                 1,
                 '今日十万加',
@@ -50,28 +50,44 @@ $(
 
         let curProgramEmployeeArray;
 
-        programEmployee.getParameter=function(){
-            programName=decodeURIComponent($.Request('program'));
+        programEmployee.getParameter = function () {
+            programName = decodeURIComponent($.Request('program'));
 
-            roleIdArray=decodeURIComponent($.Request('roleIds')).split(',');
-            roleIdArray.splice(roleIdArray.length-1,1);
+            roleIdArray = decodeURIComponent($.Request('roleIds')).split(',');
 
-            window.originData={
-                programName:programName,
-                roleIdArray:roleIdArray
+            roleNameArray = decodeURIComponent($.Request('roleNames')).split(' , ');
+
+            window.originData = {
+                programName: programName,
+                roleIdArray: roleIdArray,
+                roleNameArray: roleNameArray,
             };
+
+            // build progran-role select
+            $('#program-role')
+                .html('')
+                .append(
+                    roleNameArray.map(
+                        (roleName, index) => {
+                            return $('<option>')
+                                .attr('value', roleIdArray[index])
+                                .append(roleName)
+                        }
+                    )
+                );
         };
 
-        programEmployee.bindClick=function(){
-            $('.add').click(function(){
+        programEmployee.bindClick = function () {
+            $('.add').click(function () {
 
                 // save type
-                window.originData.type=0;
+                window.originData.type = 0;
+                window.originData.curRoleId=$('#program-role').children('option:selected').val();
 
                 layer.open({
                     type: 2,
                     title: '添加节目人员',
-                    area: ['400px', '290px'],
+                    area: ['400px', '340px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
@@ -79,24 +95,34 @@ $(
                 });
             });
 
+            $('#program-role').bind('change', function () {
+                const curRoleId = $('#program-role').children('option:selected').val();
+                window.queryProgramEmployees(curRoleId);
+            });
+
         };
 
-        window.queryProgramEmployees=function(){
+        window.queryProgramEmployees = function (roleId) {
+
+            if (!roleId) {
+                roleId = roleIdArray[0];
+            }
+
             $.ajax({
-                url:'/schedule/role_employee?id='+roleIdArray[0],
-                success:result=>{
-                    if(result.code===0){
-                        curProgramEmployeeArray=result.data.employees;
-                        programEmployee.buildEmployeeTable('.employee-body',programEmployee.parseData(curProgramEmployeeArray));
+                url: '/schedule/role_employee?id=' + roleId,
+                success: result => {
+                    if (result.code === 0) {
+                        curProgramEmployeeArray = result.data.employees;
+                        programEmployee.buildEmployeeTable('.employee-body', programEmployee.parseData(curProgramEmployeeArray));
                     }
                 }
             });
         };
 
-        programEmployee.buildEmployeeTable=function(container,dataList){
+        programEmployee.buildEmployeeTable = function (container, dataList) {
             const rowGroup = ['index', 'program', 'employee', 'weight', 'delete', 'modify'];
 
-            
+
             const cellsArray = dataList.map(
                 rowValues => {
                     return rowValues.map(
@@ -117,22 +143,24 @@ $(
             );
 
             $(container).html('')
-                        .append(rowsArray);
+                .append(rowsArray);
 
-            $('.modify').click(function(){
+            $('.modify').click(function () {
 
-                const curEmployee=curProgramEmployeeArray[$(this).parent('tr').index()];
+                const curEmployee = curProgramEmployeeArray[$(this).parent('tr').index()];
 
                 // modify type
-                window.originData.type=1;
-                window.originData.employeeId=curEmployee.id;
-                window.originData.name=curEmployee.name;
-                window.originData.ratio=curEmployee.ratio;
+                window.originData.type = 1;
+                window.originData.employeeId = curEmployee.id;
+                window.originData.name = curEmployee.name;
+                window.originData.ratio = curEmployee.ratio;
+
+                window.originData.curRoleId=$('#program-role').children('option:selected').val();
 
                 layer.open({
                     type: 2,
                     title: '修改节目人员',
-                    area: ['400px', '290px'],
+                    area: ['400px', '340px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
@@ -140,53 +168,41 @@ $(
                 });
             });
 
-            $('.delete').click(function(){
-                
-                const curEmployee=curProgramEmployeeArray[$(this).parent('tr').index()];
+            $('.delete').click(function () {
 
-                if(confirm('确认删除')){
+                const curEmployee = curProgramEmployeeArray[$(this).parent('tr').index()];
+                const curRoleId = $('#program-role').children('option:selected').val();
 
-                    roleIdArray.map(
-                        (roleId,index)=>{
-                            setTimeout(
-                                ()=>{
-                                    $.ajax({
-                                        url:'/schedule/role_employee/delete?employeeId='+curEmployee.id+'&roleId='+roleId,
-                                        success:result=>{
-                                            if(result.code===0){
-                                                if(index===roleIdArray.length-1){
-                                                    alert('删除成功');
-                                                    window.queryProgramEmployees();
-                                                }
-                                            }else{
-                                                if(index===roleIdArray.length-1){
-                                                    alert('删除失败...'+result.message);
-                                                }
-                                                console.log('删除失败...'+result.message);
-                                            }
-                                        }
-                                    })
-                                },100
-                            );
+                if (confirm('确认删除')) {
+
+                    $.ajax({
+                        url: '/schedule/role_employee/delete?employeeId=' + curEmployee.id + '&roleId=' + curRoleId,
+                        success: result => {
+                            if (result.code === 0) {
+                                alert('删除成功');
+                                window.queryProgramEmployees(curRoleId);
+                            } else {
+                                alert('删除失败...' + result.message);
+                            }
                         }
-                    );
-                    
-                    
+                    })
+
+
                 }
             });
         };
 
-        programEmployee.parseData=function(employees){
-            const dataList=[];
+        programEmployee.parseData = function (employees) {
+            const dataList = [];
 
-            for(let i=0;i<employees.length;i++){
-                const item=[];
-                item[0]=i+1;
-                item[1]=programName;
-                item[2]=employees[i].name;
-                item[3]=employees[i].ratio;
-                item[4]='delete';
-                item[5]='modify';
+            for (let i = 0; i < employees.length; i++) {
+                const item = [];
+                item[0] = i + 1;
+                item[1] = programName;
+                item[2] = employees[i].name;
+                item[3] = employees[i].ratio;
+                item[4] = 'delete';
+                item[5] = 'modify';
 
                 dataList.push(item);
             }

@@ -11,7 +11,17 @@ $(
 
             switch (originData.type) {
                 case 0:
-
+                    $('#program-role')
+                        .html('')
+                        .append(
+                            originData.roleNameArray.map(
+                                (roleName, index) => {
+                                    return $('<option>')
+                                        .attr('value', originData.roleIdArray[index])
+                                        .append(roleName)
+                                }
+                            )
+                        );
                     this.buildEmployeeNames();
                     break;
 
@@ -22,6 +32,19 @@ $(
                         .append(
                             $('<option>')
                                 .append(originData.name)
+                        );
+                    $('#program-role')
+                        .html('')
+                        .append(
+                            originData.roleNameArray.map(
+                                (roleName, index) => {
+                                    if(originData.roleIdArray[index]==originData.curRoleId){
+                                        return $('<option>')
+                                            .attr('value', originData.roleIdArray[index])
+                                            .append(roleName)
+                                    }
+                                }
+                            )
                         );
                     break;
 
@@ -62,30 +85,26 @@ $(
                 function () {
                     switch (originData.type) {
                         case 0:
-                            originData.roleIdArray.map(
-                                roleId => {
-                                    const data = {
-                                        employeeId: $('#employee-name').children('option:selected').val(),
-                                        roleId: roleId,
-                                        ratio: $('.employee-weight').val()
-                                    }
-
-                                    editProgramEmployee.saveRequest(data);
+                            {
+                                const data = {
+                                    employeeId: $('#employee-name').children('option:selected').val(),
+                                    roleId: $('#program-role').children('option:selected').val(),
+                                    ratio: $('.employee-weight').val()
                                 }
-                            );
+
+                                editProgramEmployee.saveRequest(data);
+                            }
                             break;
                         case 1:
-                            originData.roleIdArray.map(
-                                roleId => {
-                                    const data = {
-                                        employeeId: originData.employeeId,
-                                        roleId: roleId,
-                                        ratio: $('.employee-weight').val()
-                                    }
-
-                                    editProgramEmployee.modifyRequest(data);
+                            {
+                                const data = {
+                                    employeeId: originData.employeeId,
+                                    roleId: originData.curRoleId,
+                                    ratio: $('.employee-weight').val()
                                 }
-                            );
+
+                                editProgramEmployee.modifyRequest(data);
+                            }
                             break;
                         default:
                             break;
@@ -100,8 +119,8 @@ $(
                     const index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
 
-                    if(isRequsetSuccess){
-                        window.parent.queryProgramEmployees();
+                    if (isRequsetSuccess) {
+                        window.parent.queryProgramEmployees(originData.curRoleId);
                     }
                 }
             );
@@ -115,10 +134,10 @@ $(
                 success: result => {
                     if (result.code === 0) {
                         $('.message-container .message').text('保存成功');
-                        isRequsetSuccess=true;
+                        isRequsetSuccess = true;
                     } else {
                         $('.message-container .message').text('保存失败...' + result.message);
-                        isRequsetSuccess=false;
+                        isRequsetSuccess = false;
                     }
                 }
             });
@@ -132,10 +151,10 @@ $(
                 success: result => {
                     if (result.code === 0) {
                         $('.message-container .message').text('修改成功');
-                        isRequsetSuccess=true;
+                        isRequsetSuccess = true;
                     } else {
                         $('.message-container .message').text('修改失败...' + result.message);
-                        isRequsetSuccess=false;
+                        isRequsetSuccess = false;
                     }
                 }
             });

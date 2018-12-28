@@ -19,6 +19,28 @@ button{
     cursor: pointer;
 }
 
+.tb-container .role-selector{
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.tb-container label {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    min-width: 80px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+
+.tb-container select{
+    min-height: 38px;
+    line-height: 30px;
+    width: 212px;
+    padding-left: 10px; 
+    border: 1px solid #e6e6e6;
+}
 
 .tb-container caption{
     padding-bottom: 5px;
