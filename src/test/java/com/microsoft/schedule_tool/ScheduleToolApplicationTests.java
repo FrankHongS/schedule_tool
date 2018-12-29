@@ -9,6 +9,7 @@ import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.schedule.service.impl.RadioProgramSeviceImpl;
 import com.microsoft.schedule_tool.schedule.service.impl.ScheduleServiceImpl;
 import com.microsoft.schedule_tool.service.impl.schedule.ProgramServiceImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +34,18 @@ public class ScheduleToolApplicationTests {
     private RelationRoleAndEmployeeService relationRoleAndEmployeeService;
 
     @Test
+    @Ignore
     public void contextLoads() {
     }
 
     @Test
+    @Ignore
     public void getAllProgramByStationId() {
 
     }
 
     @Test
+    @Ignore
     public void testSaveSome() {
         long[] longs = programService.saveSome("[\n" +
                 " {\"radioStationId\":1,\n" +
@@ -57,12 +61,14 @@ public class ScheduleToolApplicationTests {
         }
     }
     @Test
+    @Ignore
     public void save(){
         relationRoleAndEmployeeService.addWorkers2Role(21l,15l,1);
     }
     @Autowired
     private ScheduleSercive scheduleSercive;
     @Test
+    @Ignore
     public void testSchedule(){
         scheduleSercive.schedule("2019-02-27","2019-12-20");
     }
@@ -73,6 +79,7 @@ public class ScheduleToolApplicationTests {
     @Autowired
     private RadioReplaceScheduleService radioReplaceScheduleService;
     @Test
+    @Ignore
     public void testMutex(){
         //equalRolesService.addEqualRoles("7326,7327");
         //equalRolesService.getAllEqualRolesGroup();

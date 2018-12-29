@@ -87,7 +87,7 @@ $(
                 layer.open({
                     type: 2,
                     title: '添加节目人员',
-                    area: ['400px', '340px'],
+                    area: ['450px', '360px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
@@ -160,7 +160,7 @@ $(
                 layer.open({
                     type: 2,
                     title: '修改节目人员',
-                    area: ['400px', '340px'],
+                    area: ['450px', '360px'],
                     fix: false,
                     maxmin: false,
                     scrollbar: false,
