@@ -1,12 +1,9 @@
 package com.microsoft.schedule_tool.schedule.domain.vo.schedule;
 
-import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
-import com.microsoft.schedule_tool.schedule.domain.entity.RelationRoleAndEmployee;
-import com.microsoft.schedule_tool.schedule.domain.entity.StationEmployee;
-import com.microsoft.schedule_tool.schedule.domain.vo.response.RespEmployeeByRoleId;
-import com.microsoft.schedule_tool.schedule.repository.RelationRoleAndEmployeeRepository;
+import com.microsoft.schedule_tool.schedule.domain.entity.*;
+import com.microsoft.schedule_tool.schedule.repository.*;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.microsoft.schedule_tool.util.DateUtil;
 
 import java.util.*;
 
@@ -17,65 +14,143 @@ import java.util.*;
 //角色对应的人员候选名单
 public class ScheduleRoleWaitingList {
 
-
     public Long id;
-    //最大权重
-    public int maxRatio;
-    //当前选到那个权重的员工了
-    public int currentRatio;
+
+    public java.sql.Date firstDate;
+
     //备选员工
     public Queue<Long> alternativeEmployee = new LinkedList<>();
+
+    //一轮所有的员工
+    public ArrayList<Long> allEmp = new ArrayList<>();
+
     //所有员工
     public List<RelationRoleAndEmployee> allEmployee = new ArrayList<>();
 
-
     //更新角色候选名单
-    public void updateAlternativeEmloyee() {
+    public void updateAlternativeEmloyee(Date date) {
         if (!alternativeEmployee.isEmpty()) {
             return;
         }
-        if (currentRatio < maxRatio) {
-        } else {
-            currentRatio = 1;
-        }
-        for (int i = 0; i < allEmployee.size(); i++) {
-            int ratio = allEmployee.get(i).getRatio();
-            if (ratio <= currentRatio) {
-                alternativeEmployee.offer(allEmployee.get(i).getEmployeeId());
-            }
+//        randomSort(allEmp);
+        firstDate = new java.sql.Date(date.getTime());
+        for (int i = 0; i < allEmp.size(); i++) {
+            alternativeEmployee.offer(allEmp.get(i));
         }
     }
 
     //初始化
-    public void init(Long id, RelationRoleAndEmployeeService relationRoleAndEmployeeService, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
-        List<RespEmployeeByRoleId> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
-        int maxRatio = 1;
-        for (int j = 0; j < employees.size(); j++) {
-            int ratio = relationRoleAndEmployeeService.getRatio(employees.get(j).getId(), id);
-            maxRatio = maxRatio < ratio ? ratio : maxRatio;
-        }
+    public void init(Long id, Date startDate,
+                     RelationRoleAndEmployeeService relationRoleAndEmployeeService,
+                     RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository,
+                     ScheduleStatesResposity scheduleStatesResposity,
+                     ProgramRoleRepository programRoleRepository,
+                     RadioScheduleRepository radioScheduleRepository) {
         this.id = id;
-        this.currentRatio = 1;
-        this.maxRatio = maxRatio;
-        allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
-        randomSort(allEmployee);
-        for (int j = 0; j < allEmployee.size(); j++) {
-            int ratio = allEmployee.get(j).getRatio();
-            if (currentRatio == ratio) {
-                alternativeEmployee.offer(allEmployee.get(j).getEmployeeId());
-            }
-        }
-        currentRatio++;
+
+        initAllEmp(id, relationRoleAndEmployeeRepository);
+        initAlternativeEmployeeAndFirstDate(id, startDate, scheduleStatesResposity, programRoleRepository, radioScheduleRepository);
     }
 
-    private void randomSort(List<RelationRoleAndEmployee> allEmployee) {
-        int len = allEmployee.size();
+//    /**
+//     * 初始化最大权重
+//     *
+//     * @param id
+//     * @param relationRoleAndEmployeeService
+//     * @return
+//     */
+//    private int initMaxRatio(Long id, RelationRoleAndEmployeeService relationRoleAndEmployeeService) {
+//        //获取该角色下所有员工
+//        List<RespEmployeeByRoleId> employees = relationRoleAndEmployeeService.getAllWorkersByRoleId(id);
+//        //获取该角色下员工的权重最大值
+//        int maxRatio = 1;
+//        for (int j = 0; j < employees.size(); j++) {
+//            int ratio = relationRoleAndEmployeeService.getRatio(employees.get(j).getId(), id);
+//            maxRatio = maxRatio < ratio ? ratio : maxRatio;
+//        }
+//        return maxRatio;
+//    }
+
+    /**
+     * 初始化一轮的emp
+     *
+     * @param id
+     * @param relationRoleAndEmployeeRepository
+     */
+    private void initAllEmp(Long id, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
+        //该角色下的（员工id+权重）数组
+        //初始化allEmp，之后去掉已经排过的员工
+        allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
+        for (int j = 0; j < allEmployee.size(); j++) {
+            RelationRoleAndEmployee item = allEmployee.get(j);
+            Long employeeId = item.getEmployeeId();
+            int ratio = item.getRatio();
+            for (int i = 0; i < ratio; i++) {
+                allEmp.add(employeeId);
+            }
+        }
+        randomSort(allEmp);
+    }
+
+    /**
+     * 初始化候选名单
+     * //get first data from tb_shcdule_state by roleId and curDate
+     * <p>
+     * //if(has) -> 1:get has sorted employees from tb_schdule by isholidy=false and roleid and curDate and firstDate
+     * <p>
+     * //          2:init alternativeEmployee  ( allEmp except  has sorted)
+     * <p>
+     * //else ->1:alternativeEmployee = allEmp
+     *
+     * @param id
+     * @param startDate
+     * @param scheduleStatesResposity
+     * @param programRoleRepository
+     * @param radioScheduleRepository
+     */
+    private void initAlternativeEmployeeAndFirstDate(Long id, Date startDate, ScheduleStatesResposity scheduleStatesResposity, ProgramRoleRepository programRoleRepository, RadioScheduleRepository radioScheduleRepository) {
+        ArrayList<Long> hasSortEmp = new ArrayList<>();
+
+        Date thisWeekMonday = DateUtil.getThisWeekMonday(startDate);
+        Optional<ProgramRole> roleOptional = programRoleRepository.findById(id);
+
+
+        Optional<ScheduleStates> currentState = scheduleStatesResposity.getByCurDateAndRole(new java.sql.Date(DateUtil.getNextDate(thisWeekMonday, -7).getTime()), roleOptional.get());
+        if (currentState.isPresent()) {
+            firstDate = currentState.get().getFirstDate();
+            List<RadioSchedule> schedules = radioScheduleRepository.findAllByRoleAndDateLessThanEqualAndDateGreaterThanEqualAndIsHoliday(roleOptional.get(), startDate, firstDate, false);
+            long currentId = -1;
+            for (int i = 0; i < schedules.size(); i++) {
+                Long id1 = schedules.get(i).getEmployee().getId();
+                if (id1 != currentId) {
+                    currentId = id1;
+                    hasSortEmp.add(id1);
+                }
+            }
+            ArrayList<Long> temp = new ArrayList<>();
+            for (int i = 0; i < allEmp.size(); i++) {
+                temp.add(allEmp.get(i));
+            }
+            temp.removeAll(hasSortEmp);
+            for (int i = 0; i < temp.size(); i++) {
+                alternativeEmployee.offer(temp.get(i));
+            }
+        } else {
+            for (int i = 0; i < allEmp.size(); i++) {
+                alternativeEmployee.offer(allEmp.get(i));
+            }
+            firstDate = new java.sql.Date(thisWeekMonday.getTime());
+        }
+    }
+
+    private <T> void randomSort(List<T> needRandArray) {
+        int len = needRandArray.size();
         Random random = new Random();
-        for (int i = 0; i < allEmployee.size(); i++) {
+        for (int i = 0; i < needRandArray.size(); i++) {
             int index = random.nextInt(len);
-            RelationRoleAndEmployee temp = allEmployee.get(index);
-            allEmployee.remove(index);
-            allEmployee.add(temp);
+            T temp = needRandArray.get(index);
+            needRandArray.remove(index);
+            needRandArray.add(temp);
             len--;
         }
 

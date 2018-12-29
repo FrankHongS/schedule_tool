@@ -70,7 +70,7 @@ public class ScheduleToolApplicationTests {
     @Test
     @Ignore
     public void testSchedule(){
-        scheduleSercive.schedule("2019-9-02","2019-12-01");
+        scheduleSercive.schedule("2019-02-27","2019-12-20");
     }
 
     @Autowired
