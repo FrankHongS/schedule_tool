@@ -66,7 +66,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private int endWeek;
 
     //排班失败retry次数
-    private static int RETRY_TIME = 1;
+    private static int RETRY_TIME = 20;
     private int currentTime = 0;
     private HashSet<Long> needScheduleRole;
     private String special;
@@ -148,6 +148,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                         }
                         if (move == alternativeEmployee.size()) {
                             //选不到人！！！！
+                            System.out.println("测试数据：第a次 第i周 j角色" + currentTime + " " + i + " " + j);
                             throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
                         }
 
@@ -161,7 +162,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     }
                     if (alternativeEmployee.isEmpty()) {
                         //同一个ratio排完了,更新候选名单
-                        scheduleRole.updateAlternativeEmloyee();
+                        Date nextDate = DateUtil.getNextDate(startDate, 7 * (i + 1));
+                        Date thisWeekMonday = DateUtil.getThisWeekMonday(nextDate);
+                        scheduleRole.updateAlternativeEmloyee(thisWeekMonday);
 //                        updateScheduleState(i, j);
                     }
                 }
@@ -183,15 +186,14 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             //清理掉可选员工表中to之后的信息
             clearScheduleStateTo();
 
-            currentTime = 0;
         } catch (Exception e) {
+            try {
+                clearOldData(from, to);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+            clearScheduleState();
             if (e instanceof ProgramScheduleException && currentTime < RETRY_TIME) {
-                try {
-                    clearOldData(from, to);
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-                clearScheduleState();
                 currentTime++;
                 schedule(from, to);
             } else {
@@ -227,16 +229,18 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         java.sql.Date curDate = new java.sql.Date(DateUtil.getNextDate(mondayOfStartWeek, i * 7).getTime());
 
         Optional<ProgramRole> roleOptional = programRoleRepository.findById(scheduleRoles.get(j).id);
-        Optional<ScheduleStates> scheduleStatesOptional = scheduleStatesResposity.getByRoleAndCurDateAndFirstDate(roleOptional.get(), curDate, firstDate);
-        ScheduleStates scheduleStates = new ScheduleStates();
+        Optional<ScheduleStates> scheduleStatesOptional = scheduleStatesResposity.getByRoleAndCurDate(roleOptional.get(), curDate);
         if (scheduleStatesOptional.isPresent()) {
-            scheduleStates.setId(scheduleStatesOptional.get().getId());
+            ScheduleStates scheduleStates = scheduleStatesOptional.get();
+            scheduleStates.setFirstDate(firstDate);
+            scheduleStatesResposity.saveAndFlush(scheduleStates);
+        } else {
+            ScheduleStates scheduleStates = new ScheduleStates();
+            scheduleStates.setCurDate(curDate);
+            scheduleStates.setFirstDate(firstDate);
+            scheduleStates.setRole(roleOptional.get());
+            scheduleStatesResposity.saveAndFlush(scheduleStates);
         }
-        scheduleStates.setCurDate(curDate);
-        scheduleStates.setFirstDate(firstDate);
-        scheduleStates.setRole(roleOptional.get());
-
-        scheduleStatesResposity.save(scheduleStates);
     }
 
     /**

@@ -28,10 +28,12 @@ public class ScheduleRoleWaitingList {
     public List<RelationRoleAndEmployee> allEmployee = new ArrayList<>();
 
     //更新角色候选名单
-    public void updateAlternativeEmloyee() {
+    public void updateAlternativeEmloyee(Date date) {
         if (!alternativeEmployee.isEmpty()) {
             return;
         }
+//        randomSort(allEmp);
+        firstDate = new java.sql.Date(date.getTime());
         for (int i = 0; i < allEmp.size(); i++) {
             alternativeEmployee.offer(allEmp.get(i));
         }
@@ -87,7 +89,7 @@ public class ScheduleRoleWaitingList {
                 allEmp.add(employeeId);
             }
         }
-//        randomSort(allEmp);
+        randomSort(allEmp);
     }
 
     /**
@@ -113,7 +115,7 @@ public class ScheduleRoleWaitingList {
         Optional<ProgramRole> roleOptional = programRoleRepository.findById(id);
 
 
-        Optional<ScheduleStates> currentState = scheduleStatesResposity.getByCurDateAndRole(new java.sql.Date(thisWeekMonday.getTime()), roleOptional.get());
+        Optional<ScheduleStates> currentState = scheduleStatesResposity.getByCurDateAndRole(new java.sql.Date(DateUtil.getNextDate(thisWeekMonday, -7).getTime()), roleOptional.get());
         if (currentState.isPresent()) {
             firstDate = currentState.get().getFirstDate();
             List<RadioSchedule> schedules = radioScheduleRepository.findAllByRoleAndDateLessThanEqualAndDateGreaterThanEqualAndIsHoliday(roleOptional.get(), startDate, firstDate, false);
@@ -125,7 +127,10 @@ public class ScheduleRoleWaitingList {
                     hasSortEmp.add(id1);
                 }
             }
-            ArrayList<Long> temp = allEmp;
+            ArrayList<Long> temp = new ArrayList<>();
+            for (int i = 0; i < allEmp.size(); i++) {
+                temp.add(allEmp.get(i));
+            }
             temp.removeAll(hasSortEmp);
             for (int i = 0; i < temp.size(); i++) {
                 alternativeEmployee.offer(temp.get(i));

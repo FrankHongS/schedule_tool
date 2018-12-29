@@ -18,7 +18,7 @@ public interface ScheduleStatesResposity extends JpaRepository<ScheduleStates, L
 
     Optional<ScheduleStates> getByCurDateAndRole(Date date, ProgramRole role);
 
-    Optional<ScheduleStates> getByRoleAndCurDateAndFirstDate(ProgramRole role, Date curData, Date firstData);
+    Optional<ScheduleStates> getByRoleAndCurDate(ProgramRole role, Date curData);
 
     @Modifying
     @Transactional

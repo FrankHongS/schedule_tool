@@ -193,12 +193,7 @@ public class ExportExcelUtil {
     private static void buildScheduleTable(XSSFSheet sheet, List<RespSchedule> datas, String from, String to) throws ParseException {
 
         XSSFRow row = sheet.createRow(0);
-        int dayCountFromDate = DateUtil.getDayCountFromDate(from, to);
-        row.createCell(0);
-        for (int i = 0; i < dayCountFromDate; i++) {
-            Date nextDate = DateUtil.getNextDate(DateUtil.parseDateString(from), i);
-            row.createCell(i + 1).setCellValue(DateUtil.parseDateToString(nextDate));
-        }
+
 
         HashSet<String> roles = new HashSet<>();
         HashMap<String, String> rolesAndData2employee = new HashMap<>();
@@ -207,19 +202,58 @@ public class ExportExcelUtil {
             String roleName = respSchedule.programName + "--" + respSchedule.roleName;
             roles.add(roleName);
 
-            rolesAndData2employee.put(roleName + datas.get(i).date, respSchedule.name + "(" + respSchedule.alias + ")");
+            rolesAndData2employee.put(roleName + datas.get(i).date, respSchedule.name);
         }
 
-        int rowNum = 1;
+        row.createCell(0);
+        int tempIndex = 1;
         for (String role : roles) {
-            XSSFRow row1 = sheet.createRow(rowNum);
-            row1.createCell(0).setCellValue(role);
-            for (int i = 0; i < dayCountFromDate; i++) {
-                Date nextDate = DateUtil.getNextDate(DateUtil.parseDateString(from), i);
-                row1.createCell(i + 1).setCellValue(rolesAndData2employee.get(role +DateUtil.parseDateToString(nextDate)));
-            }
-            rowNum++;
+            row.createCell(tempIndex).setCellValue(role);
+            tempIndex++;
         }
+
+        int dayCountFromDate = DateUtil.getDayCountFromDate(from, to);
+
+        for (int i = 0; i < dayCountFromDate; i++) {
+            XSSFRow row1 = sheet.createRow(i + 1);
+            Date nextDate = DateUtil.getNextDate(DateUtil.parseDateString(from), i);
+            row1.createCell(0).setCellValue(DateUtil.parseDateToString(nextDate));
+
+            int temp = 1;
+            for (String role : roles) {
+                row1.createCell(temp).setCellValue(rolesAndData2employee.get(role + DateUtil.parseDateToString(nextDate)));
+                temp++;
+            }
+        }
+
+//        XSSFRow row = sheet.createRow(0);
+//        int dayCountFromDate = DateUtil.getDayCountFromDate(from, to);
+//        row.createCell(0);
+//        for (int i = 0; i < dayCountFromDate; i++) {
+//            Date nextDate = DateUtil.getNextDate(DateUtil.parseDateString(from), i);
+//            row.createCell(i + 1).setCellValue(DateUtil.parseDateToString(nextDate));
+//        }
+//
+//        HashSet<String> roles = new HashSet<>();
+//        HashMap<String, String> rolesAndData2employee = new HashMap<>();
+//        for (int i = 0; i < datas.size(); i++) {
+//            RespSchedule respSchedule = datas.get(i);
+//            String roleName = respSchedule.programName + "--" + respSchedule.roleName;
+//            roles.add(roleName);
+//
+//            rolesAndData2employee.put(roleName + datas.get(i).date, respSchedule.name + "(" + respSchedule.alias + ")");
+//        }
+//
+//        int rowNum = 1;
+//        for (String role : roles) {
+//            XSSFRow row1 = sheet.createRow(rowNum);
+//            row1.createCell(0).setCellValue(role);
+//            for (int i = 0; i < dayCountFromDate; i++) {
+//                Date nextDate = DateUtil.getNextDate(DateUtil.parseDateString(from), i);
+//                row1.createCell(i + 1).setCellValue(rolesAndData2employee.get(role +DateUtil.parseDateToString(nextDate)));
+//            }
+//            rowNum++;
+//        }
 
 
     }
