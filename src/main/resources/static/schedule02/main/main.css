@@ -1,12 +1,19 @@
-.main-container{
+select {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+
+    border: 1px solid #e6e6e6;
 }
 
-.nav-container{
+.main-container {}
+
+.nav-container {
     display: flex;
     justify-content: center;
 }
 
-.nav-container ul{
+.nav-container ul {
     list-style: none;
     padding-left: 0;
     margin: 0;
@@ -14,7 +21,7 @@
     align-items: center;
 }
 
-.nav-container ul li{
+.nav-container ul li {
     display: inline-block;
     padding: 16px 30px;
     font-size: 1.2em;
@@ -22,17 +29,16 @@
     cursor: pointer;
 }
 
-.nav-container .active{
+.nav-container .active {
     color: black;
     border-bottom: 2px #009688 solid;
     /* box-shadow: #009688 0 2px; */
 }
 
-.nav-container .unactive{
+.nav-container .unactive {
     color: #888;
 }
 
-.nav-container .unactive:hover{
+.nav-container .unactive:hover {
     color: #666;
 }
-

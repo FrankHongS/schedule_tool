@@ -1,3 +1,11 @@
+select {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+
+    border: 1px solid #e6e6e6;
+}
+
 .main-container{
     width: 90%;
     margin: 0 auto;
