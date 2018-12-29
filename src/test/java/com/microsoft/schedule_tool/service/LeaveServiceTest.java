@@ -97,7 +97,6 @@ public class LeaveServiceTest {
 
     @Ignore
     @Test
-    @Ignore
     public void getAllLeavesOrderByCreatedTime() {
         List<Leave> leaves = mLeaveService.getAllLeavesOrderByCreatedTime(0, 2);
         System.out.println(leaves);
