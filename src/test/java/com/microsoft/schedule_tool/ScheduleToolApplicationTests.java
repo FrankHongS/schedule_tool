@@ -60,17 +60,20 @@ public class ScheduleToolApplicationTests {
             System.out.println(longs[i]);
         }
     }
+
     @Test
     @Ignore
-    public void save(){
-        relationRoleAndEmployeeService.addWorkers2Role(21l,15l,1);
+    public void save() {
+        relationRoleAndEmployeeService.addWorkers2Role(21l, 15l, 1);
     }
+
     @Autowired
     private ScheduleSercive scheduleSercive;
+
     @Test
     @Ignore
-    public void testSchedule(){
-        scheduleSercive.schedule("2019-02-27","2019-12-20");
+    public void testSchedule() {
+        scheduleSercive.schedule("2019-02-27", "2019-12-20");
     }
 
     @Autowired
@@ -78,24 +81,29 @@ public class ScheduleToolApplicationTests {
 
     @Autowired
     private RadioReplaceScheduleService radioReplaceScheduleService;
+
     @Test
     @Ignore
-    public void testMutex(){
+    public void testMutex() {
         //equalRolesService.addEqualRoles("7326,7327");
         //equalRolesService.getAllEqualRolesGroup();
-        radioReplaceScheduleService.addReplace(7324,"2018-10-08",7338);
+        radioReplaceScheduleService.addReplace(7324, "2018-10-08", 7338);
     }
 
 
     @Test
-    public void testReplace(){
-        radioReplaceScheduleService.addReplace(7331,"2019-02-13",7342);
+    public void testReplace() {
+        radioReplaceScheduleService.addReplace(7331, "2019-02-13", 7342);
 
     }
 
     @Test
-    public void testAddHolidayEmp(){
-        scheduleSercive.addHolidayEmployee("2019-03-03",7331,7341);
+    public void testAddHolidayEmp() {
+        scheduleSercive.addHolidayEmployee("2019-03-03", 7331, 7341);
     }
 
+    @Test
+    public void addSome() {
+        radioReplaceScheduleService.addSomeReplace(7331, "2019-02-18 - 2019-02-20", 7341);
+    }
 }

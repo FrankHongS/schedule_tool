@@ -45,10 +45,16 @@ public class RadioReplaceController {
     }
 
     @GetMapping("/findAll")
-    public Result findAll(){
+    public Result findAll() {
         List<RespReplaceSchedule> allReplace = radioReplaceScheduleService.getAllReplace();
         Map<String, List<RespReplaceSchedule>> data = ResultUtil.getResultData("data", allReplace);
         return ResultUtil.success(data);
 
+    }
+
+    @PostMapping("/addSome")
+    public Result addSomeReplace(long roleId, String date, long employeeId) {
+        radioReplaceScheduleService.addSomeReplace(roleId, date, employeeId);
+        return ResultUtil.success();
     }
 }

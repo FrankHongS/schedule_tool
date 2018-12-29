@@ -91,7 +91,8 @@ public enum ResultEnum {
     SCHEDULE_FIND_FAILED(184,"schedule_find_failed"),
     SCHEDULE_EXPORT_FAILED(185,"schedule_export_failed"),
     MUTEX_DELETE_FAILED(186,"mutex_delete_failed"),
-    EQUEL_ROLE_DELETE_FAILED(187,"equel_role_delete_failed");
+    EQUEL_ROLE_DELETE_FAILED(187,"equel_role_delete_failed"),
+    SCHEDULE_DATE_NULL(188,"schedule_date_null");
 
     private int code;
 

@@ -3,6 +3,7 @@ package com.microsoft.schedule_tool.schedule.service.impl;
 import com.microsoft.schedule_tool.dao.schedule.ProgramRepository;
 import com.microsoft.schedule_tool.entity.Employee;
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
+import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
 import com.microsoft.schedule_tool.schedule.domain.entity.ProgramRole;
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioReplaceSchedule;
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioSchedule;
@@ -11,6 +12,7 @@ import com.microsoft.schedule_tool.schedule.domain.vo.response.RespReplaceSchedu
 import com.microsoft.schedule_tool.schedule.repository.*;
 import com.microsoft.schedule_tool.schedule.service.RadioReplaceScheduleService;
 import com.microsoft.schedule_tool.util.DateUtil;
+import com.microsoft.schedule_tool.util.StringUtils;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -176,5 +178,23 @@ public class RadioReplaceScheduleServiceImpl implements RadioReplaceScheduleServ
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_REPLACE_FIND_FAILED);
         }
 
+    }
+
+    @Override
+    public void addSomeReplace(long roleId, String date, long employeeId) {
+        if (StringUtils.isEmpty(date)) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_DATE_NULL);
+        }
+        String[] dates = date.split(" - ");
+        try {
+            int dayCountFromDate = DateUtil.getDayCountFromDate(dates[0], dates[1]) + 1;
+            for (int i = 0; i < dayCountFromDate; i++) {
+                Date nextDate = DateUtil.getNextDate(DateUtil.parseDateString(dates[0]), i);
+                String s = DateUtil.parseDateToString(nextDate);
+                addReplace(roleId, s, employeeId);
+            }
+        } catch (Exception e) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_DATE_PARSE_ERROR);
+        }
     }
 }
