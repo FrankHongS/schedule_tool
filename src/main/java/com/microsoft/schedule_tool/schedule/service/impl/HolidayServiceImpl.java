@@ -6,7 +6,6 @@ import com.microsoft.schedule_tool.exception.schedule.ProgramException;
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
 import com.microsoft.schedule_tool.schedule.domain.entity.Holiday;
 import com.microsoft.schedule_tool.schedule.domain.vo.request.ReqHoliday;
-import com.microsoft.schedule_tool.schedule.domain.vo.request.ReqRole;
 import com.microsoft.schedule_tool.schedule.repository.HolidayRepository;
 import com.microsoft.schedule_tool.schedule.service.HolidayService;
 import com.microsoft.schedule_tool.util.DateUtil;
@@ -46,12 +45,11 @@ public class HolidayServiceImpl implements HolidayService {
                 ReqHoliday reqHoliday = holidays.get(i);
                 Holiday holiday = new Holiday();
                 Date date = DateUtil.parseDateString(reqHoliday.date);
+                holiday.setName(reqHoliday.name);
                 holiday.setDate(new java.sql.Date(date.getTime()));
-                //查重
-                if (canAdd(date)) {
+                //查重(有就修改)
+                if (!needUpdate(date, holiday.getName())) {
                     holidayRepository.save(holiday);
-                }else{
-                    throw new ProgramException(ResultEnum.HOLIDAY_EXISTING);
                 }
             }
         } catch (Exception e) {
@@ -83,13 +81,16 @@ public class HolidayServiceImpl implements HolidayService {
         }
     }
 
-    private boolean canAdd(Date date) {
+    private boolean needUpdate(Date date, String name) {
         List<Holiday> all = holidayRepository.findAll();
         for (int i = 0; i < all.size(); i++) {
-            if (all.get(i).getDate().getTime()==date.getTime()) {
-                return false;
+            Holiday holiday = all.get(i);
+            if (holiday.getDate().getTime() == date.getTime()) {
+                holiday.setName(name);
+                holidayRepository.saveAndFlush(holiday);
             }
+            return true;
         }
-        return true;
+        return false;
     }
 }

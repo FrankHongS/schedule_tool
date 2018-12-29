@@ -9,4 +9,5 @@ import java.util.Date;
 public class ReqHoliday {
     //"yyyy-MM-dd"
     public String date;
+    public String name;
 }
