@@ -66,7 +66,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private int endWeek;
 
     //排班失败retry次数
-    private static int RETRY_TIME = 15;
+    private static int RETRY_TIME = 1;
     private int currentTime = 0;
     private HashSet<Long> needScheduleRole;
     private String special;
@@ -162,7 +162,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     if (alternativeEmployee.isEmpty()) {
                         //同一个ratio排完了,更新候选名单
                         scheduleRole.updateAlternativeEmloyee();
-                        updateScheduleState(i, j);
+//                        updateScheduleState(i, j);
                     }
                 }
                 //reset
@@ -185,12 +185,15 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
             currentTime = 0;
         } catch (Exception e) {
-            if (e instanceof ProgramScheduleException) {
-                clearScheduleState();
-                if (currentTime < RETRY_TIME) {
-                    currentTime++;
-                    schedule(from, to);
+            if (e instanceof ProgramScheduleException && currentTime < RETRY_TIME) {
+                try {
+                    clearOldData(from, to);
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
                 }
+                clearScheduleState();
+                currentTime++;
+                schedule(from, to);
             } else {
                 throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
             }
@@ -200,6 +203,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private void clearScheduleStateTo() {
         // TODO: 2018/12/24 清除掉to之后的数据
 //        scheduleStatesResposity.deleteByStartDateGreaterThan((java.sql.Date) endaDate);
+        scheduleStatesResposity.deleteByCurDateGreaterThan(new java.sql.Date(endaDate.getTime()));
     }
 
     /**
@@ -207,7 +211,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
      * todo
      */
     private void clearScheduleState() {
-//        scheduleStatesResposity.deleteByStartDateLessThanAndStartDateGreaterThan((java.sql.Date) DateUtil.getNextDate(endaDate, 7), (java.sql.Date) startDate);
+        scheduleStatesResposity.deleteByCurDateLessThanEqualAndCurDateGreaterThanEqual(new java.sql.Date(endaDate.getTime()), new java.sql.Date(DateUtil.getThisWeekMonday(startDate).getTime()));
     }
 
     /**
@@ -217,43 +221,22 @@ public class ScheduleServiceImpl implements ScheduleSercive {
      * @param j role
      */
     private void updateScheduleState(int i, int j) {
-        //
-//        Long roleid = scheduleRoles.get(j).id;
-//        //wait_employees
-//        Queue<Long> alternativeEmployeeIds = scheduleRoles.get(j).alternativeEmployee;
-//        StringBuilder sb = new StringBuilder();
-//        for (Long employeeId : alternativeEmployeeIds) {
-//            sb.append(employeeId + ",");
-//        }
-//        String ids = sb.toString();
-//        if (ids.length() > 0) {
-//            ids = ids.substring(0, ids.length() - 1);
-//        }
-//        //排到的权重
-//        int ratio = scheduleRoles.get(j).currentRatio;
-//
-//        //获取日期(下一周的日期)
-//        Date thisWeekMonday = DateUtil.getThisWeekMonday(DateUtil.getNextDate(startDate, 7 * (i + 1)));
-//
-//        Optional<ProgramRole> roleOptional = programRoleRepository.findById(roleid);
-//        if (roleOptional.isPresent()) {
-//            Optional<ScheduleStates> scheduleStatesOptional = scheduleStatesResposity.findByStartDateAndRole((java.sql.Date) thisWeekMonday, roleOptional.get());
-//            if (scheduleStatesOptional.isPresent()) {
-//                //存在，那么更新
-//                ScheduleStates scheduleStates = scheduleStatesOptional.get();
-//                scheduleStates.ratio = ratio;
-//                scheduleStates.wait_selected = ids;
-//                scheduleStatesResposity.saveAndFlush(scheduleStates);
-//            } else {
-//                //不存在，那么add
-//                ScheduleStates scheduleStates = new ScheduleStates();
-//                scheduleStates.setRatio(ratio);
-//                scheduleStates.setRole(roleOptional.get());
-//                scheduleStates.setStartDate((java.sql.Date) thisWeekMonday);
-//                scheduleStates.setWait_selected(ids);
-//                scheduleStatesResposity.save(scheduleStates);
-//            }
-//        }
+        //1:get firstDate from rolesWaiting
+        java.sql.Date firstDate = scheduleRoles.get(j).firstDate;
+        Date mondayOfStartWeek = DateUtil.getThisWeekMonday(startDate);
+        java.sql.Date curDate = new java.sql.Date(DateUtil.getNextDate(mondayOfStartWeek, i * 7).getTime());
+
+        Optional<ProgramRole> roleOptional = programRoleRepository.findById(scheduleRoles.get(j).id);
+        Optional<ScheduleStates> scheduleStatesOptional = scheduleStatesResposity.getByRoleAndCurDateAndFirstDate(roleOptional.get(), curDate, firstDate);
+        ScheduleStates scheduleStates = new ScheduleStates();
+        if (scheduleStatesOptional.isPresent()) {
+            scheduleStates.setId(scheduleStatesOptional.get().getId());
+        }
+        scheduleStates.setCurDate(curDate);
+        scheduleStates.setFirstDate(firstDate);
+        scheduleStates.setRole(roleOptional.get());
+
+        scheduleStatesResposity.save(scheduleStates);
     }
 
     /**
@@ -263,9 +246,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
      * @param to
      */
     private void clearOldData(String from, String to) throws ParseException {
-//        Date dateFrom = DateUtil.parseDateString(from);
-//        Date dateTo = DateUtil.parseDateString(to);
-//        radioScheduleRepository.deleteByDateLessThanEqualAndDateGreaterThanEqual(dateTo, dateFrom);
+        Date dateFrom = DateUtil.parseDateString(from);
+        Date dateTo = DateUtil.parseDateString(to);
+        radioScheduleRepository.deleteByDateLessThanEqualAndDateGreaterThanEqual(dateTo, dateFrom);
     }
 
     private void saveData2Db() throws ParseException {
@@ -459,7 +442,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         weekNums = (int) DateUtil.weeks(startDate, endaDate);
 
         //获取所有的角色（1：排除掉没有员工的角色，）
-        List<ProgramRole> programRoles = programRoleRepository.findAll();
+        List<ProgramRole> programRoles = programRoleRepository.findAllByIsDeleted(false);
 
         ArrayList<Long> hasEmployeeProgramRoles = new ArrayList<>();
         for (int i = 0; i < programRoles.size(); i++) {
@@ -491,7 +474,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         scheduleRoles = new ArrayList<>();
         for (Long id : needScheduleRole) {
             ScheduleRoleWaitingList scheduleRole = new ScheduleRoleWaitingList();
-            scheduleRole.init(id,startDate, relationRoleAndEmployeeService, relationRoleAndEmployeeRepository,scheduleStatesResposity,programRoleRepository);
+            scheduleRole.init(id, startDate, relationRoleAndEmployeeService, relationRoleAndEmployeeRepository, scheduleStatesResposity, programRoleRepository, radioScheduleRepository);
             scheduleRoles.add(scheduleRole);
         }
     }
@@ -511,14 +494,14 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             boolean isIn = false;
 
             for (int j = 0; j < split.length; j++) {
-                if (id == Long.valueOf(split[j])) {
+                if (id.equals(Long.valueOf(split[j]))) {
                     isIn = true;
                     break;
                 }
             }
             if (isIn) {
                 for (int j = 0; j < split.length; j++) {
-                    if (Long.valueOf(split[j]) == id) {
+                    if (Long.valueOf(split[j]).equals(id)) {
                         continue;
                     }
                     noNeedAdd.put(Long.valueOf(split[j]), id);

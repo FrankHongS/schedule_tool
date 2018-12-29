@@ -1,6 +1,5 @@
 package com.microsoft.schedule_tool.schedule.domain.entity;
 
-import javax.management.relation.Role;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -10,17 +9,19 @@ import java.sql.Date;
  * @time 2018/12/24
  **/
 //排版状态
+
 /**
  * 1:id   2:当前周的第一天  3：当前周所在的一轮里开始的那一周的第一天 4：roleId
  */
-@Entity(name = "tb_schedule_state")
+@Entity(name = "tb1_schedule_state")
 public class ScheduleStates implements Serializable {
     @Id
+    @GeneratedValue
     public Long id;
     /**
      * 当前的日期
      */
-    public Date currentDate;
+    public Date curDate;
     /**
      * 一轮开始的日期
      */
@@ -30,12 +31,12 @@ public class ScheduleStates implements Serializable {
     @JoinColumn(name = "role_id")
     public ProgramRole role;
 
-    public Date getCurrentDate() {
-        return currentDate;
+    public Date getCurDate() {
+        return curDate;
     }
 
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
+    public void setCurDate(Date curDate) {
+        this.curDate = curDate;
     }
 
     public Date getFirstDate() {
@@ -52,5 +53,13 @@ public class ScheduleStates implements Serializable {
 
     public void setRole(ProgramRole role) {
         this.role = role;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

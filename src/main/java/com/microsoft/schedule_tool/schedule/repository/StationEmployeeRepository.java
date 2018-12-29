@@ -14,4 +14,5 @@ public interface StationEmployeeRepository extends JpaRepository<StationEmployee
     Optional<StationEmployee> findByAlias(String alias);
 
     List<StationEmployee> findAllByIsDeleted(boolean isDeleted);
+
 }

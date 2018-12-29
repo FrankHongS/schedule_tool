@@ -14,5 +14,5 @@ import java.util.Optional;
 public interface ProgramRoleRepository extends JpaRepository<ProgramRole, Long> {
     List<ProgramRole> findByNameAndRadioProgram(String name, RadioProgram radioProgram);
     List<ProgramRole> findAllByRadioProgramAndIsDeleted(RadioProgram radioProgram,boolean isDeleted);
-
+    List<ProgramRole> findAllByIsDeleted(Boolean isDeleted);
 }
