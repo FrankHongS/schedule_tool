@@ -79,4 +79,16 @@ public class ScheduleToolApplicationTests {
         radioReplaceScheduleService.addReplace(7324,"2018-10-08",7338);
     }
 
+
+    @Test
+    public void testReplace(){
+        radioReplaceScheduleService.addReplace(7331,"2019-02-13",7342);
+
+    }
+
+    @Test
+    public void testAddHolidayEmp(){
+        scheduleSercive.addHolidayEmployee("2019-03-03",7331,7341);
+    }
+
 }

@@ -516,19 +516,20 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
     @Override
     public void addHolidayEmployee(String date, long roleId, long empoyeeId) {
+        Optional<ProgramRole> roleOptional = programRoleRepository.findById(roleId);
+        if (!roleOptional.isPresent()) {
+            throw new ProgramScheduleException(ResultEnum.PROGRAM_ROLE_ID_NOT_EXIST);
+        }
+        String cycle = roleOptional.get().getCycle();
         //check params
         Date date1;
         try {
             date1 = DateUtil.parseDateString(date);
-            if (!isHoliday(date1)) {
+            if (!isHoliday(date1) && cycle.charAt(DateUtil.getDayOfWeek(date) - 1) != '0') {
                 throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_DATE_NOT_HOLIDAY);
             }
         } catch (ParseException e) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_DATE_PARSE_ERROR);
-        }
-        Optional<ProgramRole> roleOptional = programRoleRepository.findById(roleId);
-        if (!roleOptional.isPresent()) {
-            throw new ProgramScheduleException(ResultEnum.PROGRAM_ROLE_ID_NOT_EXIST);
         }
         Optional<StationEmployee> employeeOptional = stationEmployeeRepository.findById(empoyeeId);
         if (!employeeOptional.isPresent()) {
@@ -536,7 +537,10 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         }
         Optional<RadioSchedule> byDateAndAndRole = radioScheduleRepository.findByDateAndRole(date1, roleOptional.get());
         if (byDateAndAndRole.isPresent()) {
-            throw new ProgramScheduleException(ResultEnum.SCHEDULE_HOLIDAY_REPEAT);
+            RadioSchedule radioSchedule = byDateAndAndRole.get();
+            radioSchedule.setEmployee(employeeOptional.get());
+            radioScheduleRepository.saveAndFlush(radioSchedule);
+            return;
         }
         try {
             RadioSchedule radioSchedule = new RadioSchedule();

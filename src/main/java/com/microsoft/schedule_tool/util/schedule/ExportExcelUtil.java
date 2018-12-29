@@ -44,51 +44,17 @@ public class ExportExcelUtil {
     }
 
     private static void buildHolidayScheduleTable(XSSFSheet sheet, List<RespSchedule> datas, String from, String to) {
-        HashSet<String> roles = new HashSet<>();
-
-        HashSet<String> dates = new HashSet<>();
-
-        //日期排序
-        ArrayList<String> ds = new ArrayList<>();
-        for (String date : dates) {
-            ds.add(date);
-        }
-        ds.sort(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                try {
-                    return DateUtil.parseDateString(o1).getTime() > DateUtil.parseDateString(o2).getTime() ? 0 : 1;
-                } catch (ParseException e) {
-                    return 0;
-                }
-            }
-        });
-
-        HashMap<String, String> roleAndDate2employee = new HashMap<>();
+        XSSFRow row = sheet.createRow(0);
+        row.createCell(0).setCellValue("节目（角色）");
+        row.createCell(1).setCellValue("日期");
+        row.createCell(2).setCellValue("员工");
 
         for (int i = 0; i < datas.size(); i++) {
-            String role = datas.get(i).programName + "--" + datas.get(i).roleName;
-            roles.add(role);
-            String date = datas.get(i).date;
-            dates.add(date);
-            roleAndDate2employee.put(role + date,
-                    datas.get(i).name + "(" + datas.get(i).alias + ")");
-        }
-
-        XSSFRow row1 = sheet.createRow(0);
-        row1.createCell(0);
-        for (int i = 0; i < ds.size(); i++) {
-            row1.createCell(i + 1).setCellValue(ds.get(i));
-        }
-
-        int rowNum = 1;
-        for (String role : roles) {
-            XSSFRow row = sheet.createRow(rowNum);
-            row.createCell(0).setCellValue(role);
-            for (int i = 0; i < dates.size(); i++) {
-                row.createCell(i + 1).setCellValue(roleAndDate2employee.get(role + ds.get(i)));
-            }
-            rowNum++;
+            RespSchedule respSchedule = datas.get(i);
+            XSSFRow row1 = sheet.createRow(i + 1);
+            row1.createCell(0).setCellValue(respSchedule.programName + "(" + respSchedule.roleName + ")");
+            row1.createCell(1).setCellValue(respSchedule.date);
+            row1.createCell(2).setCellValue(respSchedule.name);
         }
     }
 
@@ -120,53 +86,19 @@ public class ExportExcelUtil {
     }
 
     private static void buildReplaceScheduleTable(XSSFSheet sheet, List<RespReplaceSchedule> datas, String from, String to) throws ParseException {
-
-
-        HashSet<String> roles = new HashSet<>();
-
-        HashSet<String> dates = new HashSet<>();
-
-        //日期排序
-        ArrayList<String> ds = new ArrayList<>();
-        for (String date : dates) {
-            ds.add(date);
-        }
-        ds.sort(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                try {
-                    return DateUtil.parseDateString(o1).getTime() > DateUtil.parseDateString(o2).getTime() ? 0 : 1;
-                } catch (ParseException e) {
-                    return 0;
-                }
-            }
-        });
-
-        HashMap<String, String> roleAndDate2employee = new HashMap<>();
+        XSSFRow row1 = sheet.createRow(0);
+        row1.createCell(0).setCellValue("节目（角色）");
+        row1.createCell(1).setCellValue("日期");
+        row1.createCell(2).setCellValue("替班员工");
+        row1.createCell(3).setCellValue("被替换员工");
 
         for (int i = 0; i < datas.size(); i++) {
-            String role = datas.get(i).programName + "--" + datas.get(i).roleName;
-            roles.add(role);
-            String date = datas.get(i).date;
-            dates.add(date);
-            roleAndDate2employee.put(role + date,
-                    datas.get(i).name + "(" + datas.get(i).alias + ")" + "-->" + datas.get(i).replacedEmployeeName + "(" + datas.get(i).replacedEmployeeAlias + ")");
-        }
-
-        XSSFRow row1 = sheet.createRow(0);
-        row1.createCell(0);
-        for (int i = 0; i < ds.size(); i++) {
-            row1.createCell(i + 1).setCellValue(ds.get(i));
-        }
-
-        int rowNum = 1;
-        for (String role : roles) {
-            XSSFRow row = sheet.createRow(rowNum);
-            row.createCell(0).setCellValue(role);
-            for (int i = 0; i < dates.size(); i++) {
-                row.createCell(i + 1).setCellValue(roleAndDate2employee.get(role + ds.get(i)));
-            }
-            rowNum++;
+            XSSFRow row = sheet.createRow(i + 1);
+            RespReplaceSchedule respReplaceSchedule = datas.get(i);
+            row.createCell(0).setCellValue(respReplaceSchedule.programName + "(" + respReplaceSchedule.roleName + ")");
+            row.createCell(1).setCellValue(respReplaceSchedule.date);
+            row.createCell(2).setCellValue(respReplaceSchedule.replacedEmployeeName);
+            row.createCell(3).setCellValue(respReplaceSchedule.name);
         }
     }
 
