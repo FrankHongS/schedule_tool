@@ -69,9 +69,10 @@ $(
         addSubstitute.bindClick = function () {
             $('.save-btn').on('click', function () {
 
-                const selected=$('#sub-program').children('option:selected').val();
-                const curProgram=curProgramArray[selected];
-                const curEmployee=curEmployeeArray[selected];
+                const selectedProgram=$('#sub-program').children('option:selected').val();
+                const selectedEmployee=$('#sub-name').children('option:selected').val();
+                const curProgram=curProgramArray[selectedProgram];
+                const curEmployee=curEmployeeArray[selectedEmployee];
 
                 if($('#sub-hol:checked').length == 1){
                     $.ajax({
