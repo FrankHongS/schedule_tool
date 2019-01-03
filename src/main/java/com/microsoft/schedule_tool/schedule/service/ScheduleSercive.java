@@ -19,4 +19,6 @@ public interface ScheduleSercive {
     List<RespSchedule> getAllSchedule(String from, String to, boolean isHoliday);
 
     List<RespSchedule> getHolidaySchedule();
+
+    List<Date> getSevenHolidayEndDate();
 }

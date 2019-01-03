@@ -257,19 +257,34 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
     private void saveData2Db() throws ParseException {
 
-        //单独处理国庆
-        if (containNational()) {
-            //获取国庆那一周
-            int nationalWeeknumber = DateUtil.getWeekOfYear(special);
-            int nationalWeekNumber2 = DateUtil.getWeekOfYear(special2);
-            if (nationalWeeknumber != nationalWeekNumber2) {
-                int index1 = nationalWeeknumber - startWeek;
-                int index2 = nationalWeekNumber2 - startWeek;
-                for (int i = 0; i < result.length; i++) {
-                    result[i][index2] = result[i][index1];
+        //特殊处理7天假期
+        List<Date> sevenHolidayEndDate = getSevenHolidayEndDate();
+        for (int i = 0; i < sevenHolidayEndDate.size(); i++) {
+            Date date = sevenHolidayEndDate.get(i);
+            Date holidayStart = DateUtil.getNextDate(date, -6);
+            if (containHoliday(holidayStart, date)) {
+                int startToFrom = DateUtil.getBetweenWeeks(startDate, holidayStart);
+                int endToFrom = DateUtil.getBetweenWeeks(startDate, date);
+                if (startToFrom != endToFrom) {
+                    for (int j = 0; j < result.length; j++) {
+                        result[j][startToFrom] = result[j][endToFrom];
+                    }
                 }
             }
         }
+        //单独处理国庆
+//        if (containNational()) {
+//            //获取国庆那一周
+//            int nationalWeeknumber = DateUtil.getWeekOfYear(special);
+//            int nationalWeekNumber2 = DateUtil.getWeekOfYear(special2);
+//            if (nationalWeeknumber != nationalWeekNumber2) {
+//                int index1 = nationalWeeknumber - startWeek;
+//                int index2 = nationalWeekNumber2 - startWeek;
+//                for (int i = 0; i < result.length; i++) {
+//                    result[i][index2] = result[i][index1];
+//                }
+//            }
+//        }
 
         Date start = DateUtil.getFirstDayOfWeek(DateUtil.getYear(startDate), startWeek - 1);
 
@@ -346,6 +361,11 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         return 0;
     }
 
+    private boolean containHoliday(Date date1, Date date2) {
+        return date1.getTime() >= startDate.getTime()
+                && date2.getTime() <= endaDate.getTime();
+    }
+
     private boolean containNational() throws ParseException {
         long startTime = startDate.getTime();
         int year = DateUtil.getYear(startDate);
@@ -359,6 +379,48 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         return time1 >= startTime
                 && time2 <= endTiem;
     }
+
+    /**
+     * 获取7天假期的最后一天（list）
+     * 处理假期
+     *
+     * @return
+     */
+    public List<Date> getSevenHolidayEndDate() {
+        // TODO: 2018/12/29
+        List<Holiday> all = holidayRepository.findAll();
+        all.sort(new Comparator<Holiday>() {
+            @Override
+            public int compare(Holiday o1, Holiday o2) {
+                return o1.getDate().getTime() > o2.getDate().getTime() ? 1 : -1;
+            }
+        });
+
+        ArrayList<Date> dates = new ArrayList<>();
+
+        int[] dp = new int[all.size()];
+        Date pre = null;
+        for (int i = 0; i < all.size(); i++) {
+            if (i == 0) {
+                dp[i] = 1;
+                pre = all.get(i).getDate();
+                continue;
+            }
+            Date cur = all.get(i).getDate();
+            //相差一天
+            if ((int) ((cur.getTime() - pre.getTime()) / (1000 * 3600 * 24) + 0.5f) == 1) {
+                dp[i] = dp[i - 1] + 1;
+            } else {
+                dp[i] = 1;
+            }
+            pre = cur;
+            if (dp[i] == 7) {
+                dates.add(all.get(i).getDate());
+            }
+        }
+        return dates;
+    }
+
 
     private boolean canAdd(Date date, String cycle) {
         if (date.before(startDate) || date.after(endaDate)) {

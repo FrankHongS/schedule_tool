@@ -171,4 +171,13 @@ public class DateUtil {
                 c.get(Calendar.MONTH) == c1.get(Calendar.MONTH) &&
                 c.get(Calendar.DAY_OF_MONTH) == c1.get(Calendar.DAY_OF_MONTH));
     }
+
+    public static int getBetweenWeeks(Date date1, Date date2) {
+        //1:获取date1的星期一的日期temp  2：求date2跟temp之前的天数count  3：return count/7
+        Date temp = getThisWeekMonday(date1);
+
+        long time = date2.getTime() - temp.getTime();
+        int i = (int) (time / (24 * 60 * 60 * 1000) + 0.5f);
+        return i / 7;
+    }
 }

@@ -2,21 +2,23 @@ package com.microsoft.schedule_tool;
 
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioProgram;
 import com.microsoft.schedule_tool.schedule.repository.RadioProgramRepository;
-import com.microsoft.schedule_tool.schedule.service.EqualRolesService;
-import com.microsoft.schedule_tool.schedule.service.RadioReplaceScheduleService;
-import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
-import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
+import com.microsoft.schedule_tool.schedule.service.*;
 import com.microsoft.schedule_tool.schedule.service.impl.RadioProgramSeviceImpl;
 import com.microsoft.schedule_tool.schedule.service.impl.ScheduleServiceImpl;
+import com.microsoft.schedule_tool.schedule.web.HolidayController;
 import com.microsoft.schedule_tool.service.impl.schedule.ProgramServiceImpl;
+import com.microsoft.schedule_tool.util.DateUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,9 +73,8 @@ public class ScheduleToolApplicationTests {
     private ScheduleSercive scheduleSercive;
 
     @Test
-    @Ignore
     public void testSchedule() {
-        scheduleSercive.schedule("2019-02-27", "2019-12-20");
+        scheduleSercive.schedule("2018-9-27", "2019-2-20");
     }
 
     @Autowired
@@ -105,5 +106,41 @@ public class ScheduleToolApplicationTests {
     @Test
     public void addSome() {
         radioReplaceScheduleService.addSomeReplace(7331, "2019-02-18 - 2019-02-20", 7341);
+    }
+
+    @Test
+    public void testGetSevenHolidayEndDate() {
+        List<Date> sevenHolidayEndDate = scheduleSercive.getSevenHolidayEndDate();
+        for (int i = 0; i < sevenHolidayEndDate.size(); i++) {
+            Date date = sevenHolidayEndDate.get(i);
+            System.out.println(date);
+        }
+    }
+
+    @Test
+    public void testDateUtils() throws ParseException {
+        Date date = DateUtil.parseDateString("2018-12-29");
+        Date date1 = DateUtil.parseDateString("2019-01-09");
+        int betweenWeeks = DateUtil.getBetweenWeeks(date, date1);
+
+    }
+
+    @Autowired
+    private HolidayController holidayController;
+
+    @Autowired
+    private HolidayService holidayService;
+    @Test
+    public void testHoliay(){
+        String p="[\n" +
+                " {\"date\":\"2019-02-04\",\"name\":\"年假\"},\n" +
+                "{\"date\":\"2019-02-05\",\"name\":\"年假\"},\n" +
+                "{\"date\":\"2019-02-06\",\"name\":\"年假\"},\n" +
+                "{\"date\":\"2019-02-07\",\"name\":\"年假\"},\n" +
+                "{\"date\":\"2019-02-08\",\"name\":\"年假\"},\n" +
+                "{\"date\":\"2019-02-09\",\"name\":\"年假\"},\n" +
+                "{\"date\":\"2019-02-10\",\"name\":\"年假\"}\n" +
+                "]";
+        holidayService.addHolidays(p);
     }
 }

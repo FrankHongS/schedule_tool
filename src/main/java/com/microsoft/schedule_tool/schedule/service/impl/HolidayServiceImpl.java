@@ -88,8 +88,8 @@ public class HolidayServiceImpl implements HolidayService {
             if (holiday.getDate().getTime() == date.getTime()) {
                 holiday.setName(name);
                 holidayRepository.saveAndFlush(holiday);
+                return true;
             }
-            return true;
         }
         return false;
     }
