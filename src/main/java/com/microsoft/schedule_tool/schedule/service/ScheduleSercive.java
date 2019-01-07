@@ -20,5 +20,4 @@ public interface ScheduleSercive {
 
     List<RespSchedule> getHolidaySchedule();
 
-    List<Date> getSevenHolidayEndDate();
 }

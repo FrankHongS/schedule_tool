@@ -74,7 +74,7 @@ public class ScheduleToolApplicationTests {
 
     @Test
     public void testSchedule() {
-        scheduleSercive.schedule("2018-9-27", "2019-2-20");
+        scheduleSercive.schedule("2018-5-27", "2019-3-20");
     }
 
     @Autowired
@@ -107,15 +107,15 @@ public class ScheduleToolApplicationTests {
     public void addSome() {
         radioReplaceScheduleService.addSomeReplace(7331, "2019-02-18 - 2019-02-20", 7341);
     }
-
-    @Test
-    public void testGetSevenHolidayEndDate() {
-        List<Date> sevenHolidayEndDate = scheduleSercive.getSevenHolidayEndDate();
-        for (int i = 0; i < sevenHolidayEndDate.size(); i++) {
-            Date date = sevenHolidayEndDate.get(i);
-            System.out.println(date);
-        }
-    }
+//
+//    @Test
+//    public void testGetSevenHolidayEndDate() {
+//        List<Date> sevenHolidayEndDate = scheduleSercive.getSevenHolidayEndDate();
+//        for (int i = 0; i < sevenHolidayEndDate.size(); i++) {
+//            Date date = sevenHolidayEndDate.get(i);
+//            System.out.println(date);
+//        }
+//    }
 
     @Test
     public void testDateUtils() throws ParseException {
