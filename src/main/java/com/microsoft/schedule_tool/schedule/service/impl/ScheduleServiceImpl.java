@@ -12,6 +12,7 @@ import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.util.ListUtils;
 import com.microsoft.schedule_tool.util.LogUtils;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -724,11 +725,11 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             saveData2Db();
             saveState2Db();
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (ProgramScheduleException e) {
+        } catch (Exception e) {
             LogUtils.getInstance().write("end-time failed:" + DateUtil.parseDateToString(new Date()));
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
         }
+
     }
 
     /**
