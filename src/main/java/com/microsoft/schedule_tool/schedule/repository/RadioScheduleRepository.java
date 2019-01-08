@@ -27,5 +27,9 @@ public interface RadioScheduleRepository extends JpaRepository<RadioSchedule, Lo
     @Transactional
     void deleteByDateLessThanEqualAndDateGreaterThanEqual(Date big, Date small);
 
-    List<RadioSchedule> findAllByRoleAndDateLessThanEqualAndDateGreaterThanEqualAndIsHoliday(ProgramRole role,Date big,Date small,boolean isHoliday);
+    @Modifying
+    @Transactional
+    void deleteByDateGreaterThanEqual(Date small);
+
+    List<RadioSchedule> findAllByRoleAndDateLessThanEqualAndDateGreaterThanEqualAndIsHoliday(ProgramRole role, Date big, Date small, boolean isHoliday);
 }

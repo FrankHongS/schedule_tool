@@ -89,7 +89,7 @@ public class ScheduleRoleWaitingList {
                 allEmp.add(employeeId);
             }
         }
-        randomSort(allEmp);
+//        randomSort(allEmp);
     }
 
     /**

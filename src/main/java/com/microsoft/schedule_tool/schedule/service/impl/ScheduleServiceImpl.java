@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.schedule.service.impl;
 
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
+import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
 import com.microsoft.schedule_tool.schedule.domain.entity.*;
 import com.microsoft.schedule_tool.schedule.domain.vo.response.RespSchedule;
 import com.microsoft.schedule_tool.schedule.domain.vo.schedule.ScheduleRoleWaitingList;
@@ -8,10 +9,14 @@ import com.microsoft.schedule_tool.schedule.repository.*;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.util.DateUtil;
+import com.microsoft.schedule_tool.util.ListUtils;
+import com.microsoft.schedule_tool.util.LogUtils;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataUnit;
+import sun.rmi.runtime.Log;
 
 import java.text.ParseException;
 import java.util.*;
@@ -71,141 +76,145 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private HashSet<Long> needScheduleRole;
     private String special;
     private String special2;
+    private boolean hasSortSuccess;
 
-    @Override
-    public void schedule(String from, String to) {
-        try {
-            //初始化排版参数：结果二维数组result；跳过排序的角色skipRole（hashmap）；周不可选；角色待选名单
-            initParams(from, to);
-            for (int i = 0; i < result[0].length; i++) {
-                for (int j = 0; j < result.length; j++) {
-                    //i->time  j->role
-                    //获取待选名单
-                    ScheduleRoleWaitingList scheduleRole = scheduleRoles.get(j);
-                    Queue<Long> alternativeEmployee = scheduleRole.alternativeEmployee;
-
-                    //选人，要求： 不在周不可选名单中 且 不可连续两周同一个人。
-                    int moveCount = 0;
-                    while (!alternativeEmployee.isEmpty()
-                            && moveCount < alternativeEmployee.size()
-                            && (isInNotOptionalInOneWeek(alternativeEmployee.peek()) || (i - 1 > 0 && alternativeEmployee.peek().equals(result[j][i - 1])))) {
-                        //不符合要求的人跟待选队列的最后一个换位置，接着检查队首的员工是否符合要求
-                        Long temp = alternativeEmployee.poll();
-                        alternativeEmployee.offer(temp);
-                        moveCount++;
-                    }
-
-                    if (moveCount == alternativeEmployee.size()) {
-                        //没有可选的人的时候从该角色前面已经排好的人中选一个跟他互换。
-                        //待选名单中的每一个人都试一遍
-                        int move = 0;
-                        boolean isChanged = false;
-                        while (!alternativeEmployee.isEmpty()
-                                && move < alternativeEmployee.size()
-                                && !isChanged) {
-                            Long employeeId = alternativeEmployee.peek();
-                            for (int k = 0; k < i; k++) {
-                                //1：选中的人不能在周不可选名单
-                                Long temp = result[j][k];
-                                if (notOptionalInOneWeek.contains(temp)) {
-                                    continue;
-                                }
-                                //2：被替换的元素左右不能是employeeId
-                                if (k - 1 >= 0 && result[j][k - 1].equals(employeeId)) {
-                                    continue;
-                                }
-                                if (k + 1 < i && result[j][k + 1].equals(employeeId)) {
-                                    continue;
-                                }
-
-                                //3：替换的那一列中不能有employeeId,并且不能有跟employeeId互斥的。
-                                boolean canChange = true;
-                                for (int l = 0; l < result.length; l++) {
-                                    if (employeeId.equals(result[l][k])
-                                            || getMutexEmployee(employeeId).contains(result[l][k])) {
-                                        canChange = false;
-                                        break;
-                                    }
-                                }
-                                if (!canChange) {
-                                    continue;
-                                }
-
-                                //*****找到了可以替换的员工
-                                isChanged = true;
-                                Long poll = alternativeEmployee.poll();
-                                result[j][k] = poll;
-                                result[j][i] = temp;
-                                addToNotOptionalInOneWeek(poll);
-                                updateScheduleState(i, j);
-                                break;
-                            }
-                            if (!isChanged) {
-                                Long temp = alternativeEmployee.poll();
-                                alternativeEmployee.offer(temp);
-                            }
-                            move++;
-                        }
-                        if (move == alternativeEmployee.size()) {
-                            //选不到人！！！！
-                            System.out.println("测试数据：第a次 第i周 j角色" + currentTime + " " + i + " " + j);
-                            throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
-                        }
-
-                    } else {
-                        //*****选到人了那么设置result值；更新待选名单；更新周不可选名单
-                        Long employeeId = alternativeEmployee.poll();
-                        result[j][i] = employeeId;
-                        scheduleRole.alternativeEmployee = alternativeEmployee;
-                        addToNotOptionalInOneWeek(employeeId);
-                        updateScheduleState(i, j);
-                    }
-                    if (alternativeEmployee.isEmpty()) {
-                        //同一个ratio排完了,更新候选名单
-                        Date nextDate = DateUtil.getNextDate(startDate, 7 * (i + 1));
-                        Date thisWeekMonday = DateUtil.getThisWeekMonday(nextDate);
-                        scheduleRole.updateAlternativeEmloyee(thisWeekMonday);
+//    @Override
+//    public void schedule(String from, String to) {
+//        try {
+//            //初始化排版参数：结果二维数组result；跳过排序的角色skipRole（hashmap）；周不可选；角色待选名单
+//            initParams(from, to);
+//            for (int i = 0; i < result[0].length; i++) {
+//                for (int j = 0; j < result.length; j++) {
+//                    //i->time  j->role
+//                    //获取待选名单
+//                    ScheduleRoleWaitingList scheduleRole = scheduleRoles.get(j);
+//                    Queue<Long> alternativeEmployee = scheduleRole.alternativeEmployee;
+//
+//                    //选人，要求： 不在周不可选名单中 且 不可连续两周同一个人。
+//                    int moveCount = 0;
+//                    while (!alternativeEmployee.isEmpty()
+//                            && moveCount < alternativeEmployee.size()
+//                            && (isInNotOptionalInOneWeek(alternativeEmployee.peek()) || (i - 1 > 0 && alternativeEmployee.peek().equals(result[j][i - 1])))) {
+//                        //不符合要求的人跟待选队列的最后一个换位置，接着检查队首的员工是否符合要求
+//                        Long temp = alternativeEmployee.poll();
+//                        alternativeEmployee.offer(temp);
+//                        moveCount++;
+//                    }
+//
+//                    if (moveCount == alternativeEmployee.size()) {
+//                        //没有可选的人的时候从该角色前面已经排好的人中选一个跟他互换。
+//                        //待选名单中的每一个人都试一遍
+//                        int move = 0;
+//                        boolean isChanged = false;
+//                        while (!alternativeEmployee.isEmpty()
+//                                && move < alternativeEmployee.size()
+//                                && !isChanged) {
+//                            Long employeeId = alternativeEmployee.peek();
+//                            for (int k = 0; k < i; k++) {
+//                                //1：选中的人不能在周不可选名单
+//                                Long temp = result[j][k];
+//                                if (notOptionalInOneWeek.contains(temp)) {
+//                                    continue;
+//                                }
+//                                //2：被替换的元素左右不能是employeeId
+//                                if (k - 1 >= 0 && result[j][k - 1].equals(employeeId)) {
+//                                    continue;
+//                                }
+//                                if (k + 1 < i && result[j][k + 1].equals(employeeId)) {
+//                                    continue;
+//                                }
+//
+//                                //3：替换的那一列中不能有employeeId,并且不能有跟employeeId互斥的。
+//                                boolean canChange = true;
+//                                for (int l = 0; l < result.length; l++) {
+//                                    if (employeeId.equals(result[l][k])
+//                                            || getMutexEmployee(employeeId).contains(result[l][k])) {
+//                                        canChange = false;
+//                                        break;
+//                                    }
+//                                }
+//                                if (!canChange) {
+//                                    continue;
+//                                }
+//
+//                                //*****找到了可以替换的员工
+//                                isChanged = true;
+//                                Long poll = alternativeEmployee.poll();
+//                                result[j][k] = poll;
+//                                result[j][i] = temp;
+//                                addToNotOptionalInOneWeek(poll);
+//                                updateScheduleState(i, j);
+//                                break;
+//                            }
+//                            if (!isChanged) {
+//                                Long temp = alternativeEmployee.poll();
+//                                alternativeEmployee.offer(temp);
+//                            }
+//                            move++;
+//                        }
+//                        if (move == alternativeEmployee.size()) {
+//                            //选不到人！！！！
+//                            System.out.println("测试数据：第a次 第i周 j角色" + currentTime + " " + i + " " + j);
+//                            throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
+//                        }
+//
+//                    } else {
+//                        //*****选到人了那么设置result值；更新待选名单；更新周不可选名单
+//                        Long employeeId = alternativeEmployee.poll();
+//                        result[j][i] = employeeId;
+//                        scheduleRole.alternativeEmployee = alternativeEmployee;
+//                        addToNotOptionalInOneWeek(employeeId);
 //                        updateScheduleState(i, j);
-                    }
-                }
-                //reset
-                notOptionalInOneWeek.clear();
-            }
-            /*******************测试**/
-            Long[][] test = new Long[result[0].length][result.length];
-            for (int i = 0; i < result[0].length; i++) {
-                for (int j = 0; j < result.length; j++) {
-                    test[i][j] = result[j][i];
-                }
-            }
-            /*******************测试**/
-            //清理掉旧数据
-            clearOldData(from, to);
-            //将排好的信息存入db
-            saveData2Db();
-            //清理掉可选员工表中to之后的信息
-            clearScheduleStateTo();
+//                    }
+//                    if (alternativeEmployee.isEmpty()) {
+//                        //同一个ratio排完了,更新候选名单
+//                        Date nextDate = DateUtil.getNextDate(startDate, 7 * (i + 1));
+//                        Date thisWeekMonday = DateUtil.getThisWeekMonday(nextDate);
+//                        scheduleRole.updateAlternativeEmloyee(thisWeekMonday);
+////                        updateScheduleState(i, j);
+//                    }
+//                }
+//                //reset
+//                notOptionalInOneWeek.clear();
+//            }
+//            /*******************测试**/
+//            Long[][] test = new Long[result[0].length][result.length];
+//            for (int i = 0; i < result[0].length; i++) {
+//                for (int j = 0; j < result.length; j++) {
+//                    test[i][j] = result[j][i];
+//                }
+//            }
+//            /*******************测试**/
+//            //清理掉旧数据
+//            clearOldData(from, to);
+//            //将排好的信息存入db
+//            saveData2Db();
+//            //清理掉可选员工表中to之后的信息
+//            clearScheduleStateTo();
+//
+//        } catch (Exception e) {
+//            try {
+//                clearOldData(from, to);
+//            } catch (ParseException e1) {
+//                e1.printStackTrace();
+//            }
+//            clearScheduleState();
+//            if (e instanceof ProgramScheduleException && currentTime < RETRY_TIME) {
+//                currentTime++;
+//                schedule(from, to);
+//            } else {
+//                throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
+//            }
+//        }
+//    }
 
-        } catch (Exception e) {
-            try {
-                clearOldData(from, to);
-            } catch (ParseException e1) {
-                e1.printStackTrace();
-            }
-            clearScheduleState();
-            if (e instanceof ProgramScheduleException && currentTime < RETRY_TIME) {
-                currentTime++;
-                schedule(from, to);
-            } else {
-                throw new ProgramScheduleException(ResultEnum.SCHEDULE_ERROT_PLEASE_RETRY);
-            }
-        }
-    }
 
-    private void clearScheduleStateTo() {
-        // TODO: 2018/12/24 清除掉to之后的数据
+    private void clearScheduleStateTo(String from) throws ParseException {
+        // TODO: 2018/12/24 清除掉状态信息
+        Date dateFrom = DateUtil.parseDateString(from);
+
 //        scheduleStatesResposity.deleteByStartDateGreaterThan((java.sql.Date) endaDate);
-        scheduleStatesResposity.deleteByCurDateGreaterThan(new java.sql.Date(endaDate.getTime()));
+        scheduleStatesResposity.deleteByCurDateGreaterThan(new java.sql.Date(dateFrom.getTime()));
     }
 
     /**
@@ -247,31 +256,15 @@ public class ScheduleServiceImpl implements ScheduleSercive {
      * 清掉数据库中的旧数据
      *
      * @param from
-     * @param to
      */
-    private void clearOldData(String from, String to) throws ParseException {
+    private void clearOldData(String from) throws ParseException {
         Date dateFrom = DateUtil.parseDateString(from);
-        Date dateTo = DateUtil.parseDateString(to);
-        radioScheduleRepository.deleteByDateLessThanEqualAndDateGreaterThanEqual(dateTo, dateFrom);
+//        Date dateTo = DateUtil.parseDateString(to);
+//        radioScheduleRepository.deleteByDateLessThanEqualAndDateGreaterThanEqual(dateTo, dateFrom);
+        radioScheduleRepository.deleteByDateGreaterThanEqual(dateFrom);
     }
 
     private void saveData2Db() throws ParseException {
-
-        //特殊处理7天假期
-        List<Date> sevenHolidayEndDate = getSevenHolidayEndDate();
-        for (int i = 0; i < sevenHolidayEndDate.size(); i++) {
-            Date date = sevenHolidayEndDate.get(i);
-            Date holidayStart = DateUtil.getNextDate(date, -6);
-            if (containHoliday(holidayStart, date)) {
-                int startToFrom = DateUtil.getBetweenWeeks(startDate, holidayStart);
-                int endToFrom = DateUtil.getBetweenWeeks(startDate, date);
-                if (startToFrom != endToFrom) {
-                    for (int j = 0; j < result.length; j++) {
-                        result[j][startToFrom] = result[j][endToFrom];
-                    }
-                }
-            }
-        }
         //单独处理国庆
 //        if (containNational()) {
 //            //获取国庆那一周
@@ -353,6 +346,24 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             }
 
 
+        }
+    }
+
+    private void handleHoliday() {
+        //特殊处理7天假期
+        List<Date> sevenHolidayEndDate = getSevenHolidayEndDate();
+        for (int i = 0; i < sevenHolidayEndDate.size(); i++) {
+            Date date = sevenHolidayEndDate.get(i);
+            Date holidayStart = DateUtil.getNextDate(date, -6);
+            if (containHoliday(holidayStart, date)) {
+                int startToFrom = DateUtil.getBetweenWeeks(startDate, holidayStart);
+                int endToFrom = DateUtil.getBetweenWeeks(startDate, date);
+                if (startToFrom != endToFrom) {
+                    for (int j = 0; j < result.length; j++) {
+                        result[j][startToFrom] = result[j][endToFrom];
+                    }
+                }
+            }
         }
     }
 
@@ -494,8 +505,15 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
     //添加自己以及跟自己互斥的员工进入周不可选名单
     private void addToNotOptionalInOneWeek(long employeeId) {
-        ArrayList<Long> mutexEmployee = getMutexEmployee(employeeId);
-        notOptionalInOneWeek.addAll(mutexEmployee);
+//        ArrayList<Long> mutexEmployee = getMutexEmployee(employeeId);
+//        notOptionalInOneWeek.addAll(mutexEmployee);
+        notOptionalInOneWeek.add(employeeId);
+
+        for (Long item : skipRoles.keySet()) {
+            if (skipRoles.get(item).longValue() == employeeId) {
+                notOptionalInOneWeek.add(skipRoles.get(item));
+            }
+        }
     }
 
     private void initParams(String from, String to) throws ParseException {
@@ -682,6 +700,315 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             return re;
         } catch (Exception e) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_FIND_FAILED);
+        }
+    }
+
+    /**
+     * 排班
+     *
+     * @param from
+     * @param to
+     */
+    @Override
+    public void schedule(String from, String to) {
+        try {
+            initParams(from, to);
+            LogUtils.getInstance().write("start-time" + DateUtil.parseDateToString(new Date()));
+            schedule(0, 0);
+            LogUtils.getInstance().write("end-time success:" + DateUtil.parseDateToString(new Date()));
+            //清理掉旧数据
+            clearOldData(from);
+            clearScheduleStateTo(from);
+            //处理假期
+            handleHoliday();
+            saveData2Db();
+            saveState2Db();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (ProgramScheduleException e) {
+            LogUtils.getInstance().write("end-time failed:" + DateUtil.parseDateToString(new Date()));
+        }
+    }
+
+    /**
+     * 根据result存放状态
+     */
+    private void saveState2Db() {
+        if (result != null && result.length > 0 && result[0].length > 0) {
+            Date mondayOfStartWeek = DateUtil.getThisWeekMonday(startDate);
+            for (int i = 0; i < result.length; i++) {
+                Long roleId = scheduleRoles.get(i).id;
+                //找到跳过的array
+                ArrayList<Long> skip = new ArrayList<>();
+                for (Long id : skipRoles.keySet()) {
+                    Long aLong = skipRoles.get(id);
+                    if (aLong.longValue() == roleId.longValue()) {
+                        skip.add(id);
+                    }
+                }
+
+
+                Optional<ProgramRole> roleOptional = programRoleRepository.findById(roleId);
+                int allSize = scheduleRoles.get(i).allEmp.size();
+                int alterSize = scheduleRoles.get(i).alternativeEmployee.size();
+                for (int j = 0; j < result[0].length; j++) {
+                    java.sql.Date curDate = new java.sql.Date(DateUtil.getNextDate(mondayOfStartWeek, j * 7).getTime());
+
+                    ScheduleStates scheduleStates = new ScheduleStates();
+                    scheduleStates.setRole(roleOptional.get());
+                    scheduleStates.setCurDate(curDate);
+                    //有状态
+                    if (alterSize < allSize) {
+                        if (j < alterSize) {
+                            scheduleStates.setFirstDate(scheduleRoles.get(i).firstDate);
+                        } else {
+                            Date date = DateUtil.getNextDate(mondayOfStartWeek, 7 * alterSize);
+                            int count = (j - alterSize) / allSize;
+                            java.sql.Date date1 = new java.sql.Date(DateUtil.getNextDate(date, count * 7 * allSize).getTime());
+                            scheduleStates.setFirstDate(date1);
+                        }
+                    } else {
+                        int count = j / allSize;
+                        java.sql.Date date = new java.sql.Date(DateUtil.getNextDate(mondayOfStartWeek, count * 7 * allSize).getTime());
+                        scheduleStates.setFirstDate(date);
+                    }
+                    scheduleStatesResposity.saveAndFlush(scheduleStates);
+
+
+                    //处理skip
+                    for (int k = 0; k < skip.size(); k++) {
+                        Optional<ProgramRole> byId = programRoleRepository.findById(skip.get(k));
+
+
+                        ScheduleStates skipStates = new ScheduleStates();
+                        skipStates.setFirstDate(scheduleStates.getFirstDate());
+                        skipStates.setCurDate(scheduleStates.getCurDate());
+                        skipStates.setRole(byId.get());
+                        scheduleStatesResposity.saveAndFlush(skipStates);
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    private void schedule(int i, int j) {
+        while (true) {
+            if (ok(i, j)) {
+                if (i == needScheduleRole.size() - 1) {
+                    i = 0;
+                    j = j + 1;
+                    if (j == weekNums) {
+                        System.out.println("******成功*******");
+                        break;
+                    }
+                } else {
+                    i = i + 1;
+                }
+            } else {
+                if (i == 0) {
+                    if (j == 0) {
+                        System.out.println("------失败------");
+                        throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
+                    } else {
+                        i = needScheduleRole.size() - 1;
+                        j = j - 1;
+                    }
+                } else {
+                    i = i - 1;
+                }
+            }
+        }
+    }
+
+    /**
+     * 递归回溯（栈深会stackoverflow）
+     *
+     * @param i 角色
+     * @param j week
+     * @deprecated
+     */
+    private void schedule1(int i, int j) {
+        if (i == 0 && j == weekNums) {
+            //成功
+            System.out.println("********成功**********");
+            return;
+        }
+        if (ok(i, j)) {
+            if (i == needScheduleRole.size() - 1) {
+                schedule1(0, j + 1);
+            } else {
+                schedule1(i + 1, j);
+            }
+        } else {
+            if (i == 0) {
+                if (j == 0) {                  //失败
+                    System.out.println("---------失败----------");
+                    return;
+                } else {
+                    schedule1(needScheduleRole.size() - 1, j - 1);
+                }
+            } else {
+                schedule1(i - 1, j);
+            }
+        }
+    }
+
+    private boolean ok(int i, int j) {
+        System.out.println("----------->>");
+        System.out.println("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id);
+        LogUtils.getInstance().write("----------->>\n");
+        LogUtils.getInstance().write("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id + "\n");
+
+        notOptionalInOneWeek.clear();
+        for (int k = 0; k < i; k++) {
+            if (result[k][j] != null) {
+                addToNotOptionalInOneWeek(result[k][j]);
+            }
+        }
+
+
+        ArrayList<Long> initAlternativeEmployees = new ArrayList<>();
+        Queue<Long> alternativeEmployee = scheduleRoles.get(i).alternativeEmployee;
+        for (int k = 0; k < alternativeEmployee.size(); k++) {
+            Long poll = alternativeEmployee.poll();
+            initAlternativeEmployees.add(poll);
+            alternativeEmployee.offer(poll);
+        }
+        ArrayList<Long> allEmployees = scheduleRoles.get(i).allEmp;
+
+        ArrayList<Long> canChooseEmployees = new ArrayList<>();
+        ArrayList<Long> hasUseEmployees = new ArrayList<>();
+        int initEmployeeSize = initAlternativeEmployees.size();
+        if (j < initEmployeeSize) {
+            canChooseEmployees.clear();
+            canChooseEmployees.addAll(initAlternativeEmployees);
+            for (int k = 0; k < j; k++) {
+                if (result[i][k] != null) {
+                    hasUseEmployees.add(result[i][k]);
+                }
+            }
+        } else {
+            canChooseEmployees.clear();
+            canChooseEmployees.addAll(allEmployees);
+            int start = (j - initEmployeeSize) / allEmployees.size() * allEmployees.size() + initEmployeeSize;
+            for (int k = start; k < j; k++) {
+                if (result[i][k] != null) {
+                    hasUseEmployees.add(result[i][k]);
+                }
+            }
+        }
+        // TODO: 2019/1/8
+        System.out.print("待选员工" + canChooseEmployees.size() + "->>");
+        LogUtils.getInstance().write("待选员工" + canChooseEmployees.size() + "->>");
+        for (int k = 0; k < canChooseEmployees.size(); k++) {
+            System.out.print(canChooseEmployees.get(k) + "-");
+            LogUtils.getInstance().write(canChooseEmployees.get(k) + "-");
+        }
+        System.out.println();
+        LogUtils.getInstance().write("\n");
+        ListUtils.removeAll(canChooseEmployees, hasUseEmployees);
+        System.out.print("已经用过的员工" + hasUseEmployees.size() + "->>");
+        LogUtils.getInstance().write("已经用过的员工" + hasUseEmployees.size() + "->>");
+        for (int k = 0; k < hasUseEmployees.size(); k++) {
+            System.out.print(hasUseEmployees.get(k) + "-");
+            LogUtils.getInstance().write(hasUseEmployees.get(k) + "-");
+
+        }
+        System.out.println();
+        LogUtils.getInstance().write("\n");
+        canChooseEmployees.removeAll(notOptionalInOneWeek);
+
+        LogUtils.getInstance().write("一周不可选员工" + notOptionalInOneWeek.size() + "->>");
+        System.out.print("一周不可选员工" + notOptionalInOneWeek.size() + "->>");
+        for (int k = 0; k < notOptionalInOneWeek.size(); k++) {
+            System.out.print(notOptionalInOneWeek.get(k) + "-");
+            LogUtils.getInstance().write(notOptionalInOneWeek.get(k) + "-");
+        }
+        System.out.println();
+
+//        canChooseEmployees.removeAll(hasUseEmployees);
+//        canChooseEmployees.removeAll(notOptionalInOneWeek);
+        if (j > 0) {
+            Long o = result[i][j - 1];
+            Iterator<Long> iterator = canChooseEmployees.iterator();
+            while (iterator.hasNext()) {
+                Long next = iterator.next();
+                if (next.longValue() == o.longValue()) {
+                    iterator.remove();
+                }
+            }
+//            canChooseEmployees.remove(o);
+        }
+
+        LogUtils.getInstance().write("\n");
+        LogUtils.getInstance().write("可选员工不去重" + canChooseEmployees.size() + "->>");
+
+        System.out.print("可选员工不去重" + canChooseEmployees.size() + "->>");
+        for (int k = 0; k < canChooseEmployees.size(); k++) {
+            System.out.print(canChooseEmployees.get(k) + "-");
+            LogUtils.getInstance().write(canChooseEmployees.get(k) + "-");
+
+        }
+        LogUtils.getInstance().write("\n");
+
+        System.out.println();
+
+        //canChooseEmployees不能有重复的员工！！
+        HashSet<Long> canChooseEmployeesSet = new HashSet<>();
+        for (int k = 0; k < canChooseEmployees.size(); k++) {
+            canChooseEmployeesSet.add(canChooseEmployees.get(k));
+        }
+
+        ArrayList<Long> canChooseEmployeesArray = new ArrayList<>();
+        LogUtils.getInstance().write("可选员工去重" + canChooseEmployeesSet.size() + "->>");
+
+        System.out.print("可选员工去重" + canChooseEmployeesSet.size() + "->>");
+        for (Long id : canChooseEmployeesSet) {
+            canChooseEmployeesArray.add(id);
+            System.out.print(id + "-");
+            LogUtils.getInstance().write(id + "-");
+
+        }
+        LogUtils.getInstance().write("\n");
+
+        System.out.println();
+
+        if (canChooseEmployeesArray.size() == 0) {
+            System.out.println("失败");
+            LogUtils.getInstance().write("失败\n");
+
+            return false;
+        } else {
+            Long pre = result[i][j];
+            if (pre == null) {
+                result[i][j] = canChooseEmployeesArray.get(0);
+                System.out.println("成功->>" + result[i][j]);
+                LogUtils.getInstance().write("成功->>" + result[i][j] + "\n");
+
+                return true;
+            } else {
+                boolean has = false;
+                for (int k = 0; k < canChooseEmployeesArray.size(); k++) {
+                    if (has) {
+                        result[i][j] = canChooseEmployeesArray.get(k);
+                        System.out.println("成功->>" + result[i][j]);
+                        LogUtils.getInstance().write("成功->>" + result[i][j] + "\n");
+
+                        return true;
+                    }
+                    if (pre.longValue() == canChooseEmployeesArray.get(k).longValue()) {
+                        has = true;
+                    }
+                }
+                result[i][j] = null;
+                System.out.println("失败");
+                LogUtils.getInstance().write("失败\n");
+
+                return false;
+            }
         }
     }
 }
