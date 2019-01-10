@@ -9,6 +9,7 @@ import java.io.*;
  * @time 2019/1/8
  **/
 public class LogUtils {
+    private static boolean isOpen = false;
     private static String log_path = "log.txt";
 
     private LogUtils() {
@@ -36,6 +37,9 @@ public class LogUtils {
     }
 
     public void write(String s) {
+        if (!isOpen) {
+            return;
+        }
         File file = new File(log_path);
         try {
             FileWriter fw = new FileWriter(file, true);

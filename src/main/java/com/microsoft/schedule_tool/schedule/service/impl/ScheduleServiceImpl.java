@@ -3,6 +3,7 @@ package com.microsoft.schedule_tool.schedule.service.impl;
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
 import com.microsoft.schedule_tool.exception.schedule.ScheduleException;
 import com.microsoft.schedule_tool.schedule.domain.entity.*;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.Progress;
 import com.microsoft.schedule_tool.schedule.domain.vo.response.RespSchedule;
 import com.microsoft.schedule_tool.schedule.domain.vo.schedule.ScheduleRoleWaitingList;
 import com.microsoft.schedule_tool.schedule.repository.*;
@@ -78,6 +79,10 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private String special;
     private String special2;
     private boolean hasSortSuccess;
+    private boolean isShedule = false;
+    private boolean isCancle = false;
+
+    private Progress curProgress = new Progress();
 
 //    @Override
 //    public void schedule(String from, String to) {
@@ -714,9 +719,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     public void schedule(String from, String to) {
         try {
             initParams(from, to);
-            LogUtils.getInstance().write("start-time" + DateUtil.parseDateToString(new Date()));
+            LogUtils.getInstance().write("start-time" + new Date().getTime());
             schedule(0, 0);
-            LogUtils.getInstance().write("end-time success:" + DateUtil.parseDateToString(new Date()));
+            LogUtils.getInstance().write("end-time success:" + new Date().getTime());
             //清理掉旧数据
             clearOldData(from);
             clearScheduleStateTo(from);
@@ -724,12 +729,14 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             handleHoliday();
             saveData2Db();
             saveState2Db();
-
         } catch (Exception e) {
-            LogUtils.getInstance().write("end-time failed:" + DateUtil.parseDateToString(new Date()));
-            throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
+            LogUtils.getInstance().write("end-time failed:" + new Date().getTime());
+            if (e instanceof ProgramScheduleException) {
+                throw (ProgramScheduleException) e;
+            } else {
+                throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
+            }
         }
-
     }
 
     /**
@@ -858,6 +865,11 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     }
 
     private boolean ok(int i, int j) {
+        if (isCancle) {
+            isCancle = false;
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANCEL);
+        }
+        setCurProgress(i + needScheduleRole.size() * j + 1, needScheduleRole.size() * weekNums);
         System.out.println("----------->>");
         System.out.println("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id);
         LogUtils.getInstance().write("----------->>\n");
@@ -1011,5 +1023,23 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 return false;
             }
         }
+    }
+
+    @Override
+    public Progress getProgress() {
+        // TODO: 2019/1/9  
+        return curProgress;
+    }
+
+    @Override
+    public void cancel() {
+        isCancle = true;
+        curProgress.currentNumber = 0;
+        curProgress.totalNumber = 0;
+    }
+
+    public void setCurProgress(long cur, long total) {
+        curProgress.currentNumber = cur;
+        curProgress.totalNumber = total;
     }
 }

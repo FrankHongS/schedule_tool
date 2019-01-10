@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool.schedule.web;
 
 import com.microsoft.schedule_tool.exception.schedule.ProgramScheduleException;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.Progress;
 import com.microsoft.schedule_tool.schedule.domain.vo.response.RespSchedule;
 import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.util.ResultUtil;
@@ -24,6 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/schedule")
 public class RadioScheduleController {
+
     @Autowired
     private ScheduleSercive scheduleSercive;
 
@@ -48,7 +50,7 @@ public class RadioScheduleController {
     }
 
     @GetMapping("/holiday")
-    public Result getHolidaySchedules(){
+    public Result getHolidaySchedules() {
         List<RespSchedule> holidaySchedule = scheduleSercive.getHolidaySchedule();
         Map<String, List<RespSchedule>> data = ResultUtil.getResultData("data", holidaySchedule);
         return ResultUtil.success(data);
@@ -67,4 +69,16 @@ public class RadioScheduleController {
         return ResultUtil.success();
     }
 
+    @GetMapping("/state")
+    public Result getState() {
+        Progress progress = scheduleSercive.getProgress();
+        Map<String, Progress> data = ResultUtil.getResultData("data", progress);
+        return ResultUtil.success(data);
+    }
+
+    @GetMapping("/cancel")
+    public Result cancelSchedule(){
+        scheduleSercive.cancel();
+        return ResultUtil.success();
+    }
 }

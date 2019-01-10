@@ -74,7 +74,7 @@ public class ScheduleToolApplicationTests {
 
     @Test
     public void testSchedule() {
-        scheduleSercive.schedule("2018-7-03", "2018-9-27");
+        scheduleSercive.schedule("2018-7-23", "2018-8-27");
     }
 
     @Autowired

@@ -3,6 +3,8 @@ window.exportSchedule = function () {
 
     let curSpecialArray;
     let curSpecialProgramArray;
+    var index;
+    var canClickGen=true;
 
     exportSchedule.bindLayer = function () {
         laydate.render({
@@ -237,7 +239,11 @@ window.exportSchedule = function () {
         });
 
         $('.export-main-container .gen-info').click(function(){
-
+            if(!canClickGen){
+                alert('请勿重复点击');
+                return;
+            }
+            canClickGen=false;
             const from = $('.export-from').val();
             const to = $('.export-to').val();
 
@@ -251,12 +257,26 @@ window.exportSchedule = function () {
                 url:'/schedule/schedule/schedue?from=' + from + '&to=' + to,
                 success:result=>{
                     $('.export-btns .message').text('');
+                    canClickGen=true;
+
                     if(result.code===0){
                         alert('生成排班记录成功!');
+                        layer.close(index);
                     }else{
-                        alert('生成排班记录失败...'+result.message);
+                        alert('生成排班记录失败!'+result.message);
+                        layer.close(index);
                     }
                 }
+            });
+            index = layer.open({
+                type: 2,
+                title:"排班进度",
+                area: ['380px', '143px'],
+                fix: false,
+                maxmin: false,
+                scrollbar: false,
+                content: '/schedule/schedule02/exportSchedule/exportProgress/exportProgress.html'
+                // content: './editSpecial/editSpecial.html'
             });
         });
 
@@ -271,6 +291,31 @@ window.exportSchedule = function () {
             }
 
             $(this).attr('href', '/schedule/excel/export_schedule?from=' + from + '&to=' + to+'&isHoliday=false');
+        });
+        $('.check-progress').click(function(){
+            index=layer.open({
+                type: 2,
+                title:"排班进度",
+                area: ['380px', '143px'],
+                fix: false,
+                maxmin: false,
+                scrollbar: false,
+                content: '/schedule/schedule02/exportSchedule/exportProgress/exportProgress.html'
+                // content: './editSpecial/editSpecial.html'
+            });
+
+        });
+        $('.cancel-schedule').click(function () {
+            $.ajax({
+                url:'/schedule/schedule/cancel',
+                success:result=>{
+                    if(result.code===0){
+                        $('.export-btns .message').text('取消成功');
+                    }else{
+                        $('.export-btns .message').text('取消失败');
+                    }
+                }
+            });
         });
     };
 

@@ -1,5 +1,6 @@
 package com.microsoft.schedule_tool.schedule.service;
 
+import com.microsoft.schedule_tool.schedule.domain.vo.response.Progress;
 import com.microsoft.schedule_tool.schedule.domain.vo.response.RespSchedule;
 
 import java.util.Date;
@@ -19,5 +20,9 @@ public interface ScheduleSercive {
     List<RespSchedule> getAllSchedule(String from, String to, boolean isHoliday);
 
     List<RespSchedule> getHolidaySchedule();
+
+    Progress getProgress();
+
+    void cancel();
 
 }

@@ -1,0 +1,29 @@
+.progressbar {
+    width: 380px;
+    height: 40px;
+}
+
+.progress-current-div {
+}
+
+.progress-tv {
+    float: right;
+    font-size: 18px;
+}
+
+.progress-layout {
+    margin-top: 20px;
+}
+
+.root-layout {
+    display: table;
+    height: 80px;
+    width: 380px;
+}
+
+.root-cell {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: table-cell;
+    vertical-align: middle;
+}

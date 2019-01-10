@@ -93,7 +93,9 @@ public enum ResultEnum {
     MUTEX_DELETE_FAILED(186,"mutex_delete_failed"),
     EQUEL_ROLE_DELETE_FAILED(187,"equel_role_delete_failed"),
     SCHEDULE_DATE_NULL(188,"schedule_date_null"),
-    SCHEDULE_FAILED(189,"schedule_failed");
+    SCHEDULE_FAILED(189,"schedule_failed"),
+    SCHEDULE_CANNOT_SHEDULE_SOME_IN_SAME_TIME(190,"不能同时排班"),
+    SCHEDULE_CANCEL(191,"取消排班");
 
     private int code;
 

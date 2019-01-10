@@ -4,6 +4,7 @@ import com.microsoft.schedule_tool.schedule.domain.entity.*;
 import com.microsoft.schedule_tool.schedule.repository.*;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import com.microsoft.schedule_tool.util.DateUtil;
+import com.microsoft.schedule_tool.util.ListUtils;
 
 import java.util.*;
 
@@ -131,7 +132,8 @@ public class ScheduleRoleWaitingList {
             for (int i = 0; i < allEmp.size(); i++) {
                 temp.add(allEmp.get(i));
             }
-            temp.removeAll(hasSortEmp);
+//            temp.removeAll(hasSortEmp);
+            ListUtils.removeAll(temp,hasSortEmp);
             for (int i = 0; i < temp.size(); i++) {
                 alternativeEmployee.offer(temp.get(i));
             }
