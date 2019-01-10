@@ -523,6 +523,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     }
 
     private void initParams(String from, String to) throws ParseException {
+        isCancle=false;
         startDate = DateUtil.parseDateString(from);
         endaDate = DateUtil.parseDateString(to);
         startWeek = DateUtil.getWeekOfYear(from);
