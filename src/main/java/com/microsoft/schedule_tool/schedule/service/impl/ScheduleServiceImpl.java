@@ -523,7 +523,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     }
 
     private void initParams(String from, String to) throws ParseException {
-        isCancle=false;
+        isCancle = false;
         startDate = DateUtil.parseDateString(from);
         endaDate = DateUtil.parseDateString(to);
         startWeek = DateUtil.getWeekOfYear(from);
@@ -718,7 +718,11 @@ public class ScheduleServiceImpl implements ScheduleSercive {
      */
     @Override
     public void schedule(String from, String to) {
+        if (isShedule) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANNOT_SHEDULE_SOME_IN_SAME_TIME);
+        }
         try {
+            isShedule = true;
             initParams(from, to);
             LogUtils.getInstance().write("start-time" + new Date().getTime());
             schedule(0, 0);
@@ -730,7 +734,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             handleHoliday();
             saveData2Db();
             saveState2Db();
+            isShedule = false;
         } catch (Exception e) {
+            isShedule = false;
             LogUtils.getInstance().write("end-time failed:" + new Date().getTime());
             if (e instanceof ProgramScheduleException) {
                 throw (ProgramScheduleException) e;
