@@ -1,3 +1,4 @@
+// window.clickSchdule=false;
 window.exportSchedule = function () {
     const exportSchedule = {};
 
@@ -243,6 +244,7 @@ window.exportSchedule = function () {
                 alert('请勿重复点击');
                 return;
             }
+            // window.clickSchdule=true;
             canClickGen=false;
             const from = $('.export-from').val();
             const to = $('.export-to').val();
@@ -258,6 +260,7 @@ window.exportSchedule = function () {
                 success:result=>{
                     $('.export-btns .message').text('');
                     canClickGen=true;
+                    // window.clickSchdule=false;
 
                     if(result.code===0){
                         alert('生成排班记录成功!');
@@ -314,6 +317,9 @@ window.exportSchedule = function () {
                     }else{
                         $('.export-btns .message').text('取消失败');
                     }
+                    canClickGen=true;
+                    // window.clickSchdule=false;
+
                 }
             });
         });
