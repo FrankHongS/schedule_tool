@@ -68,7 +68,7 @@ window.substitute = function () {
             if (from && to) {
                 if (isHoliday) {
                     $.ajax({
-                        url: '/schedule/schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to,
+                        url: '/arrange/schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to,
                         success: result => {
                             if (result.code == 0) {
                                 this.createTable('.tb-container .sub-body', this.parseData(result.data.data, true), true);
@@ -79,7 +79,7 @@ window.substitute = function () {
                     });
                 } else {
                     $.ajax({
-                        url: '/schedule/replace?from=' + from + '&to=' + to,
+                        url: '/arrange/replace?from=' + from + '&to=' + to,
                         success: result => {
                             if (result.code == 0) {
                                 this.createTable('.tb-container .sub-body', this.parseData(result.data.data, false), false);
@@ -92,7 +92,7 @@ window.substitute = function () {
             } else {
                 if (isHoliday) {
                     $.ajax({
-                        url: '/schedule/schedule/holiday',
+                        url: '/arrange/schedule/holiday',
                         success: result => {
                             if (result.code == 0) {
                                 this.createTable('.tb-container .sub-body', this.parseData(result.data.data, true), true);
@@ -103,7 +103,7 @@ window.substitute = function () {
                     });
                 } else {
                     $.ajax({
-                        url: '/schedule/replace/findAll',
+                        url: '/arrange/replace/findAll',
                         success: result => {
                             if (result.code == 0) {
                                 this.createTable('.tb-container .sub-body', this.parseData(result.data.data, false), false);
@@ -180,7 +180,7 @@ window.substitute = function () {
             if(confirm('确认删除?')){
                 if(isHoliday){
                     $.ajax({
-                        url:'/schedule/schedule/delete_holiday?id='+curSubstitute.id,
+                        url:'/arrange/schedule/delete_holiday?id='+curSubstitute.id,
                         success:result=>{
                             if(result.code===0){
                                 alert('删除成功');
@@ -191,7 +191,7 @@ window.substitute = function () {
                     });
                 }else{
                     $.ajax({
-                        url:'/schedule/replace/delete?id='+curSubstitute.id,
+                        url:'/arrange/replace/delete?id='+curSubstitute.id,
                         success:result=>{
                             if(result.code===0){
                                 alert('删除成功');

@@ -77,7 +77,7 @@ $(
 
         editSpecial.saveSpecial=function(idStr){
             $.ajax({
-                url: '/schedule/mutex_employee/add',
+                url: '/arrange/mutex_employee/add',
                 type: 'POST',
                 data: {
                     ids: idStr
@@ -95,7 +95,7 @@ $(
 
         editSpecial.updateSpecial=function(id,idStr){
             $.ajax({
-                url: '/schedule/mutex_employee/update',
+                url: '/arrange/mutex_employee/update',
                 type: 'POST',
                 data: {
                     id:id,
@@ -114,7 +114,7 @@ $(
 
         editSpecial.queryEmployees = function () {
             $.ajax({
-                url: '/schedule/station_employee',
+                url: '/arrange/station_employee',
                 success: result => {
                     if (result.code == 0) {
                         curEmployeeArray = result.data.employees;

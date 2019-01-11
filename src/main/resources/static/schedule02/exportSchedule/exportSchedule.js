@@ -98,7 +98,7 @@ window.exportSchedule = function () {
 
             if(confirm('确定删除?')){
                 $.ajax({
-                    url:'/schedule/mutex_employee/delete?id='+curSpecial.id,
+                    url:'/arrange/mutex_employee/delete?id='+curSpecial.id,
                     success:result=>{
                         if(result.code===0){
                             alert('删除成功');
@@ -163,7 +163,7 @@ window.exportSchedule = function () {
 
             if(confirm('确定删除?')){
                 $.ajax({
-                    url:'/schedule/equal_role/delete?id='+curSpecialProgram.id,
+                    url:'/arrange/equal_role/delete?id='+curSpecialProgram.id,
                     success:result=>{
                         if(result.code===0){
                             alert('删除成功');
@@ -220,7 +220,7 @@ window.exportSchedule = function () {
                 const date = $current.text();
                 console.log(date);
                 $.ajax({
-                    url: '/schedule/holiday/delete?date=' + date,
+                    url: '/arrange/holiday/delete?date=' + date,
                     success: result => {
                         if (result.code === 0) {
                             alert('删除' + date + '成功');
@@ -256,7 +256,7 @@ window.exportSchedule = function () {
 
             $('.export-btns .message').text('正在生成排班记录,请稍等...');
             $.ajax({
-                url:'/schedule/schedule/schedue?from=' + from + '&to=' + to,
+                url:'/arrange/schedule/schedue?from=' + from + '&to=' + to,
                 success:result=>{
                     $('.export-btns .message').text('');
                     canClickGen=true;
@@ -310,7 +310,7 @@ window.exportSchedule = function () {
         });
         $('.cancel-schedule').click(function () {
             $.ajax({
-                url:'/schedule/schedule/cancel',
+                url:'/arrange/schedule/cancel',
                 success:result=>{
                     if(result.code===0){
                         $('.export-btns .message').text('取消成功');
@@ -327,7 +327,7 @@ window.exportSchedule = function () {
 
     window.queryHoliday = function (from, to) {
         $.ajax({
-            url: '/schedule/holiday?from=' + from + '&to=' + to,
+            url: '/arrange/holiday?from=' + from + '&to=' + to,
             success: result => {
                 if (result.code === 0) {
                     exportSchedule.buildHoliday(result.data.holidays);
@@ -353,7 +353,7 @@ window.exportSchedule = function () {
 
     window.querySpecialGroup = function () {
         $.ajax({
-            url: '/schedule/mutex_employee',
+            url: '/arrange/mutex_employee',
             success: result => {
                 if (result.code === 0) {
                     curSpecialArray=result.data.data;
@@ -367,7 +367,7 @@ window.exportSchedule = function () {
 
     window.querySpecialProgramGroup=function(){
         $.ajax({
-            url: '/schedule/equal_role',
+            url: '/arrange/equal_role',
             success: result => {
                 if (result.code === 0) {
                     curSpecialProgramArray=result.data.data;

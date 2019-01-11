@@ -74,7 +74,7 @@ window.employee = function () {
             if (confirm('确认删除')) {
                 const name = curEmployee.name;
                 $.ajax({
-                    url:'/schedule/station_employee/delete?id='+curEmployee.id,
+                    url:'/arrange/station_employee/delete?id='+curEmployee.id,
                     success:result=>{
                         if(result.code===0){
                             alert('删除' + name + '成功');
@@ -95,7 +95,7 @@ window.employee = function () {
 
     window.queryEmployees = function () {
         $.ajax({
-            url: '/schedule/station_employee',
+            url: '/arrange/station_employee',
             success: result => {
                 if (result.code == 0) {
                     curEmployeeArray=result.data.employees;

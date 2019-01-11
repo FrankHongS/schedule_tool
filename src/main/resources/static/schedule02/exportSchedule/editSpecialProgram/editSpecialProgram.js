@@ -77,7 +77,7 @@ $(
 
         editSpecialProgram.saveSpecial = function (idStr) {
             $.ajax({
-                url: '/schedule/equal_role/add',
+                url: '/arrange/equal_role/add',
                 type: 'POST',
                 data: {
                     ids: idStr
@@ -95,7 +95,7 @@ $(
 
         editSpecialProgram.updateSpecial = function (id, idStr) {
             $.ajax({
-                url: '/schedule/equal_role/update',
+                url: '/arrange/equal_role/update',
                 type: 'POST',
                 data: {
                     id: id,
@@ -114,7 +114,7 @@ $(
 
         editSpecialProgram.queryPrograms = function () {
             $.ajax({
-                url: '/schedule/sprogram/programs?stationId=' + 1,
+                url: '/arrange/sprogram/programs?stationId=' + 1,
                 success: result => {
                     if (result.code == 0) {
                         this.buildPrograms(result.data.programs);

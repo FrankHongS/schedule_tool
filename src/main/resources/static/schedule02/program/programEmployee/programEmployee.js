@@ -109,7 +109,7 @@ $(
             }
 
             $.ajax({
-                url: '/schedule/role_employee?id=' + roleId,
+                url: '/arrange/role_employee?id=' + roleId,
                 success: result => {
                     if (result.code === 0) {
                         curProgramEmployeeArray = result.data.employees;
@@ -176,7 +176,7 @@ $(
                 if (confirm('确认删除')) {
 
                     $.ajax({
-                        url: '/schedule/role_employee/delete?employeeId=' + curEmployee.id + '&roleId=' + curRoleId,
+                        url: '/arrange/role_employee/delete?employeeId=' + curEmployee.id + '&roleId=' + curRoleId,
                         success: result => {
                             if (result.code === 0) {
                                 alert('删除成功');

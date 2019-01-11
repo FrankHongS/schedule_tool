@@ -74,7 +74,7 @@ window.program = function () {
             if (confirm('确认删除')) {
 
                 $.ajax({
-                    url: '/schedule/sprogram/delete?programId=' + curProgram.id,
+                    url: '/arrange/sprogram/delete?programId=' + curProgram.id,
                     success: result => {
                         if (result.code === 0) {
                             alert('删除' + curProgram.name + '成功');
@@ -121,7 +121,7 @@ window.program = function () {
 
     window.queryPrograms = function () {
         $.ajax({
-            url: '/schedule/sprogram/programs?stationId=' + 1,
+            url: '/arrange/sprogram/programs?stationId=' + 1,
             success: result => {
                 if (result.code == 0) {
                     programArray = result.data.programs;

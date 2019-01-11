@@ -1,7 +1,7 @@
 server:
   port: 8082
   servlet:
-    context-path: /schedule
+    context-path: /arrange
 spring:
   profiles:
     active: prod

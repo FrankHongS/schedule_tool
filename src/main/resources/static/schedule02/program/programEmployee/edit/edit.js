@@ -56,7 +56,7 @@ $(
         editProgramEmployee.buildEmployeeNames = function () {
 
             $.ajax({
-                url: '/schedule/station_employee',
+                url: '/arrange/station_employee',
                 success: result => {
                     if (result.code == 0) {
 
@@ -128,7 +128,7 @@ $(
 
         editProgramEmployee.saveRequest = function (data) {
             $.ajax({
-                url: '/schedule/role_employee/add',
+                url: '/arrange/role_employee/add',
                 type: 'POST',
                 data: data,
                 success: result => {
@@ -145,7 +145,7 @@ $(
 
         editProgramEmployee.modifyRequest = function (data) {
             $.ajax({
-                url: '/schedule/role_employee/update',
+                url: '/arrange/role_employee/update',
                 type: 'POST',
                 data: data,
                 success: result => {
