@@ -1,5 +1,10 @@
 package com.microsoft.schedule_tool;
 
+/**
+ * @author kb_jay
+ * @time 2019/1/11
+ **/
+
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 

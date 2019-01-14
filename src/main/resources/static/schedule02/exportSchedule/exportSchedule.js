@@ -56,7 +56,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/exportSchedule/editSpecial/editSpecial.html'
+                content: '/arrange/schedule02/exportSchedule/editSpecial/editSpecial.html'
                 // content: './editSpecial/editSpecial.html'
             });
         });
@@ -82,7 +82,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/exportSchedule/editSpecial/editSpecial.html'
+                content: '/arrange/schedule02/exportSchedule/editSpecial/editSpecial.html'
             });
         });
 
@@ -121,7 +121,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
+                content: '/arrange/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
             });
         });
 
@@ -146,7 +146,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
+                content: '/arrange/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
             });
         });
 
@@ -204,7 +204,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/exportSchedule/addHoliday/addHoliday.html'
+                content: '/arrange/schedule02/exportSchedule/addHoliday/addHoliday.html'
             });
         });
 
@@ -278,7 +278,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/exportSchedule/exportProgress/exportProgress.html'
+                content: '/arrange/schedule02/exportSchedule/exportProgress/exportProgress.html'
                 // content: './editSpecial/editSpecial.html'
             });
         });
@@ -303,7 +303,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/exportSchedule/exportProgress/exportProgress.html'
+                content: '/arrange/schedule02/exportSchedule/exportProgress/exportProgress.html'
                 // content: './editSpecial/editSpecial.html'
             });
 

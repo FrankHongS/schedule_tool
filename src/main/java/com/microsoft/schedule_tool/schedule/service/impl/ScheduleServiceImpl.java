@@ -7,6 +7,7 @@ import com.microsoft.schedule_tool.schedule.domain.vo.response.Progress;
 import com.microsoft.schedule_tool.schedule.domain.vo.response.RespSchedule;
 import com.microsoft.schedule_tool.schedule.domain.vo.schedule.ScheduleRoleWaitingList;
 import com.microsoft.schedule_tool.schedule.repository.*;
+import com.microsoft.schedule_tool.schedule.service.LogService;
 import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeService;
 import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.util.DateUtil;
@@ -55,6 +56,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
     @Autowired
     private ScheduleStatesResposity scheduleStatesResposity;
+
+    @Autowired
+    private LogService logService;
 
     private ArrayList<ScheduleRoleWaitingList> scheduleRoles;
 
@@ -877,11 +881,14 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANCEL);
         }
         setCurProgress(i + needScheduleRole.size() * j + 1, needScheduleRole.size() * weekNums);
+        /**log***/
         System.out.println("----------->>");
         System.out.println("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id);
         LogUtils.getInstance().write("----------->>\n");
         LogUtils.getInstance().write("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id + "\n");
-
+        logService.log("----------->>");
+        logService.log("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id + "\n");
+        /**log***/
         notOptionalInOneWeek.clear();
         for (int k = 0; k < i; k++) {
             if (result[k][j] != null) {
@@ -923,6 +930,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         // TODO: 2019/1/8
         System.out.print("待选员工" + canChooseEmployees.size() + "->>");
         LogUtils.getInstance().write("待选员工" + canChooseEmployees.size() + "->>");
+
         for (int k = 0; k < canChooseEmployees.size(); k++) {
             System.out.print(canChooseEmployees.get(k) + "-");
             LogUtils.getInstance().write(canChooseEmployees.get(k) + "-");

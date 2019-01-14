@@ -5,3 +5,4 @@ spring:
     url: jdbc:mysql://aicmysql.mysqldb.chinacloudapi.cn:3306/aicschedule?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     username: aicmysql%aic
     password: qwert12345()
+#    Server=aicmysql.mysqldb.chinacloudapi.cn;Port=3306;Database=aicschedule;Uid={user_name};Pwd={your_password};
