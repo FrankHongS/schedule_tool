@@ -27,7 +27,7 @@ window.employee = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/employee/edit/edit.html'
+                content: '/arrange/schedule02/employee/edit/edit.html'
             });
         });
 
@@ -56,7 +56,7 @@ window.employee = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/employee/edit/edit.html'
+                content: '/arrange/schedule02/employee/edit/edit.html'
             });
         });
 

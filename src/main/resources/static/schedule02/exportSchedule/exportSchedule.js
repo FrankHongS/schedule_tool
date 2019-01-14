@@ -293,7 +293,7 @@ window.exportSchedule = function () {
                 return;
             }
 
-            $(this).attr('href', '/schedule/excel/export_schedule?from=' + from + '&to=' + to+'&isHoliday=false');
+            $(this).attr('href', '/arrange/excel/export_schedule?from=' + from + '&to=' + to+'&isHoliday=false');
         });
         $('.check-progress').click(function(){
             index=layer.open({

@@ -27,7 +27,7 @@ window.substitute = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: true,
-                content: '/schedule/schedule02/substitute/addSubstitute/addSubstitute.html'
+                content: '/arrange/schedule02/substitute/addSubstitute/addSubstitute.html'
                 // './addSubstitute/addSubstitute.html'
             });
         });
@@ -45,9 +45,9 @@ window.substitute = function () {
 
             if (from && to) {
                 if(isHoliday){
-                    $(this).attr('href', '/schedule/excel/export_schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to);
+                    $(this).attr('href', '/arrange/excel/export_schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to);
                 }else{
-                    $(this).attr('href', '/schedule/excel/export_replace?from=' + from + '&to=' + to);
+                    $(this).attr('href', '/arrange/excel/export_replace?from=' + from + '&to=' + to);
                 }
             } else {
                 alert('时间范围需不为空... :)');

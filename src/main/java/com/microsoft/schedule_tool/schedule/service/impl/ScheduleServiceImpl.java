@@ -60,6 +60,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     @Autowired
     private LogService logService;
 
+    @Autowired
+    private RadioReplaceScheduleReposity radioReplaceScheduleReposity;
+
     private ArrayList<ScheduleRoleWaitingList> scheduleRoles;
 
     //一周中不可选的员工
@@ -732,6 +735,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             schedule(0, 0);
             LogUtils.getInstance().write("end-time success:" + new Date().getTime());
             //清理掉旧数据
+            clearReplaceSchedule(from);
             clearOldData(from);
             clearScheduleStateTo(from);
             //处理假期
@@ -746,6 +750,16 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 throw (ProgramScheduleException) e;
             } else {
                 throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
+            }
+        }
+    }
+
+    private void clearReplaceSchedule(String from) throws ParseException {
+        Date dateFrom = DateUtil.parseDateString(from);
+        List<RadioReplaceSchedule> all = radioReplaceScheduleReposity.findAll();
+        for (int i = 0; i < all.size(); i++) {
+            if(all.get(i).getRadioSchedule().getDate().getTime()>=dateFrom.getTime()){
+                radioReplaceScheduleReposity.deleteById(all.get(i).getId());
             }
         }
     }

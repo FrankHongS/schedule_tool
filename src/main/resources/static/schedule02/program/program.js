@@ -26,7 +26,7 @@ window.program = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/program/edit/edit.html'
+                content: '/arrange/schedule02/program/edit/edit.html'
                 // content:'./edit/edit.html'
             });
         });
@@ -56,7 +56,7 @@ window.program = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/schedule/schedule02/program/edit/edit.html'
+                content: '/arrange/schedule02/program/edit/edit.html'
                 // './edit/edit.html'
             });
         });
@@ -115,7 +115,7 @@ window.program = function () {
             );
 
             // $(location).attr('href', '/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + $current.text());
-            window.open('/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + curProgram.name + '&roleIds=' + roleIds + '&roleNames=' + roleNames);
+            window.open('/arrange/schedule02/program/programEmployee/programEmployee.html?program=' + curProgram.name + '&roleIds=' + roleIds + '&roleNames=' + roleNames);
         });
     };
 

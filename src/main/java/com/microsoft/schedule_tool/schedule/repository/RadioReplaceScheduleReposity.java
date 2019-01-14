@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @time 2018/12/18
  **/
 public interface RadioReplaceScheduleReposity extends JpaRepository<RadioReplaceSchedule,Long> {
-
+    void deleteById(Long id);
 }
