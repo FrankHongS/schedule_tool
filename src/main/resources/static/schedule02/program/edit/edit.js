@@ -155,7 +155,7 @@ $(
             new Promise(
                 resolve => {
                     $.ajax({
-                        url: '/arrange/sprogram/add',
+                        url: '/arrange1/sprogram/add',
                         type: 'POST',
                         data: data,
                         success: result => {
@@ -178,7 +178,7 @@ $(
                         $('.message-container .message').text(msg.success);
                     } else {
                         $.ajax({
-                            url: '/arrange/role/addSome',
+                            url: '/arrange1/role/addSome',
                             type: 'POST',
                             data: {
                                 roles: JSON.stringify(roleArray)
@@ -201,7 +201,7 @@ $(
             new Promise(
                 resolve => {
                     $.ajax({
-                        url: '/arrange/sprogram/update',
+                        url: '/arrange1/sprogram/update',
                         type: 'POST',
                         data: data,
                         success: result => {
@@ -230,7 +230,7 @@ $(
                             resolve();
                         } else {
                             $.ajax({
-                                url: '/arrange/role/addSome',
+                                url: '/arrange1/role/addSome',
                                 type: 'POST',
                                 data: {
                                     roles: JSON.stringify(modifyObject.saveRoleArray)
@@ -251,7 +251,7 @@ $(
                 () => {
                     for (let i = 0; i < discardIdArray.length; i++) {
                         $.ajax({
-                            url: '/arrange/role/delete?id=' + discardIdArray[i],
+                            url: '/arrange1/role/delete?id=' + discardIdArray[i],
                             success: result => {
                                 if (result.code === 0) {
                                     isRequestSuccess = true;
@@ -266,7 +266,7 @@ $(
 
                     for (let j = 0; j < modifyObject.updateRoleArray.length; j++) {
                         $.ajax({
-                            url: '/arrange/role/update',
+                            url: '/arrange1/role/update',
                             type: 'POST',
                             data: modifyObject.updateRoleArray[j],
                             success: result => {

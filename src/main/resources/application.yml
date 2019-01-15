@@ -1,7 +1,7 @@
 server:
   port: 8082
   servlet:
-    context-path: /arrange
+    context-path: /arrange1
 spring:
   profiles:
     active: prod
@@ -19,5 +19,6 @@ spring:
     show-sql: true
     #InnoDB 支持事务
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-
+  jmx:
+    enabled: false
 #spring.jmx.enabled=false

@@ -22,6 +22,6 @@ public class WebAppRootContext implements ServletContextInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         servletContext.addListener(WebAppRootListener.class);
         servletContext.setInitParameter("webAppRootKey",//这里是注入参数的名称
-                "arrange_root");
+                "arrange1_root");
     }
 }

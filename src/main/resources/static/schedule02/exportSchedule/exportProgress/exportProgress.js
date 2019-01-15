@@ -35,7 +35,7 @@ $(
         // };
         progress.callNet=function(){
             $.ajax({
-                url:'/arrange/schedule/state',
+                url:'/arrange1/schedule/state',
                 success:result=>{
                     if(result.code===0){
                         // exportProgress(result.data.data.currentNumber,result.data.data.totalNumber);

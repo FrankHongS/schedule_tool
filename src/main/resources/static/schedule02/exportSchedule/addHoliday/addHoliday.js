@@ -53,7 +53,7 @@ $(
 
         function saveHoliday(dateList, msg) {
             $.ajax({
-                url: '/arrange/holiday/add',
+                url: '/arrange1/holiday/add',
                 type:'POST',
                 data: {
                     holidays: JSON.stringify(dateList)

@@ -36,7 +36,7 @@ $(
 
                 switch (originData.type) {
                     case 0://save employee
-                        url = '/arrange/station_employee/add';
+                        url = '/arrange1/station_employee/add';
                         data = {
                             name: name,
                             alias: alias
@@ -47,7 +47,7 @@ $(
                         };
                         break;
                     case 1://modify employee
-                    url = '/arrange/station_employee/update';
+                    url = '/arrange1/station_employee/update';
                     data = {
                         id:originData.id,
                         name: name,

@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.microsoft</groupId>
-    <artifactId>arrange_work</artifactId>
+    <artifactId>arrange1_work</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>arrange_work</name>
-    <description>arrange_work for Spring Boot</description>
+    <name>arrange1_work</name>
+    <description>arrange1_work for Spring Boot</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <!--<version>5.1.46</version>-->
+            <version>5.1.46</version>
             <!--<version>8.0.13</version>-->
         </dependency>
 

@@ -27,7 +27,7 @@ window.employee = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange/schedule02/employee/edit/edit.html'
+                content: '/arrange1/schedule02/employee/edit/edit.html'
             });
         });
 
@@ -56,7 +56,7 @@ window.employee = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange/schedule02/employee/edit/edit.html'
+                content: '/arrange1/schedule02/employee/edit/edit.html'
             });
         });
 
@@ -74,7 +74,7 @@ window.employee = function () {
             if (confirm('确认删除')) {
                 const name = curEmployee.name;
                 $.ajax({
-                    url:'/arrange/station_employee/delete?id='+curEmployee.id,
+                    url:'/arrange1/station_employee/delete?id='+curEmployee.id,
                     success:result=>{
                         if(result.code===0){
                             alert('删除' + name + '成功');
@@ -95,7 +95,7 @@ window.employee = function () {
 
     window.queryEmployees = function () {
         $.ajax({
-            url: '/arrange/station_employee',
+            url: '/arrange1/station_employee',
             success: result => {
                 if (result.code == 0) {
                     curEmployeeArray=result.data.employees;
