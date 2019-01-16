@@ -35,7 +35,7 @@ $(
         // };
         progress.callNet=function(){
             $.ajax({
-                url:'/arrange1/schedule/state',
+                url:'/arrange/schedule/state',
                 success:result=>{
                     if(result.code===0){
                         // exportProgress(result.data.data.currentNumber,result.data.data.totalNumber);
@@ -47,20 +47,22 @@ $(
         };
 
         progress.success=function(current,total){
-            if(total!==0&&current===total){
-                clearTimeout(timeOutId);
-            }
-            var tvProcess = $('.progress-tv');
-            tvProcess.text(current + '/' + total);
-            var pre = parseInt(parseFloat(current / total) * 100) + '%';
-            console.log(current + " " + total + " " + pre);
+            layui.use('element', function () {
+                var element = layui.element;
+                if(total!==0&&current===total){
+                    clearTimeout(timeOutId);
+                }
+                var tvProcess = $('.progress-tv');
+                tvProcess.text(current + '/' + total);
+                var pre = parseInt(parseFloat(current / total) * 100) + '%';
+                console.log(current + " " + total + " " + pre);
 
-            var element = layui.element;
-            element.progress("progress", pre);
+                element.progress("schedule-process", pre);
+            });
         };
 
 
-        layuiClient.init();
+        // layuiClient.init();
         progress.callNet();
     }
 )

@@ -728,9 +728,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         if (isShedule) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANNOT_SHEDULE_SOME_IN_SAME_TIME);
         }
-        new Thread() {
-            @Override
-            public void run() {
+//        new Thread() {
+//            @Override
+//            public void run() {
                 try {
                     isShedule = true;
                     initParams(from, to);
@@ -756,8 +756,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                         throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
                     }
                 }
-            }
-        }.start();
+//            }
+//        }.start();
     }
 
     private void clearReplaceSchedule(String from) throws ParseException {
@@ -916,7 +916,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             }
         }
 
-
+//        Long id1 = scheduleRoles.get(i).id;
         ArrayList<Long> initAlternativeEmployees = new ArrayList<>();
         Queue<Long> alternativeEmployee = scheduleRoles.get(i).alternativeEmployee;
         for (int k = 0; k < alternativeEmployee.size(); k++) {
@@ -991,13 +991,13 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 //            canChooseEmployees.remove(o);
         }
 
-        LogUtils.getInstance().write("\n");
-        LogUtils.getInstance().write("可选员工不去重" + canChooseEmployees.size() + "->>");
+//        LogUtils.getInstance().write("\n");
+//        LogUtils.getInstance().write("可选员工不去重" + canChooseEmployees.size() + "->>");
 
         System.out.print("可选员工不去重" + canChooseEmployees.size() + "->>");
         for (int k = 0; k < canChooseEmployees.size(); k++) {
             System.out.print(canChooseEmployees.get(k) + "-");
-            LogUtils.getInstance().write(canChooseEmployees.get(k) + "-");
+//            LogUtils.getInstance().write(canChooseEmployees.get(k) + "-");
 
         }
         LogUtils.getInstance().write("\n");
@@ -1005,26 +1005,26 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         System.out.println();
 
         //canChooseEmployees不能有重复的员工！！
-        HashSet<Long> canChooseEmployeesSet = new HashSet<>();
-        for (int k = 0; k < canChooseEmployees.size(); k++) {
-            canChooseEmployeesSet.add(canChooseEmployees.get(k));
-        }
+//        HashSet<Long> canChooseEmployeesSet = new HashSet<>();
+//        for (int k = 0; k < canChooseEmployees.size(); k++) {
+//            canChooseEmployeesSet.add(canChooseEmployees.get(k));
+//        }
+//
+//        ArrayList<Long> canChooseEmployeesArray = new ArrayList<>();
+//        LogUtils.getInstance().write("可选员工去重" + canChooseEmployeesSet.size() + "->>");
+//
+//        System.out.print("可选员工去重" + canChooseEmployeesSet.size() + "->>");
+//        for (Long id : canChooseEmployeesSet) {
+//            canChooseEmployeesArray.add(id);
+//            System.out.print(id + "-");
+//            LogUtils.getInstance().write(id + "-");
+//
+//        }
+//        LogUtils.getInstance().write("\n");
 
-        ArrayList<Long> canChooseEmployeesArray = new ArrayList<>();
-        LogUtils.getInstance().write("可选员工去重" + canChooseEmployeesSet.size() + "->>");
+//        System.out.println();
 
-        System.out.print("可选员工去重" + canChooseEmployeesSet.size() + "->>");
-        for (Long id : canChooseEmployeesSet) {
-            canChooseEmployeesArray.add(id);
-            System.out.print(id + "-");
-            LogUtils.getInstance().write(id + "-");
-
-        }
-        LogUtils.getInstance().write("\n");
-
-        System.out.println();
-
-        if (canChooseEmployeesArray.size() == 0) {
+        if (canChooseEmployees.size() == 0) {
             System.out.println("失败");
             LogUtils.getInstance().write("失败\n");
 
@@ -1032,22 +1032,22 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         } else {
             Long pre = result[i][j];
             if (pre == null) {
-                result[i][j] = canChooseEmployeesArray.get(0);
+                result[i][j] = canChooseEmployees.get(0);
                 System.out.println("成功->>" + result[i][j]);
                 LogUtils.getInstance().write("成功->>" + result[i][j] + "\n");
 
                 return true;
             } else {
                 boolean has = false;
-                for (int k = 0; k < canChooseEmployeesArray.size(); k++) {
+                for (int k = 0; k < canChooseEmployees.size(); k++) {
                     if (has) {
-                        result[i][j] = canChooseEmployeesArray.get(k);
+                        result[i][j] = canChooseEmployees.get(k);
                         System.out.println("成功->>" + result[i][j]);
                         LogUtils.getInstance().write("成功->>" + result[i][j] + "\n");
 
                         return true;
                     }
-                    if (pre.longValue() == canChooseEmployeesArray.get(k).longValue()) {
+                    if (pre.longValue() == canChooseEmployees.get(k).longValue()) {
                         has = true;
                     }
                 }

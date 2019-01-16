@@ -137,9 +137,16 @@ public class ExportExcelUtil {
             rolesAndData2employee.put(roleName + datas.get(i).date, respSchedule.name);
         }
 
+        //将相同program中的role放在一起
+        ArrayList<String> finalRoles = new ArrayList<>();
+        for (String role : roles) {
+            finalRoles.add(role);
+        }
+        resetFinalRoles(finalRoles);
+
         row.createCell(0);
         int tempIndex = 1;
-        for (String role : roles) {
+        for (String role : finalRoles) {
             row.createCell(tempIndex).setCellValue(role);
             tempIndex++;
         }
@@ -152,7 +159,7 @@ public class ExportExcelUtil {
             row1.createCell(0).setCellValue(DateUtil.parseDateToString(nextDate));
 
             int temp = 1;
-            for (String role : roles) {
+            for (String role : finalRoles) {
                 row1.createCell(temp).setCellValue(rolesAndData2employee.get(role + DateUtil.parseDateToString(nextDate)));
                 temp++;
             }
@@ -188,5 +195,23 @@ public class ExportExcelUtil {
 //        }
 
 
+    }
+
+    //调整finalRoles中的位置
+    private static void resetFinalRoles(ArrayList<String> finalRoles) {
+        int len = finalRoles.size();
+        for (int i = 0; i < len; i++) {
+            String cur = finalRoles.get(i).split("--")[0];
+            int pos = i + 1;
+            for (int j = i + 1; j < len; j++) {
+                if (cur.equals(finalRoles.get(j).split("--")[0])) {
+                    String temp = finalRoles.get(pos);
+                    finalRoles.set(pos, finalRoles.get(j));
+                    finalRoles.set(j, temp);
+                    pos++;
+                    i++;
+                }
+            }
+        }
     }
 }
