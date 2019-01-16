@@ -6,6 +6,7 @@ window.exportSchedule = function () {
     let curSpecialProgramArray;
     var index;
     var canClickGen=true;
+    var interval;
 
     exportSchedule.bindLayer = function () {
         laydate.render({
@@ -56,7 +57,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/exportSchedule/editSpecial/editSpecial.html'
+                content: '/arrange/schedule02/exportSchedule/editSpecial/editSpecial.html'
                 // content: './editSpecial/editSpecial.html'
             });
         });
@@ -82,7 +83,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/exportSchedule/editSpecial/editSpecial.html'
+                content: '/arrange/schedule02/exportSchedule/editSpecial/editSpecial.html'
             });
         });
 
@@ -98,7 +99,7 @@ window.exportSchedule = function () {
 
             if(confirm('确定删除?')){
                 $.ajax({
-                    url:'/arrange1/mutex_employee/delete?id='+curSpecial.id,
+                    url:'/arrange/mutex_employee/delete?id='+curSpecial.id,
                     success:result=>{
                         if(result.code===0){
                             alert('删除成功');
@@ -121,7 +122,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
+                content: '/arrange/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
             });
         });
 
@@ -146,7 +147,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
+                content: '/arrange/schedule02/exportSchedule/editSpecialProgram/editSpecialProgram.html'
             });
         });
 
@@ -163,7 +164,7 @@ window.exportSchedule = function () {
 
             if(confirm('确定删除?')){
                 $.ajax({
-                    url:'/arrange1/equal_role/delete?id='+curSpecialProgram.id,
+                    url:'/arrange/equal_role/delete?id='+curSpecialProgram.id,
                     success:result=>{
                         if(result.code===0){
                             alert('删除成功');
@@ -204,7 +205,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/exportSchedule/addHoliday/addHoliday.html'
+                content: '/arrange/schedule02/exportSchedule/addHoliday/addHoliday.html'
             });
         });
 
@@ -220,7 +221,7 @@ window.exportSchedule = function () {
                 const date = $current.text();
                 console.log(date);
                 $.ajax({
-                    url: '/arrange1/holiday/delete?date=' + date,
+                    url: '/arrange/holiday/delete?date=' + date,
                     success: result => {
                         if (result.code === 0) {
                             alert('删除' + date + '成功');
@@ -256,18 +257,37 @@ window.exportSchedule = function () {
 
             $('.export-btns .message').text('正在生成排班记录,请稍等...');
             $.ajax({
-                url:'/arrange1/schedule/schedue?from=' + from + '&to=' + to,
+                url:'/arrange/schedule/schedue?from=' + from + '&to=' + to,
                 success:result=>{
-                    $('.export-btns .message').text('');
-                    canClickGen=true;
+                    // $('.export-btns .message').text('');
+                    // canClickGen=true;
                     // window.clickSchdule=false;
-
                     if(result.code===0){
-                        alert('生成排班记录成功!');
-                        layer.close(index);
+                        // alert('生成排班记录成功!');
+                        // layer.close(index);
+                        //检查进度
+                        interval = setInterval(function () {
+                            $.ajax({
+                                url:'/arrange/schedule/state',
+                                success:result=>{
+                                if(result.code===0){
+                                // exportProgress(result.data.data.currentNumber,result.data.data.totalNumber);
+                                // result.data.data.currentNumber result.data.data.totalNumber
+                                console.log(result);
+                                if(result.data.data.totalNumber!==0&&result.data.data.currentNumber===result.data.data.totalNumber){
+                                    canClickGen=true;
+                                    $('.export-btns .message').text('排班成功');
+                                    clearInterval(interval);
+                                    layer.close(index);
+                                }
+                            }
+                        }
+                        })
+                        },500);
+
                     }else{
                         alert('生成排班记录失败!'+result.message);
-                        layer.close(index);
+                        // layer.close(index);
                     }
                 }
             });
@@ -278,7 +298,7 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/exportSchedule/exportProgress/exportProgress.html'
+                content: '/arrange/schedule02/exportSchedule/exportProgress/exportProgress.html'
                 // content: './editSpecial/editSpecial.html'
             });
         });
@@ -293,7 +313,7 @@ window.exportSchedule = function () {
                 return;
             }
 
-            $(this).attr('href', '/arrange1/excel/export_schedule?from=' + from + '&to=' + to+'&isHoliday=false');
+            $(this).attr('href', '/arrange/excel/export_schedule?from=' + from + '&to=' + to+'&isHoliday=false');
         });
         $('.check-progress').click(function(){
             index=layer.open({
@@ -303,14 +323,14 @@ window.exportSchedule = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/exportSchedule/exportProgress/exportProgress.html'
+                content: '/arrange/schedule02/exportSchedule/exportProgress/exportProgress.html'
                 // content: './editSpecial/editSpecial.html'
             });
 
         });
         $('.cancel-schedule').click(function () {
             $.ajax({
-                url:'/arrange1/schedule/cancel',
+                url:'/arrange/schedule/cancel',
                 success:result=>{
                     if(result.code===0){
                         $('.export-btns .message').text('取消成功');
@@ -327,7 +347,7 @@ window.exportSchedule = function () {
 
     window.queryHoliday = function (from, to) {
         $.ajax({
-            url: '/arrange1/holiday?from=' + from + '&to=' + to,
+            url: '/arrange/holiday?from=' + from + '&to=' + to,
             success: result => {
                 if (result.code === 0) {
                     exportSchedule.buildHoliday(result.data.holidays);
@@ -353,7 +373,7 @@ window.exportSchedule = function () {
 
     window.querySpecialGroup = function () {
         $.ajax({
-            url: '/arrange1/mutex_employee',
+            url: '/arrange/mutex_employee',
             success: result => {
                 if (result.code === 0) {
                     curSpecialArray=result.data.data;
@@ -367,7 +387,7 @@ window.exportSchedule = function () {
 
     window.querySpecialProgramGroup=function(){
         $.ajax({
-            url: '/arrange1/equal_role',
+            url: '/arrange/equal_role',
             success: result => {
                 if (result.code === 0) {
                     curSpecialProgramArray=result.data.data;

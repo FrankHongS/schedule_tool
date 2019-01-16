@@ -27,7 +27,7 @@ window.substitute = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: true,
-                content: '/arrange1/schedule02/substitute/addSubstitute/addSubstitute.html'
+                content: '/arrange/schedule02/substitute/addSubstitute/addSubstitute.html'
                 // './addSubstitute/addSubstitute.html'
             });
         });
@@ -45,9 +45,9 @@ window.substitute = function () {
 
             if (from && to) {
                 if(isHoliday){
-                    $(this).attr('href', '/arrange1/excel/export_schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to);
+                    $(this).attr('href', '/arrange/excel/export_schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to);
                 }else{
-                    $(this).attr('href', '/arrange1/excel/export_replace?from=' + from + '&to=' + to);
+                    $(this).attr('href', '/arrange/excel/export_replace?from=' + from + '&to=' + to);
                 }
             } else {
                 alert('时间范围需不为空... :)');
@@ -68,7 +68,7 @@ window.substitute = function () {
             if (from && to) {
                 if (isHoliday) {
                     $.ajax({
-                        url: '/arrange1/schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to,
+                        url: '/arrange/schedule?isHoliday=' + isHoliday + '&from=' + from + '&to=' + to,
                         success: result => {
                             if (result.code == 0) {
                                 this.createTable('.tb-container .sub-body', this.parseData(result.data.data, true), true);
@@ -79,7 +79,7 @@ window.substitute = function () {
                     });
                 } else {
                     $.ajax({
-                        url: '/arrange1/replace?from=' + from + '&to=' + to,
+                        url: '/arrange/replace?from=' + from + '&to=' + to,
                         success: result => {
                             if (result.code == 0) {
                                 this.createTable('.tb-container .sub-body', this.parseData(result.data.data, false), false);
@@ -92,7 +92,7 @@ window.substitute = function () {
             } else {
                 if (isHoliday) {
                     $.ajax({
-                        url: '/arrange1/schedule/holiday',
+                        url: '/arrange/schedule/holiday',
                         success: result => {
                             if (result.code == 0) {
                                 this.createTable('.tb-container .sub-body', this.parseData(result.data.data, true), true);
@@ -103,7 +103,7 @@ window.substitute = function () {
                     });
                 } else {
                     $.ajax({
-                        url: '/arrange1/replace/findAll',
+                        url: '/arrange/replace/findAll',
                         success: result => {
                             if (result.code == 0) {
                                 this.createTable('.tb-container .sub-body', this.parseData(result.data.data, false), false);
@@ -180,7 +180,7 @@ window.substitute = function () {
             if(confirm('确认删除?')){
                 if(isHoliday){
                     $.ajax({
-                        url:'/arrange1/schedule/delete_holiday?id='+curSubstitute.id,
+                        url:'/arrange/schedule/delete_holiday?id='+curSubstitute.id,
                         success:result=>{
                             if(result.code===0){
                                 alert('删除成功');
@@ -191,7 +191,7 @@ window.substitute = function () {
                     });
                 }else{
                     $.ajax({
-                        url:'/arrange1/replace/delete?id='+curSubstitute.id,
+                        url:'/arrange/replace/delete?id='+curSubstitute.id,
                         success:result=>{
                             if(result.code===0){
                                 alert('删除成功');

@@ -8,7 +8,7 @@ $(
 
         addSubstitute.buildProgramList = function () {
             $.ajax({
-                url: '/arrange1/sprogram/programs?stationId=' + 1,
+                url: '/arrange/sprogram/programs?stationId=' + 1,
                 success: result => {
                     if (result.code == 0) {
 
@@ -46,7 +46,7 @@ $(
 
         addSubstitute.bindEmployeeList = function () {
             $.ajax({
-                url: '/arrange1/station_employee',
+                url: '/arrange/station_employee',
                 success: result => {
                     if (result.code == 0) {
                         curEmployeeArray=result.data.employees;
@@ -76,7 +76,7 @@ $(
 
                 if($('#sub-hol:checked').length == 1){
                     $.ajax({
-                        url: '/arrange1/schedule/add_holiday',
+                        url: '/arrange/schedule/add_holiday',
                         type: 'POST',
                         data: {
                             roleId:curProgram.id,
@@ -94,7 +94,7 @@ $(
                     });
                 }else{
                     $.ajax({
-                        url: '/arrange1/replace/add',
+                        url: '/arrange/replace/add',
                         type: 'POST',
                         data: {
                             roleId:curProgram.id,

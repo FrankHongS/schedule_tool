@@ -81,15 +81,33 @@ public class ScheduleRoleWaitingList {
     private void initAllEmp(Long id, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
         //该角色下的（员工id+权重）数组
         //初始化allEmp，之后去掉已经排过的员工
+        //获取最大权重，之后遍历添加
         allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
-        for (int j = 0; j < allEmployee.size(); j++) {
-            RelationRoleAndEmployee item = allEmployee.get(j);
-            Long employeeId = item.getEmployeeId();
-            int ratio = item.getRatio();
-            for (int i = 0; i < ratio; i++) {
-                allEmp.add(employeeId);
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < allEmployee.size(); i++) {
+            int ratio = allEmployee.get(i).getRatio();
+            max = max > ratio ? max : ratio;
+        }
+
+        for (int i = 1; i <= max; i++) {
+            for (int j = 0; j < allEmployee.size(); j++) {
+                int ratio = allEmployee.get(j).getRatio();
+                Long employeeId = allEmployee.get(j).getEmployeeId();
+                if (ratio >= i) {
+                    allEmp.add(employeeId);
+                }
             }
         }
+
+//        allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
+//        for (int j = 0; j < allEmployee.size(); j++) {
+//            RelationRoleAndEmployee item = allEmployee.get(j);
+//            Long employeeId = item.getEmployeeId();
+//            int ratio = item.getRatio();
+//            for (int i = 0; i < ratio; i++) {
+//                allEmp.add(employeeId);
+//            }
+//        }
 //        randomSort(allEmp);
     }
 
@@ -133,7 +151,7 @@ public class ScheduleRoleWaitingList {
                 temp.add(allEmp.get(i));
             }
 //            temp.removeAll(hasSortEmp);
-            ListUtils.removeAll(temp,hasSortEmp);
+            ListUtils.removeAll(temp, hasSortEmp);
             for (int i = 0; i < temp.size(); i++) {
                 alternativeEmployee.offer(temp.get(i));
             }

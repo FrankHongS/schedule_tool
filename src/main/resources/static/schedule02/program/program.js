@@ -26,7 +26,7 @@ window.program = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/program/edit/edit.html'
+                content: '/arrange/schedule02/program/edit/edit.html'
                 // content:'./edit/edit.html'
             });
         });
@@ -56,7 +56,7 @@ window.program = function () {
                 fix: false,
                 maxmin: false,
                 scrollbar: false,
-                content: '/arrange1/schedule02/program/edit/edit.html'
+                content: '/arrange/schedule02/program/edit/edit.html'
                 // './edit/edit.html'
             });
         });
@@ -74,7 +74,7 @@ window.program = function () {
             if (confirm('确认删除')) {
 
                 $.ajax({
-                    url: '/arrange1/sprogram/delete?programId=' + curProgram.id,
+                    url: '/arrange/sprogram/delete?programId=' + curProgram.id,
                     success: result => {
                         if (result.code === 0) {
                             alert('删除' + curProgram.name + '成功');
@@ -115,13 +115,13 @@ window.program = function () {
             );
 
             // $(location).attr('href', '/schedule/schedule02/program/programEmployee/programEmployee.html?program=' + $current.text());
-            window.open('/arrange1/schedule02/program/programEmployee/programEmployee.html?program=' + curProgram.name + '&roleIds=' + roleIds + '&roleNames=' + roleNames);
+            window.open('/arrange/schedule02/program/programEmployee/programEmployee.html?program=' + curProgram.name + '&roleIds=' + roleIds + '&roleNames=' + roleNames);
         });
     };
 
     window.queryPrograms = function () {
         $.ajax({
-            url: '/arrange1/sprogram/programs?stationId=' + 1,
+            url: '/arrange/sprogram/programs?stationId=' + 1,
             success: result => {
                 if (result.code == 0) {
                     programArray = result.data.programs;
