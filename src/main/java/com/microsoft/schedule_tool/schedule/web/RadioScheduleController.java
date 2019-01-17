@@ -81,4 +81,10 @@ public class RadioScheduleController {
         scheduleSercive.cancel();
         return ResultUtil.success();
     }
+
+    @PostMapping("/add_holidays")
+    public Result addHolidayEmployees(String date, long roleId, long employeeId) {
+        scheduleSercive.addHolidayEmployees(date, roleId, employeeId);
+        return ResultUtil.success();
+    }
 }

@@ -76,7 +76,7 @@ $(
 
                 if($('#sub-hol:checked').length == 1){
                     $.ajax({
-                        url: '/arrange/schedule/add_holiday',
+                        url: '/arrange/schedule/add_holidays',
                         type: 'POST',
                         data: {
                             roleId:curProgram.id,
@@ -94,7 +94,7 @@ $(
                     });
                 }else{
                     $.ajax({
-                        url: '/arrange/replace/add',
+                        url: '/arrange/replace/addSome',
                         type: 'POST',
                         data: {
                             roleId:curProgram.id,
@@ -124,7 +124,7 @@ $(
                 elem: '.sub-date',
                 theme: '#393D49',
                 btns: ['confirm'],
-                range: false
+                range: '-'
             });
         };
 

@@ -22,4 +22,25 @@ public class ListUtils {
             }
         }
     }
+
+    public static <T> void removeDuplicate(ArrayList<T> arr) {
+        ArrayList<T> arr1 = new ArrayList<>(arr);
+        int i = 0;
+        Iterator<T> iterator = arr.iterator();
+        while (iterator.hasNext()) {
+            if (i == 0) {
+                iterator.next();
+                i++;
+                continue;
+            }
+            T next = iterator.next();
+            for (int j = 0; j < i; j++) {
+                if (iterator.equals(arr1.get(j))) {
+                    iterator.remove();
+                    break;
+                }
+            }
+            i++;
+        }
+    }
 }

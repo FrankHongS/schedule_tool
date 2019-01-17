@@ -12,14 +12,10 @@ import com.microsoft.schedule_tool.schedule.service.RelationRoleAndEmployeeServi
 import com.microsoft.schedule_tool.schedule.service.ScheduleSercive;
 import com.microsoft.schedule_tool.util.DateUtil;
 import com.microsoft.schedule_tool.util.ListUtils;
-import com.microsoft.schedule_tool.util.LogUtils;
+import com.microsoft.schedule_tool.util.StringUtils;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
-import net.bytebuddy.implementation.bytecode.Throw;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.unit.DataUnit;
-import sun.rmi.runtime.Log;
 
 import java.text.ParseException;
 import java.util.*;
@@ -649,6 +645,26 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     }
 
     @Override
+    public void addHolidayEmployees(String date, long roleId, long empoyeeId) {
+        if (StringUtils.isEmpty(date)) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_DATE_NULL);
+        }
+        String[] dates = date.split(" - ");
+        try {
+            int dayCountFromDate = DateUtil.getDayCountFromDate(dates[0], dates[1]) + 1;
+            for (int i = 0; i < dayCountFromDate; i++) {
+                Date nextDate = DateUtil.getNextDate(DateUtil.parseDateString(dates[0]), i);
+                String s = DateUtil.parseDateToString(nextDate);
+                addHolidayEmployee(s, roleId, empoyeeId);
+            }
+        } catch (ProgramScheduleException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ProgramScheduleException(ResultEnum.SCHEDULE_REPLACE_FAILED);
+        }
+    }
+
+    @Override
     public void deleteHolidaySchedule(long id) {
         Optional<RadioSchedule> radioScheduleOptional = radioScheduleRepository.findById(id);
         if (!radioScheduleOptional.isPresent()) {
@@ -728,15 +744,15 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         if (isShedule) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANNOT_SHEDULE_SOME_IN_SAME_TIME);
         }
-//        new Thread() {
-//            @Override
-//            public void run() {
+        new Thread() {
+            @Override
+            public void run() {
                 try {
+                    setCurProgress(0, 0);
                     isShedule = true;
                     initParams(from, to);
-                    LogUtils.getInstance().write("start-time" + new Date().getTime());
+                    logService.log("start-time" + new Date().getTime());
                     schedule(0, 0);
-                    LogUtils.getInstance().write("end-time success:" + new Date().getTime());
                     //清理掉旧数据
                     clearReplaceSchedule(from);
                     clearOldData(from);
@@ -746,18 +762,17 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     saveData2Db();
                     saveState2Db();
                     isShedule = false;
-                    setCurProgress(needScheduleRole.size() * weekNums+1,needScheduleRole.size() * weekNums+1);
+                    setCurProgress(needScheduleRole.size() * weekNums + 1, needScheduleRole.size() * weekNums + 1);
                 } catch (Exception e) {
                     isShedule = false;
-                    LogUtils.getInstance().write("end-time failed:" + new Date().getTime());
                     if (e instanceof ProgramScheduleException) {
                         throw (ProgramScheduleException) e;
                     } else {
                         throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
                     }
                 }
-//            }
-//        }.start();
+            }
+        }.start();
     }
 
     private void clearReplaceSchedule(String from) throws ParseException {
@@ -840,7 +855,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     i = 0;
                     j = j + 1;
                     if (j == weekNums) {
-                        System.out.println("******成功*******");
+                        logService.log("end-time" + new Date().getTime());
+                        logService.log("******排班成功*******");
                         break;
                     }
                 } else {
@@ -849,7 +865,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             } else {
                 if (i == 0) {
                     if (j == 0) {
-                        System.out.println("------失败------");
+                        logService.log("end-time" + new Date().getTime());
+                        logService.log("------排班失败------");
+                        setCurProgress(-1, 0);
                         throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
                     } else {
                         i = needScheduleRole.size() - 1;
@@ -900,23 +918,19 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             isCancle = false;
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANCEL);
         }
-        setCurProgress(i + needScheduleRole.size() * j + 1, needScheduleRole.size() * weekNums+1);
-        /**log***/
-        System.out.println("----------->>");
-        System.out.println("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id);
-        LogUtils.getInstance().write("----------->>\n");
-        LogUtils.getInstance().write("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id + "\n");
+        setCurProgress(i + needScheduleRole.size() * j + 1, needScheduleRole.size() * weekNums + 1);
+
+        /*****************************log********************/
         logService.log("----------->>");
-        logService.log("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id + "\n");
-        /**log***/
+        logService.log("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id);
+        /***************************************************/
+
         notOptionalInOneWeek.clear();
         for (int k = 0; k < i; k++) {
             if (result[k][j] != null) {
                 addToNotOptionalInOneWeek(result[k][j]);
             }
         }
-
-//        Long id1 = scheduleRoles.get(i).id;
         ArrayList<Long> initAlternativeEmployees = new ArrayList<>();
         Queue<Long> alternativeEmployee = scheduleRoles.get(i).alternativeEmployee;
         for (int k = 0; k < alternativeEmployee.size(); k++) {
@@ -947,62 +961,63 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 }
             }
         }
-        // TODO: 2019/1/8
-        System.out.print("待选员工" + canChooseEmployees.size() + "->>");
-        LogUtils.getInstance().write("待选员工" + canChooseEmployees.size() + "->>");
-
+        /*****************log*************************/
+        logService.log("待选员工" + canChooseEmployees.size() + "->>");
+        StringBuilder sb = new StringBuilder();
         for (int k = 0; k < canChooseEmployees.size(); k++) {
-            System.out.print(canChooseEmployees.get(k) + "-");
-            LogUtils.getInstance().write(canChooseEmployees.get(k) + "-");
+            sb.append(canChooseEmployees.get(k) + "-");
         }
-        System.out.println();
-        LogUtils.getInstance().write("\n");
-        ListUtils.removeAll(canChooseEmployees, hasUseEmployees);
-        System.out.print("已经用过的员工" + hasUseEmployees.size() + "->>");
-        LogUtils.getInstance().write("已经用过的员工" + hasUseEmployees.size() + "->>");
-        for (int k = 0; k < hasUseEmployees.size(); k++) {
-            System.out.print(hasUseEmployees.get(k) + "-");
-            LogUtils.getInstance().write(hasUseEmployees.get(k) + "-");
+        logService.log(sb.toString());
+        /*****************************************/
 
+        //step1:移除掉已经用过的员工
+        ListUtils.removeAll(canChooseEmployees, hasUseEmployees);
+
+        /*******************log**************************/
+        logService.log("已经用过的员工" + hasUseEmployees.size() + "->>");
+        sb.delete(0, sb.length());
+        for (int k = 0; k < hasUseEmployees.size(); k++) {
+            sb.append(hasUseEmployees.get(k) + "-");
         }
-        System.out.println();
-        LogUtils.getInstance().write("\n");
+        logService.log(sb.toString());
+        /*********************************************/
+
+        //step2:移除掉周不可选的员工
         canChooseEmployees.removeAll(notOptionalInOneWeek);
 
-        LogUtils.getInstance().write("一周不可选员工" + notOptionalInOneWeek.size() + "->>");
-        System.out.print("一周不可选员工" + notOptionalInOneWeek.size() + "->>");
+        /************************log******************/
+        logService.log("一周不可选员工" + notOptionalInOneWeek.size() + "->>");
+        sb.delete(0, sb.length());
         for (int k = 0; k < notOptionalInOneWeek.size(); k++) {
-            System.out.print(notOptionalInOneWeek.get(k) + "-");
-            LogUtils.getInstance().write(notOptionalInOneWeek.get(k) + "-");
+            sb.append(notOptionalInOneWeek.get(k) + "-");
         }
-        System.out.println();
+        logService.log(sb.toString());
+        /*****************************************/
 
-//        canChooseEmployees.removeAll(hasUseEmployees);
-//        canChooseEmployees.removeAll(notOptionalInOneWeek);
-        if (j > 0) {
-            Long o = result[i][j - 1];
-            Iterator<Long> iterator = canChooseEmployees.iterator();
-            while (iterator.hasNext()) {
-                Long next = iterator.next();
-                if (next.longValue() == o.longValue()) {
-                    iterator.remove();
-                }
-            }
-//            canChooseEmployees.remove(o);
-        }
 
-//        LogUtils.getInstance().write("\n");
-//        LogUtils.getInstance().write("可选员工不去重" + canChooseEmployees.size() + "->>");
+//        if (j > 0) {
+//            Long o = result[i][j - 1];
+//            Iterator<Long> iterator = canChooseEmployees.iterator();
+//            while (iterator.hasNext()) {
+//                Long next = iterator.next();
+//                if (next.longValue() == o.longValue()) {
+//                    iterator.remove();
+//                }
+//            }
+////            canChooseEmployees.remove(o);
+//        }
 
-        System.out.print("可选员工不去重" + canChooseEmployees.size() + "->>");
+        /**********************log***********************************/
+        logService.log("可选员工不去重" + canChooseEmployees.size() + "->>");
+        sb.delete(0, sb.length());
         for (int k = 0; k < canChooseEmployees.size(); k++) {
-            System.out.print(canChooseEmployees.get(k) + "-");
-//            LogUtils.getInstance().write(canChooseEmployees.get(k) + "-");
-
+            sb.append(canChooseEmployees.get(k) + "-");
         }
-        LogUtils.getInstance().write("\n");
+        logService.log(sb.toString());
+        /******************************************************/
 
-        System.out.println();
+        //step3:去重复
+        ListUtils.removeDuplicate(canChooseEmployees);
 
         //canChooseEmployees不能有重复的员工！！
 //        HashSet<Long> canChooseEmployeesSet = new HashSet<>();
@@ -1013,28 +1028,25 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 //        ArrayList<Long> canChooseEmployeesArray = new ArrayList<>();
 //        LogUtils.getInstance().write("可选员工去重" + canChooseEmployeesSet.size() + "->>");
 //
-//        System.out.print("可选员工去重" + canChooseEmployeesSet.size() + "->>");
-//        for (Long id : canChooseEmployeesSet) {
-//            canChooseEmployeesArray.add(id);
-//            System.out.print(id + "-");
-//            LogUtils.getInstance().write(id + "-");
-//
-//        }
-//        LogUtils.getInstance().write("\n");
-
-//        System.out.println();
-
+        /***********************log******************************/
+        logService.log("可选员工去重" + canChooseEmployees.size() + "->>");
+        sb.delete(0, sb.length());
+        for (Long id : canChooseEmployees) {
+            sb.append(id + "-");
+        }
+        logService.log(sb.toString());
+        /*******************************************************/
         if (canChooseEmployees.size() == 0) {
-            System.out.println("失败");
-            LogUtils.getInstance().write("失败\n");
+
+            logService.log("失败");
 
             return false;
         } else {
             Long pre = result[i][j];
             if (pre == null) {
                 result[i][j] = canChooseEmployees.get(0);
-                System.out.println("成功->>" + result[i][j]);
-                LogUtils.getInstance().write("成功->>" + result[i][j] + "\n");
+
+                logService.log("成功->>" + result[i][j]);
 
                 return true;
             } else {
@@ -1042,8 +1054,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 for (int k = 0; k < canChooseEmployees.size(); k++) {
                     if (has) {
                         result[i][j] = canChooseEmployees.get(k);
-                        System.out.println("成功->>" + result[i][j]);
-                        LogUtils.getInstance().write("成功->>" + result[i][j] + "\n");
+
+                        logService.log("成功->>" + result[i][j]);
 
                         return true;
                     }
@@ -1052,8 +1064,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     }
                 }
                 result[i][j] = null;
-                System.out.println("失败");
-                LogUtils.getInstance().write("失败\n");
+
+                logService.log("失败");
 
                 return false;
             }
@@ -1062,12 +1074,12 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 
     @Override
     public Progress getProgress() {
-        // TODO: 2019/1/9  
         return curProgress;
     }
 
     @Override
     public void cancel() {
+        logService.log("cancel-time" + new Date().getTime());
         isShedule = false;
         isCancle = true;
         curProgress.currentNumber = 0;

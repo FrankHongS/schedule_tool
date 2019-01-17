@@ -15,6 +15,8 @@ public interface ScheduleSercive {
 
     void addHolidayEmployee(String date, long roleId, long empoyeeId);
 
+    void addHolidayEmployees(String date, long roleId, long empoyeeId);
+
     void deleteHolidaySchedule(long id);
 
     List<RespSchedule> getAllSchedule(String from, String to, boolean isHoliday);

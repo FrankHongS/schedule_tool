@@ -143,4 +143,9 @@ public class ScheduleToolApplicationTests {
 //                "]";
 //        holidayService.addHolidays(p);
 //    }
+//
+//    @Test
+//    public void testAddHolidays(){
+//        scheduleSercive.addHolidayEmployees("2019-01-07 - 2019-01-09",7320,7308);
+//    }
 }

@@ -4,7 +4,7 @@ server:
     context-path: /arrange
 spring:
   profiles:
-    active: prod
+    active: dev
   mvc:
     view:
       suffix: .html

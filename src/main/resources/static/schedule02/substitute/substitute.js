@@ -23,7 +23,7 @@ window.substitute = function () {
             layer.open({
                 type: 2,
                 title: '添加替班信息',
-                area: ['480px', '400px'],
+                area: ['750px', '400px'],
                 fix: false,
                 maxmin: false,
                 scrollbar: true,

@@ -279,6 +279,11 @@ window.exportSchedule = function () {
                                     $('.export-btns .message').text('排班成功');
                                     clearInterval(interval);
                                     layer.close(index);
+                                }else if(result.data.data.totalNumber===0&&result.data.data.currentNumber===-1){
+                                    canClickGen=true;
+                                    $('.export-btns .message').text('排班失败，没有满足条件的组合！');
+                                    clearInterval(interval);
+                                    layer.close(index);
                                 }
                             }
                         }
