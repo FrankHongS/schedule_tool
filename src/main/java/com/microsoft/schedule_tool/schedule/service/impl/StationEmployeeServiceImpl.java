@@ -15,6 +15,7 @@ import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,7 @@ public class StationEmployeeServiceImpl implements StationEmployeeService {
             stationEmployee.setAlias(alias);
             stationEmployee.setDeleted(false);
             stationEmployee.setName(name);
+            stationEmployee.setCreateDate(new Date(new java.util.Date().getTime()));
             StationEmployee save = stationEmployeeRepository.save(stationEmployee);
             return save.getId();
         } catch (Exception e) {

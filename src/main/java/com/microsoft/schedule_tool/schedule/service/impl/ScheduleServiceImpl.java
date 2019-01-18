@@ -59,6 +59,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     @Autowired
     private RadioReplaceScheduleReposity radioReplaceScheduleReposity;
 
+    @Autowired
+    private LastScheduleTimeResposity lastScheduleTimeResposity;
     private ArrayList<ScheduleRoleWaitingList> scheduleRoles;
 
     //一周中不可选的员工
@@ -86,6 +88,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private boolean isCancle = false;
 
     private Progress curProgress = new Progress();
+    private LastScheduleTime lastScheduleTime;
 
 //    @Override
 //    public void schedule(String from, String to) {
@@ -560,17 +563,39 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 checkSameRoles(id, noNeedAdd);
             }
         }
-        //初始化result（两个维度：角色+周数）
-        result = new Long[needScheduleRole.size()][weekNums];
+
         //同一周中不可选的员工
         notOptionalInOneWeek = new ArrayList<>();
         //初始化待选角色待选名单
         scheduleRoles = new ArrayList<>();
         for (Long id : needScheduleRole) {
             ScheduleRoleWaitingList scheduleRole = new ScheduleRoleWaitingList();
-            scheduleRole.init(id, startDate, relationRoleAndEmployeeService, relationRoleAndEmployeeRepository, scheduleStatesResposity, programRoleRepository, radioScheduleRepository);
+            scheduleRole.init(id, startDate, relationRoleAndEmployeeService, relationRoleAndEmployeeRepository, scheduleStatesResposity, programRoleRepository, radioScheduleRepository, lastScheduleTimeResposity, stationEmployeeRepository);
             scheduleRoles.add(scheduleRole);
         }
+        resetScheduleRoles();
+
+        //获取最大周期的2倍跟26中的较小值设置为weekNums
+        int maxCycle = Integer.MIN_VALUE;
+        for (int i = 0; i < scheduleRoles.size(); i++) {
+            int size = scheduleRoles.get(i).allEmp.size();
+            maxCycle = maxCycle > size ? maxCycle : size;
+        }
+        weekNums = maxCycle * 2 > 26 ? 26 : maxCycle * 2;
+        //初始化result（两个维度：角色+周数）
+        result = new Long[needScheduleRole.size()][weekNums];
+    }
+
+    /**s
+     * 按照角色下的可选员工数目排序
+     */
+    private void resetScheduleRoles() {
+        scheduleRoles.sort(new Comparator<ScheduleRoleWaitingList>() {
+            @Override
+            public int compare(ScheduleRoleWaitingList o1, ScheduleRoleWaitingList o2) {
+                return o1.allEmployee.size() > o2.allEmployee.size() ? 1 : -1;
+            }
+        });
     }
 
     /**
@@ -744,35 +769,54 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         if (isShedule) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANNOT_SHEDULE_SOME_IN_SAME_TIME);
         }
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    setCurProgress(0, 0);
-                    isShedule = true;
-                    initParams(from, to);
-                    logService.log("start-time" + new Date().getTime());
-                    schedule(0, 0);
-                    //清理掉旧数据
-                    clearReplaceSchedule(from);
-                    clearOldData(from);
-                    clearScheduleStateTo(from);
-                    //处理假期
-                    handleHoliday();
-                    saveData2Db();
-                    saveState2Db();
-                    isShedule = false;
-                    setCurProgress(needScheduleRole.size() * weekNums + 1, needScheduleRole.size() * weekNums + 1);
-                } catch (Exception e) {
-                    isShedule = false;
-                    if (e instanceof ProgramScheduleException) {
-                        throw (ProgramScheduleException) e;
-                    } else {
-                        throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
-                    }
-                }
+//        new Thread() {
+//            @Override
+//            public void run() {
+        try {
+            List<LastScheduleTime> all = lastScheduleTimeResposity.findAll();
+            if (all != null && all.size() > 0) {
+                lastScheduleTime = all.get(0);
             }
-        }.start();
+
+            setCurProgress(0, 0);
+            isShedule = true;
+            initParams(from, to);
+            logService.log("start-time" + new Date().getTime());
+//                    schedule(0, 0);
+            arrange(0, 0);
+            //清理掉旧数据
+            clearReplaceSchedule(from);
+            clearOldData(from);
+            clearScheduleStateTo(from);
+            //处理假期
+            handleHoliday();
+            saveData2Db();
+            saveState2Db();
+            saveLastScheduleTime2Db();
+
+            isShedule = false;
+            setCurProgress(needScheduleRole.size() * weekNums + 1, needScheduleRole.size() * weekNums + 1);
+        } catch (Exception e) {
+            isShedule = false;
+            if (e instanceof ProgramScheduleException) {
+                throw (ProgramScheduleException) e;
+            } else {
+                throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
+            }
+        }
+//            }
+//        }.start();
+    }
+
+    private void saveLastScheduleTime2Db() {
+        if (lastScheduleTime != null) {
+            lastScheduleTime.setLastScheduleData(new java.sql.Date(startDate.getTime()));
+            lastScheduleTimeResposity.saveAndFlush(lastScheduleTime);
+        } else {
+            LastScheduleTime lastScheduleTime = new LastScheduleTime();
+            lastScheduleTime.setLastScheduleData(new java.sql.Date(startDate.getTime()));
+            lastScheduleTimeResposity.saveAndFlush(lastScheduleTime);
+        }
     }
 
     private void clearReplaceSchedule(String from) throws ParseException {
@@ -848,6 +892,12 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         }
     }
 
+    /**
+     * 按照周去排序
+     *
+     * @param i role
+     * @param j week
+     */
     private void schedule(int i, int j) {
         while (true) {
             if (ok(i, j)) {
@@ -875,6 +925,45 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     }
                 } else {
                     i = i - 1;
+                }
+            }
+        }
+    }
+
+    /**
+     * 按照角色区排序
+     *
+     * @param i
+     * @param j
+     */
+    private void arrange(int i, int j) {
+
+        while (true) {
+            if (ok(i, j)) {
+                if (j == result[0].length - 1) {
+                    j = 0;
+                    i++;
+                    if (i == result.length) {
+                        logService.log("end-time" + new Date().getTime());
+                        logService.log("******排班成功*******");
+                        break;
+                    }
+                } else {
+                    j++;
+                }
+            } else {
+                if (j == 0) {
+                    if (i == 0) {
+                        logService.log("end-time" + new Date().getTime());
+                        logService.log("------排班失败------");
+                        setCurProgress(-1, 0);
+                        throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
+                    } else {
+                        i--;
+                        j = result[0].length - 1;
+                    }
+                } else {
+                    j--;
                 }
             }
         }
@@ -918,8 +1007,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             isCancle = false;
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANCEL);
         }
-        setCurProgress(i + needScheduleRole.size() * j + 1, needScheduleRole.size() * weekNums + 1);
-
+//        setCurProgress(i + needScheduleRole.size() * j + 1, needScheduleRole.size() * weekNums + 1);
+        setCurProgress(i*weekNums+j+1, needScheduleRole.size() * weekNums + 1);
         /*****************************log********************/
         logService.log("----------->>");
         logService.log("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id);

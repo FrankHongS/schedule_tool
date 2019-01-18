@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.sql.Date;
 
 /**
  * @author kb_jay
@@ -26,11 +27,22 @@ public class StationEmployee implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String alias;
     private Boolean isDeleted;
+
+    private Date createDate;
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
     public StationEmployee() {
     }

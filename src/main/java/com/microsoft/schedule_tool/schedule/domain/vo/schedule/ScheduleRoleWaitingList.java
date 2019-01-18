@@ -27,6 +27,7 @@ public class ScheduleRoleWaitingList {
 
     //所有员工
     public List<RelationRoleAndEmployee> allEmployee = new ArrayList<>();
+    private java.sql.Date lastScheduleTime;
 
     //更新角色候选名单
     public void updateAlternativeEmloyee(Date date) {
@@ -46,11 +47,22 @@ public class ScheduleRoleWaitingList {
                      RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository,
                      ScheduleStatesResposity scheduleStatesResposity,
                      ProgramRoleRepository programRoleRepository,
-                     RadioScheduleRepository radioScheduleRepository) {
+                     RadioScheduleRepository radioScheduleRepository,
+                     LastScheduleTimeResposity lastScheduleTimeResposity,
+                     StationEmployeeRepository stationEmployeeRepository) {
         this.id = id;
 
-        initAllEmp(id, relationRoleAndEmployeeRepository);
-        initAlternativeEmployeeAndFirstDate(id, startDate, scheduleStatesResposity, programRoleRepository, radioScheduleRepository);
+        initLastScheduleTime(lastScheduleTimeResposity);
+
+        initAllEmp(id, relationRoleAndEmployeeRepository, stationEmployeeRepository);
+        initAlternativeEmployeeAndFirstDate(id, startDate, scheduleStatesResposity, programRoleRepository, radioScheduleRepository, stationEmployeeRepository);
+    }
+
+    private void initLastScheduleTime(LastScheduleTimeResposity lastScheduleTimeResposity) {
+        List<LastScheduleTime> all = lastScheduleTimeResposity.findAll();
+        if (all != null && all.size() > 0) {
+            lastScheduleTime = all.get(0).getLastScheduleData();
+        }
     }
 
 //    /**
@@ -77,12 +89,15 @@ public class ScheduleRoleWaitingList {
      *
      * @param id
      * @param relationRoleAndEmployeeRepository
+     * @param stationEmployeeRepository
      */
-    private void initAllEmp(Long id, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository) {
+    private void initAllEmp(Long id, RelationRoleAndEmployeeRepository relationRoleAndEmployeeRepository, StationEmployeeRepository stationEmployeeRepository) {
         //该角色下的（员工id+权重）数组
         //初始化allEmp，之后去掉已经排过的员工
         //获取最大权重，之后遍历添加
         allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
+        //去掉employee的isdeleted==1的员工
+        clearDeletedEmployee(stationEmployeeRepository);
         int max = Integer.MIN_VALUE;
         for (int i = 0; i < allEmployee.size(); i++) {
             int ratio = allEmployee.get(i).getRatio();
@@ -111,6 +126,18 @@ public class ScheduleRoleWaitingList {
 //        randomSort(allEmp);
     }
 
+    private void clearDeletedEmployee(StationEmployeeRepository stationEmployeeRepository) {
+        Iterator<RelationRoleAndEmployee> iterator = allEmployee.iterator();
+        while (iterator.hasNext()) {
+            RelationRoleAndEmployee next = iterator.next();
+            Long employeeId = next.getEmployeeId();
+            Optional<StationEmployee> byId = stationEmployeeRepository.findById(employeeId);
+            if (byId.isPresent() && byId.get().isDeleted()) {
+                iterator.remove();
+            }
+        }
+    }
+
     /**
      * 初始化候选名单
      * //get first data from tb_shcdule_state by roleId and curDate
@@ -126,8 +153,9 @@ public class ScheduleRoleWaitingList {
      * @param scheduleStatesResposity
      * @param programRoleRepository
      * @param radioScheduleRepository
+     * @param stationEmployeeRepository
      */
-    private void initAlternativeEmployeeAndFirstDate(Long id, Date startDate, ScheduleStatesResposity scheduleStatesResposity, ProgramRoleRepository programRoleRepository, RadioScheduleRepository radioScheduleRepository) {
+    private void initAlternativeEmployeeAndFirstDate(Long id, Date startDate, ScheduleStatesResposity scheduleStatesResposity, ProgramRoleRepository programRoleRepository, RadioScheduleRepository radioScheduleRepository, StationEmployeeRepository stationEmployeeRepository) {
         ArrayList<Long> hasSortEmp = new ArrayList<>();
 
         Date thisWeekMonday = DateUtil.getThisWeekMonday(startDate);
@@ -153,10 +181,26 @@ public class ScheduleRoleWaitingList {
 //            temp.removeAll(hasSortEmp);
             ListUtils.removeAll(temp, hasSortEmp);
             for (int i = 0; i < temp.size(); i++) {
+                //如果temp.get(i)的日期大于上次排班的时间，那么continue
+                Optional<StationEmployee> byId = stationEmployeeRepository.findById(temp.get(i));
+                if (byId.isPresent() && !byId.get().isDeleted()) {
+                    java.sql.Date createDate = byId.get().getCreateDate();
+                    if (createDate != null && lastScheduleTime != null && createDate.getTime() > lastScheduleTime.getTime()) {
+                        continue;
+                    }
+                }
                 alternativeEmployee.offer(temp.get(i));
             }
         } else {
             for (int i = 0; i < allEmp.size(); i++) {
+                //如果temp.get(i)的日期大于上次排班的时间，那么continue
+                Optional<StationEmployee> byId = stationEmployeeRepository.findById(allEmp.get(i));
+                if (byId.isPresent() && !byId.get().isDeleted()) {
+                    java.sql.Date createDate = byId.get().getCreateDate();
+                    if (createDate != null && lastScheduleTime != null && createDate.getTime() > lastScheduleTime.getTime()) {
+                        continue;
+                    }
+                }
                 alternativeEmployee.offer(allEmp.get(i));
             }
             firstDate = new java.sql.Date(thisWeekMonday.getTime());
