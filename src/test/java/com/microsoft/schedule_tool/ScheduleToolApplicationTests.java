@@ -1,6 +1,7 @@
 package com.microsoft.schedule_tool;
 
 import com.microsoft.schedule_tool.schedule.domain.entity.RadioProgram;
+import com.microsoft.schedule_tool.schedule.domain.vo.response.RespEmployeeByRoleId;
 import com.microsoft.schedule_tool.schedule.repository.RadioProgramRepository;
 import com.microsoft.schedule_tool.schedule.service.*;
 import com.microsoft.schedule_tool.schedule.service.impl.RadioProgramSeviceImpl;
@@ -74,7 +75,7 @@ public class ScheduleToolApplicationTests {
 
     @Test
     public void testSchedule() {
-        scheduleSercive.schedule("2018-7-23", "2018-10-27");
+        scheduleSercive.schedule("2019-1-18", "2019-10-27");
     }
 
     @Autowired
@@ -147,5 +148,15 @@ public class ScheduleToolApplicationTests {
     @Test
     public void testAddHolidays(){
         scheduleSercive.addHolidayEmployees("2019-01-07 - 2019-01-09",7320,7308);
+    }
+
+
+    @Test
+    public void testEmployees(){
+        List<RespEmployeeByRoleId> allWorkersByRoleId = relationRoleAndEmployeeService.getAllWorkersByRoleId(18L);
+
+        for (int i = 0; i < allWorkersByRoleId.size(); i++) {
+            System.out.println(allWorkersByRoleId.get(i).name);
+        }
     }
 }

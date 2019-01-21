@@ -34,7 +34,7 @@
         <root level="info">
             <appender-ref ref="SAVE-TO-FILE"/>
         </root>
-        <logger name="com.microsoft.schedule_tool.schedule.service.impl.LogServiceImpl" additivity="false" level="error">
+        <logger name="com.microsoft.schedule_tool.schedule.service.impl.LogServiceImpl" additivity="false" level="debug">
             <appender-ref ref="SAVE-TO-FILE"/>
         </logger>
     </springProfile>

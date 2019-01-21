@@ -324,9 +324,9 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         for (Long key : skipRoles.keySet()) {
             Long roleId = skipRoles.get(key);
             int index = -1;
-            for (Long item : needScheduleRole) {
+            for (ScheduleRoleWaitingList item : scheduleRoles) {
                 index++;
-                if (roleId.equals(item)) {
+                if (roleId.longValue()==item.id.longValue()) {
                     break;
                 }
             }
@@ -586,7 +586,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         result = new Long[needScheduleRole.size()][weekNums];
     }
 
-    /**s
+    /**
+     * s
      * 按照角色下的可选员工数目排序
      */
     private void resetScheduleRoles() {
@@ -769,43 +770,43 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         if (isShedule) {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANNOT_SHEDULE_SOME_IN_SAME_TIME);
         }
-//        new Thread() {
-//            @Override
-//            public void run() {
-        try {
-            List<LastScheduleTime> all = lastScheduleTimeResposity.findAll();
-            if (all != null && all.size() > 0) {
-                lastScheduleTime = all.get(0);
-            }
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    List<LastScheduleTime> all = lastScheduleTimeResposity.findAll();
+                    if (all != null && all.size() > 0) {
+                        lastScheduleTime = all.get(0);
+                    }
 
-            setCurProgress(0, 0);
-            isShedule = true;
-            initParams(from, to);
-            logService.log("start-time" + new Date().getTime());
+                    setCurProgress(0, 0);
+                    isShedule = true;
+                    initParams(from, to);
+                    logService.log("start-time" + new Date().getTime());
 //                    schedule(0, 0);
-            arrange(0, 0);
-            //清理掉旧数据
-            clearReplaceSchedule(from);
-            clearOldData(from);
-            clearScheduleStateTo(from);
-            //处理假期
-            handleHoliday();
-            saveData2Db();
-            saveState2Db();
-            saveLastScheduleTime2Db();
+                    arrange(0, 0);
+                    //清理掉旧数据
+                    clearReplaceSchedule(from);
+                    clearOldData(from);
+                    clearScheduleStateTo(from);
+                    //处理假期
+                    handleHoliday();
+                    saveData2Db();
+                    saveState2Db();
+                    saveLastScheduleTime2Db();
 
-            isShedule = false;
-            setCurProgress(needScheduleRole.size() * weekNums + 1, needScheduleRole.size() * weekNums + 1);
-        } catch (Exception e) {
-            isShedule = false;
-            if (e instanceof ProgramScheduleException) {
-                throw (ProgramScheduleException) e;
-            } else {
-                throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
+                    isShedule = false;
+                    setCurProgress(needScheduleRole.size() * weekNums + 1, needScheduleRole.size() * weekNums + 1);
+                } catch (Exception e) {
+                    isShedule = false;
+                    if (e instanceof ProgramScheduleException) {
+                        throw (ProgramScheduleException) e;
+                    } else {
+                        throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
+                    }
+                }
             }
-        }
-//            }
-//        }.start();
+        }.start();
     }
 
     private void saveLastScheduleTime2Db() {
@@ -906,7 +907,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     j = j + 1;
                     if (j == weekNums) {
                         logService.log("end-time" + new Date().getTime());
-                        logService.log("******排班成功*******");
+                        logService.log("******arrange success*******");
                         break;
                     }
                 } else {
@@ -916,7 +917,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 if (i == 0) {
                     if (j == 0) {
                         logService.log("end-time" + new Date().getTime());
-                        logService.log("------排班失败------");
+                        logService.log("------arrange failed------");
                         setCurProgress(-1, 0);
                         throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
                     } else {
@@ -945,7 +946,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     i++;
                     if (i == result.length) {
                         logService.log("end-time" + new Date().getTime());
-                        logService.log("******排班成功*******");
+                        logService.log("******arrange success*******");
                         break;
                     }
                 } else {
@@ -955,7 +956,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 if (j == 0) {
                     if (i == 0) {
                         logService.log("end-time" + new Date().getTime());
-                        logService.log("------排班失败------");
+                        logService.log("------arrange failed------");
                         setCurProgress(-1, 0);
                         throw new ProgramScheduleException(ResultEnum.SCHEDULE_FAILED);
                     } else {
@@ -1008,10 +1009,10 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             throw new ProgramScheduleException(ResultEnum.SCHEDULE_CANCEL);
         }
 //        setCurProgress(i + needScheduleRole.size() * j + 1, needScheduleRole.size() * weekNums + 1);
-        setCurProgress(i*weekNums+j+1, needScheduleRole.size() * weekNums + 1);
+        setCurProgress(i * weekNums + j + 1, needScheduleRole.size() * weekNums + 1);
         /*****************************log********************/
         logService.log("----------->>");
-        logService.log("排" + i + "->" + j + "角色id：" + scheduleRoles.get(i).id);
+        logService.log("" + i + "->" + j + "  roleid：" + scheduleRoles.get(i).id);
         /***************************************************/
 
         notOptionalInOneWeek.clear();
@@ -1051,7 +1052,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             }
         }
         /*****************log*************************/
-        logService.log("待选员工" + canChooseEmployees.size() + "->>");
+        logService.log("canChooseEmployees=>" + canChooseEmployees.size() + "->>");
         StringBuilder sb = new StringBuilder();
         for (int k = 0; k < canChooseEmployees.size(); k++) {
             sb.append(canChooseEmployees.get(k) + "-");
@@ -1063,7 +1064,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         ListUtils.removeAll(canChooseEmployees, hasUseEmployees);
 
         /*******************log**************************/
-        logService.log("已经用过的员工" + hasUseEmployees.size() + "->>");
+        logService.log("hasUseEmployees=>" + hasUseEmployees.size() + "->>");
         sb.delete(0, sb.length());
         for (int k = 0; k < hasUseEmployees.size(); k++) {
             sb.append(hasUseEmployees.get(k) + "-");
@@ -1075,7 +1076,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         canChooseEmployees.removeAll(notOptionalInOneWeek);
 
         /************************log******************/
-        logService.log("一周不可选员工" + notOptionalInOneWeek.size() + "->>");
+        logService.log("notOptionalInOneWeek=>" + notOptionalInOneWeek.size() + "->>");
         sb.delete(0, sb.length());
         for (int k = 0; k < notOptionalInOneWeek.size(); k++) {
             sb.append(notOptionalInOneWeek.get(k) + "-");
@@ -1097,7 +1098,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 //        }
 
         /**********************log***********************************/
-        logService.log("可选员工不去重" + canChooseEmployees.size() + "->>");
+        logService.log("canChooseEmployees=>" + canChooseEmployees.size() + "->>");
         sb.delete(0, sb.length());
         for (int k = 0; k < canChooseEmployees.size(); k++) {
             sb.append(canChooseEmployees.get(k) + "-");
@@ -1118,7 +1119,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
 //        LogUtils.getInstance().write("可选员工去重" + canChooseEmployeesSet.size() + "->>");
 //
         /***********************log******************************/
-        logService.log("可选员工去重" + canChooseEmployees.size() + "->>");
+        logService.log("canChooseEmployees(not repeat)=>" + canChooseEmployees.size() + "->>");
         sb.delete(0, sb.length());
         for (Long id : canChooseEmployees) {
             sb.append(id + "-");
@@ -1127,7 +1128,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         /*******************************************************/
         if (canChooseEmployees.size() == 0) {
 
-            logService.log("失败");
+            logService.log("failed");
 
             return false;
         } else {
@@ -1135,7 +1136,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             if (pre == null) {
                 result[i][j] = canChooseEmployees.get(0);
 
-                logService.log("成功->>" + result[i][j]);
+                logService.log("success->>" + result[i][j]);
 
                 return true;
             } else {
@@ -1144,7 +1145,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                     if (has) {
                         result[i][j] = canChooseEmployees.get(k);
 
-                        logService.log("成功->>" + result[i][j]);
+                        logService.log("success->>" + result[i][j]);
 
                         return true;
                     }
@@ -1154,7 +1155,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
                 }
                 result[i][j] = null;
 
-                logService.log("失败");
+                logService.log("failed");
 
                 return false;
             }
