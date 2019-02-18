@@ -22,7 +22,7 @@ public interface ScheduleStatesResposity extends JpaRepository<ScheduleStates, L
 
     @Modifying
     @Transactional
-    void deleteByCurDateGreaterThan(Date date);
+    void deleteByCurDateGreaterThanEqual(Date date);
 
     @Modifying
     @Transactional

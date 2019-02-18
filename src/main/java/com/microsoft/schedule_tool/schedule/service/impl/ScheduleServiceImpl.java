@@ -16,6 +16,7 @@ import com.microsoft.schedule_tool.util.StringUtils;
 import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataUnit;
 
 import java.text.ParseException;
 import java.util.*;
@@ -224,45 +225,46 @@ public class ScheduleServiceImpl implements ScheduleSercive {
     private void clearScheduleStateTo(String from) throws ParseException {
         // TODO: 2018/12/24 清除掉状态信息
         Date dateFrom = DateUtil.parseDateString(from);
+        Date monday = DateUtil.getThisWeekMonday(dateFrom);
 
 //        scheduleStatesResposity.deleteByStartDateGreaterThan((java.sql.Date) endaDate);
-        scheduleStatesResposity.deleteByCurDateGreaterThan(new java.sql.Date(dateFrom.getTime()));
+        scheduleStatesResposity.deleteByCurDateGreaterThanEqual(new java.sql.Date(monday.getTime()));
     }
 
-    /**
-     * 清除掉排班状态
-     * todo
-     */
-    private void clearScheduleState() {
-        scheduleStatesResposity.deleteByCurDateLessThanEqualAndCurDateGreaterThanEqual(new java.sql.Date(endaDate.getTime()), new java.sql.Date(DateUtil.getThisWeekMonday(startDate).getTime()));
-    }
+//    /**
+//     * 清除掉排班状态
+//     * todo
+//     */
+//    private void clearScheduleState() {
+//        scheduleStatesResposity.deleteByCurDateLessThanEqualAndCurDateGreaterThanEqual(new java.sql.Date(endaDate.getTime()), new java.sql.Date(DateUtil.getThisWeekMonday(startDate).getTime()));
+//    }
 
-    /**
-     * 更新数据库中排班状态
-     *
-     * @param i time
-     * @param j role
-     */
-    private void updateScheduleState(int i, int j) {
-        //1:get firstDate from rolesWaiting
-        java.sql.Date firstDate = scheduleRoles.get(j).firstDate;
-        Date mondayOfStartWeek = DateUtil.getThisWeekMonday(startDate);
-        java.sql.Date curDate = new java.sql.Date(DateUtil.getNextDate(mondayOfStartWeek, i * 7).getTime());
-
-        Optional<ProgramRole> roleOptional = programRoleRepository.findById(scheduleRoles.get(j).id);
-        Optional<ScheduleStates> scheduleStatesOptional = scheduleStatesResposity.getByRoleAndCurDate(roleOptional.get(), curDate);
-        if (scheduleStatesOptional.isPresent()) {
-            ScheduleStates scheduleStates = scheduleStatesOptional.get();
-            scheduleStates.setFirstDate(firstDate);
-            scheduleStatesResposity.saveAndFlush(scheduleStates);
-        } else {
-            ScheduleStates scheduleStates = new ScheduleStates();
-            scheduleStates.setCurDate(curDate);
-            scheduleStates.setFirstDate(firstDate);
-            scheduleStates.setRole(roleOptional.get());
-            scheduleStatesResposity.saveAndFlush(scheduleStates);
-        }
-    }
+//    /**
+//     * 更新数据库中排班状态
+//     *
+//     * @param i time
+//     * @param j role
+//     */
+//    private void updateScheduleState(int i, int j) {
+//        //1:get firstDate from rolesWaiting
+//        java.sql.Date firstDate = scheduleRoles.get(j).firstDate;
+//        Date mondayOfStartWeek = DateUtil.getThisWeekMonday(startDate);
+//        java.sql.Date curDate = new java.sql.Date(DateUtil.getNextDate(mondayOfStartWeek, i * 7).getTime());
+//
+//        Optional<ProgramRole> roleOptional = programRoleRepository.findById(scheduleRoles.get(j).id);
+//        Optional<ScheduleStates> scheduleStatesOptional = scheduleStatesResposity.getByRoleAndCurDate(roleOptional.get(), curDate);
+//        if (scheduleStatesOptional.isPresent()) {
+//            ScheduleStates scheduleStates = scheduleStatesOptional.get();
+//            scheduleStates.setFirstDate(firstDate);
+//            scheduleStatesResposity.saveAndFlush(scheduleStates);
+//        } else {
+//            ScheduleStates scheduleStates = new ScheduleStates();
+//            scheduleStates.setCurDate(curDate);
+//            scheduleStates.setFirstDate(firstDate);
+//            scheduleStates.setRole(roleOptional.get());
+//            scheduleStatesResposity.saveAndFlush(scheduleStates);
+//        }
+//    }
 
     /**
      * 清掉数据库中的旧数据
@@ -326,7 +328,7 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             int index = -1;
             for (ScheduleRoleWaitingList item : scheduleRoles) {
                 index++;
-                if (roleId.longValue()==item.id.longValue()) {
+                if (roleId.longValue() == item.id.longValue()) {
                     break;
                 }
             }
@@ -379,10 +381,10 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         }
     }
 
-    private int getIndex() {
-
-        return 0;
-    }
+//    private int getIndex() {
+//
+//        return 0;
+//    }
 
     private boolean containHoliday(Date date1, Date date2) {
         return date1.getTime() >= startDate.getTime()
@@ -582,6 +584,8 @@ public class ScheduleServiceImpl implements ScheduleSercive {
             maxCycle = maxCycle > size ? maxCycle : size;
         }
         weekNums = maxCycle * 2 > 26 ? 26 : maxCycle * 2;
+
+        endaDate = DateUtil.getNextDate(startDate, weekNums * 7);
         //初始化result（两个维度：角色+周数）
         result = new Long[needScheduleRole.size()][weekNums];
     }
@@ -1085,17 +1089,17 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         /*****************************************/
 
 
-//        if (j > 0) {
-//            Long o = result[i][j - 1];
-//            Iterator<Long> iterator = canChooseEmployees.iterator();
-//            while (iterator.hasNext()) {
-//                Long next = iterator.next();
-//                if (next.longValue() == o.longValue()) {
-//                    iterator.remove();
-//                }
-//            }
-////            canChooseEmployees.remove(o);
-//        }
+        if (j > 0) {
+            Long o = result[i][j - 1];
+            Iterator<Long> iterator = canChooseEmployees.iterator();
+            while (iterator.hasNext()) {
+                Long next = iterator.next();
+                if (next.longValue() == o.longValue()) {
+                    iterator.remove();
+                }
+            }
+//            canChooseEmployees.remove(o);
+        }
 
         /**********************log***********************************/
         logService.log("canChooseEmployees=>" + canChooseEmployees.size() + "->>");
@@ -1126,6 +1130,29 @@ public class ScheduleServiceImpl implements ScheduleSercive {
         }
         logService.log(sb.toString());
         /*******************************************************/
+
+        //step4:重新排序，将前一周跟后一周拍过的员工放在后面
+        ArrayList<Long> nearEmployees = new ArrayList<>();
+        if (i > 0) {
+            if (j == 0) {
+                for (int k = 0; k < i; k++) {
+                    nearEmployees.add(result[k][1]);
+                }
+            } else if (j == result[0].length - 1) {
+                for (int k = 0; k < i; k++) {
+                    nearEmployees.add(result[k][result[0].length - 2]);
+                }
+            } else {
+                for (int k = 0; k < i; k++) {
+                    nearEmployees.add(result[k][j - 1]);
+                    nearEmployees.add(result[k][j + 1]);
+                }
+            }
+        }
+        ListUtils.removeDuplicate(nearEmployees);
+
+        ListUtils.resortArray(canChooseEmployees,nearEmployees);
+
         if (canChooseEmployees.size() == 0) {
 
             logService.log("failed");

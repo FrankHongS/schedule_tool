@@ -21,6 +21,17 @@ public class RelationRoleAndEmployee implements Serializable {
     //权重
     private int ratio;
 
+    //创建时间
+    private long createTime;
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
     public RelationRoleAndEmployee() {
     }
 

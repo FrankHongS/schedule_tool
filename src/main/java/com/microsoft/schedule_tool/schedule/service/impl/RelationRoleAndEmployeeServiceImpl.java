@@ -15,9 +15,7 @@ import com.microsoft.schedule_tool.vo.result.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author kb_jay
@@ -45,6 +43,13 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
             List<RespEmployeeByRoleId> employees = new ArrayList<>();
 
             List<RelationRoleAndEmployee> allByRole = repository.getAllByRoleId(id);
+
+            allByRole.sort(new Comparator<RelationRoleAndEmployee>() {
+                @Override
+                public int compare(RelationRoleAndEmployee o1, RelationRoleAndEmployee o2) {
+                    return o1.getCreateTime() > o2.getCreateTime() ? 1 : -1;
+                }
+            });
 
             for (int i = 0; i < allByRole.size(); i++) {
                 Long employeeId = allByRole.get(i).getEmployeeId();
@@ -91,6 +96,7 @@ public class RelationRoleAndEmployeeServiceImpl implements RelationRoleAndEmploy
             relationRoleAndEmployee.setEmployeeId(employeeId);
             relationRoleAndEmployee.setRoleId(roleId);
             relationRoleAndEmployee.setRatio(ratio);
+            relationRoleAndEmployee.setCreateTime(new Date().getTime());
 
             repository.save(relationRoleAndEmployee);
         } catch (Exception e) {

@@ -96,6 +96,13 @@ public class ScheduleRoleWaitingList {
         //初始化allEmp，之后去掉已经排过的员工
         //获取最大权重，之后遍历添加
         allEmployee = relationRoleAndEmployeeRepository.getAllByRoleId(id);
+        allEmployee.sort(new Comparator<RelationRoleAndEmployee>() {
+            @Override
+            public int compare(RelationRoleAndEmployee o1, RelationRoleAndEmployee o2) {
+                //按添加时间从晚到早排序
+                return o1.getCreateTime() > o2.getCreateTime() ? -1 : 1;
+            }
+        });
         //去掉employee的isdeleted==1的员工
         clearDeletedEmployee(stationEmployeeRepository);
         int max = Integer.MIN_VALUE;
@@ -161,11 +168,12 @@ public class ScheduleRoleWaitingList {
         Date thisWeekMonday = DateUtil.getThisWeekMonday(startDate);
         Optional<ProgramRole> roleOptional = programRoleRepository.findById(id);
 
-
         Optional<ScheduleStates> currentState = scheduleStatesResposity.getByCurDateAndRole(new java.sql.Date(DateUtil.getNextDate(thisWeekMonday, -7).getTime()), roleOptional.get());
+//        Optional<ScheduleStates> currentState = scheduleStatesResposity.getByCurDateAndRole(new java.sql.Date(thisWeekMonday.getTime()), roleOptional.get());
         if (currentState.isPresent()) {
             firstDate = currentState.get().getFirstDate();
-            List<RadioSchedule> schedules = radioScheduleRepository.findAllByRoleAndDateLessThanEqualAndDateGreaterThanEqualAndIsHoliday(roleOptional.get(), startDate, firstDate, false);
+            Date beforeDate = DateUtil.getNextDate(thisWeekMonday, -1);
+            List<RadioSchedule> schedules = radioScheduleRepository.findAllByRoleAndDateLessThanEqualAndDateGreaterThanEqualAndIsHoliday(roleOptional.get(), beforeDate, firstDate, false);
             long currentId = -1;
             for (int i = 0; i < schedules.size(); i++) {
                 Long id1 = schedules.get(i).getEmployee().getId();
@@ -180,30 +188,80 @@ public class ScheduleRoleWaitingList {
             }
 //            temp.removeAll(hasSortEmp);
             ListUtils.removeAll(temp, hasSortEmp);
+            //处理新加入的员工（要求立马有工作）
+            handleNewEmployee(temp, stationEmployeeRepository);
             for (int i = 0; i < temp.size(); i++) {
                 //如果temp.get(i)的日期大于上次排班的时间，那么continue
-                Optional<StationEmployee> byId = stationEmployeeRepository.findById(temp.get(i));
-                if (byId.isPresent() && !byId.get().isDeleted()) {
-                    java.sql.Date createDate = byId.get().getCreateDate();
-                    if (createDate != null && lastScheduleTime != null && createDate.getTime() > lastScheduleTime.getTime()) {
-                        continue;
-                    }
-                }
+//                Optional<StationEmployee> byId = stationEmployeeRepository.findById(temp.get(i));
+//                if (byId.isPresent() && !byId.get().isDeleted()) {
+//                    java.sql.Date createDate = byId.get().getCreateDate();
+//                    if (createDate != null && lastScheduleTime != null && createDate.getTime() > lastScheduleTime.getTime()) {
+//                        continue;
+//                    }
+//                }
                 alternativeEmployee.offer(temp.get(i));
             }
         } else {
+            //处理新加入的员工
+            handleNewEmployee(allEmp, stationEmployeeRepository);
             for (int i = 0; i < allEmp.size(); i++) {
                 //如果temp.get(i)的日期大于上次排班的时间，那么continue
-                Optional<StationEmployee> byId = stationEmployeeRepository.findById(allEmp.get(i));
-                if (byId.isPresent() && !byId.get().isDeleted()) {
-                    java.sql.Date createDate = byId.get().getCreateDate();
-                    if (createDate != null && lastScheduleTime != null && createDate.getTime() > lastScheduleTime.getTime()) {
-                        continue;
-                    }
-                }
+//                Optional<StationEmployee> byId = stationEmployeeRepository.findById(allEmp.get(i));
+//                if (byId.isPresent() && !byId.get().isDeleted()) {
+//                    java.sql.Date createDate = byId.get().getCreateDate();
+//                    if (createDate != null && lastScheduleTime != null && createDate.getTime() > lastScheduleTime.getTime()) {
+//                        continue;
+//                    }
+//                }
                 alternativeEmployee.offer(allEmp.get(i));
             }
             firstDate = new java.sql.Date(thisWeekMonday.getTime());
+        }
+    }
+
+    private void handleNewEmployee(ArrayList<Long> allEmp, StationEmployeeRepository stationEmployeeRepository) {
+        //获取新人数目
+        int newCount = 0;
+        long newEmployee = -1;
+        for (int i = 0; i < allEmp.size(); i++) {
+            Optional<StationEmployee> byId = stationEmployeeRepository.findById(allEmp.get(i));
+            if (byId.isPresent() && !byId.get().isDeleted()) {
+                java.sql.Date createDate = byId.get().getCreateDate();
+                //如果员工的添加日期大于上次排班的日期，那么他就是新员工
+                if (createDate != null && lastScheduleTime != null && createDate.getTime() > lastScheduleTime.getTime()) {
+                    if (newCount == 0) {
+                        newEmployee = byId.get().getId();
+                        newCount++;
+                    } else {
+                        if (newEmployee == byId.get().getId().longValue()) {
+                        } else {
+                            newCount++;
+                        }
+                    }
+
+                }
+            }
+        }
+        //新加入的员工的权重一致，所以如果新加入的员工个数大于1，那么不会有问题，如果等于一，特殊处理
+        if (newCount == 1) {
+            int count = 0;
+            for (int i = 0; i < allEmp.size(); i++) {
+                if (newEmployee == allEmp.get(i).longValue()) {
+                    count++;
+                }
+            }
+
+            while (count > 0 && allEmp.size() < (2 * count - 1)) {
+                //移除新员工，更新count
+                for (Iterator<Long> iterator = allEmp.iterator(); iterator.hasNext(); ) {
+                    Long next = iterator.next();
+                    if (next == newEmployee) {
+                        iterator.remove();
+                        count--;
+                        break;
+                    }
+                }
+            }
         }
     }
 

@@ -35,12 +35,27 @@ public class ListUtils {
             }
             T next = iterator.next();
             for (int j = 0; j < i; j++) {
-                if (iterator.equals(arr1.get(j))) {
+                if (next.equals(arr1.get(j))) {
                     iterator.remove();
                     break;
                 }
             }
             i++;
+        }
+    }
+
+    public static <T> void resortArray(ArrayList<T> arr1, ArrayList<T> arr2) {
+        int len = arr1.size();
+        int count = 0;
+        while (count < len) {
+            T temp = arr1.get(0);
+            if (arr2.contains(temp)) {
+                arr1.add(temp);
+                arr1.remove(0);
+                count++;
+            } else {
+                break;
+            }
         }
     }
 }
